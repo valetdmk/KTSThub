@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Форма с валидацией</title>
+</head>
+<body>
+
+<h1>Регистрация</h1>
+
+<form id="form" novalidate>
+
+  <div>
+    <label>Имя:
+      <input type="text" id="name" />
+    </label>
+    <div class="error"></div>
+  </div>
+
+  <div>
+    <label>Email:
+      <input type="email" id="email" />
+    </label>
+    <div class="error"></div>
+  </div>
+
+  <div>
+    <label>Телефон:
+      <input type="tel" id="phone" />
+    </label>
+    <div class="error"></div>
+  </div>
+
+  <div>
+    <label>Аватар:
+      <input type="file" id="avatar" accept="image/*" />
+    </label>
+  </div>
+
+  <div id="drop-zone" style="margin:10px 0;padding:20px;border:1px dashed #000;">
+    Перетащите файл сюда
+  </div>
+
+  <img id="preview" width="120" />
+
+  <br><br>
+  <button id="submit" disabled>Отправить</button>
+
+</form>
+
+<div id="loader" style="display:none;">Загрузка...</div>
+
+<script src="script.js"></script>
+</body>
+</html>
