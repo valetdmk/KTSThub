@@ -1,0 +1,56 @@
+.stats {
+  display: flex;
+  flex-wrap: wrap;             
+  justify-content: center;
+  gap: 32px 48px;             
+  padding: 32px 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;    
+  text-align: center;   
+  min-width: 140px;           
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.value {
+  font-size: clamp(36px, 9vw, 64px);
+  font-weight: 800;
+  line-height: 1;
+  color: #4f46e5;
+  margin-bottom: 8px;         
+  letter-spacing: -0.02em;
+}
+
+.label {
+  font-size: clamp(15px, 3.8vw, 18px);
+  font-weight: 500;
+  color: #1f2937;
+  line-height: 1.3;
+  max-width: 220px;           
+  white-space: normal;         
+}
+
+.stats strong {
+  font-size: clamp(24px, 6vw, 32px);
+  color: #4f46e5;
+}
+
+/* планшет */
+@media (min-width: 768px) {
+  .stats {
+    flex-direction: row;
+    justify-content: center;
+    gap: 40px;
+  }
+}

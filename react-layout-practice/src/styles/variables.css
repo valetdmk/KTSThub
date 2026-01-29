@@ -1,0 +1,9 @@
+:root {
+  --color-primary: #4f46e5;
+  --color-bg: #ffffff;
+  --color-bg-secondary: #f3f4f6;
+  --color-text: #111827;
+  --color-text-inverse: #ffffff;
+
+  --radius: 8px;
+}
