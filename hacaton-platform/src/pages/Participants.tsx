@@ -5,19 +5,17 @@ import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
 
 const Participants: React.FC = () => {
-  const [participants, setParticipants] = useState<UserProps[]>([]); // Массив "задач"
-  const [newName, setNewName] = useState(''); // Текст новой задачи
-  const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all'); // Фильтр
-  const [showForm, setShowForm] = useState(false); // Состояние модалки/формы
-  const [error, setError] = useState(''); // Ошибки
+  const [participants, setParticipants] = useState<UserProps[]>([]);
+  const [newName, setNewName] = useState('');
+  const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all');
+  const [showForm, setShowForm] = useState(false);
+  const [error, setError] = useState('');
 
-  // Загрузка из localStorage при монтировании
   useEffect(() => {
     const saved = localStorage.getItem('participants');
     if (saved) {
       setParticipants(JSON.parse(saved));
     } else {
-      // Фейковые начальные данные
       const initial: UserProps[] = [
         { id: '1', name: 'Ксения', email: 'ksenia@example.com', completed: false },
         { id: '2', name: 'Мария', bio: 'Из России', completed: true }
@@ -26,48 +24,44 @@ const Participants: React.FC = () => {
     }
   }, []);
 
-  // Автосохранение в localStorage при изменении
   useEffect(() => {
     localStorage.setItem('participants', JSON.stringify(participants));
   }, [participants]);
 
-  // Добавление (иммутабельно: spread)
   const addParticipant = () => {
     if (!newName.trim()) {
       setError('Имя не может быть пустым!');
       return;
     }
     const newOne: UserProps = {
-      id: Date.now().toString(), // Timestamp как ID
+      id: Date.now().toString(),
       name: newName,
       completed: false
     };
-    setParticipants([...participants, newOne]); // Spread для иммутабельности
+    setParticipants([...participants, newOne]);
     setNewName('');
     setError('');
     setShowForm(false);
   };
 
-  // Toggle completed (иммутабельно: map)
   const toggleCompleted = (id: string) => {
-    setParticipants( // Обновляем state новым массивом
-      participants.map(p =>   // Проходим по каждому участнику (p)
-        p.id === id ? { ...p, completed: !p.completed } : p // Логика замены
+    setParticipants(
+      participants.map(p =>
+        p.id === id ? { ...p, completed: !p.completed } : p
       )
     );
   };
 
-  // Фильтрация (filter)
   const filtered = participants.filter(p => 
     filter === 'all' || (filter === 'active' && !p.completed) || (filter === 'completed' && p.completed)
   );
 
-  // Сортировка по имени (опционально)
   const sorted = [...filtered].sort((a, b) => a.name.localeCompare(b.name));
 
-  if (participants.length === 0 && !error) { // Empty state
-    return <div className="text-center p-8"><p>Нет участников. Добавьте первого!</p></div>;
-  }
+  {participants.length === 0 && !error && (
+  <p>Нет участников</p>
+)}
+
 
   return (
     <>
@@ -82,13 +76,12 @@ const Participants: React.FC = () => {
 
       {error && <div className="bg-red-100 text-red-700 p-4 mb-4 rounded">Ошибка: {error}</div>} {/* Ошибки */}
 
-      // рендеринг списка участников
       <main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {sorted.map(participant => ( // map с key
+        {sorted.map(participant => ( 
           <UserCard 
-            key={participant.id} // Уникальный key!
-            {...participant} // Spread props
-            onClick={() => toggleCompleted(participant.id)} // Деструктуризация в обработчике
+            key={participant.id}
+            {...participant}
+            onClick={() => toggleCompleted(participant.id)}
           />
         ))}
       </main>
@@ -99,7 +92,7 @@ const Participants: React.FC = () => {
         </button>
       </footer>
 
-      {showForm && ( // Условный: показ/скрытие формы
+      {showForm && ( 
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg">
             <h2>Новый участник</h2>
