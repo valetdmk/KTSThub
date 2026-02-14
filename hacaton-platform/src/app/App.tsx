@@ -1,10 +1,10 @@
 import { Routes, Route, Link, BrowserRouter } from 'react-router-dom'
 
-import Home from './pages/Home'
-import Participants from './pages/Participants'
-import Schedule from './pages/Schedule'
-import Admin from './pages/Admin'
-import Profile from './pages/Profile'
+import Home from '../pages/Home'
+import Participants from '../pages/Participants'
+import Schedule from '../pages/Schedule'
+import Admin from '../pages/Admin'
+import Profile from '../pages/Profile'
 
 function App() {
   return (
