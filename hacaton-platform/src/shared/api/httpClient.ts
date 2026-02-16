@@ -1,6 +1,6 @@
 import type { ApiResponse, HttpMethod } from './api.types'
 import { ApiError, NetworkError, AuthError, TimeoutError } from './api.errors'
-import { authStore } from '../entities/auth.store'
+import { authStore } from '../../entities/auth.store'
 
 const BASE_URL = 'https://example.com/api'
 const TIMEOUT = 8000
