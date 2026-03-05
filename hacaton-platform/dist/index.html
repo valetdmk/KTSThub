@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>hacaton-platform</title>
+    <script type="module" crossorigin src="/assets/index-HrnTkyx-.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-CshnOKjq.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-9_fTO7I1.js">
+  <link rel="manifest" href="/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/registerSW.js"></script></head>
+  <body>
+    <div id="root"></div>
+    <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f9fafb; color: #333; }
+    nav { background: #fff; padding: 1rem; border-bottom: 1px solid #e5e7eb; margin-bottom: 2rem; text-align: center; }
+    nav a { margin: 0 1rem; text-decoration: none; color: #3b82f6; font-weight: bold; }
+    nav a:hover { text-decoration: underline; }
+    .page { display: none; padding: 2rem; max-width: 1200px; margin: 0 auto; }
+    .page.active { display: block; }
+    header { text-align: center; margin-bottom: 2rem; }
+    h1 { font-size: 2.5rem; color: #1f2937; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+    .card { background: #fff; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .stats { text-align: center; }
+    .stats h2 { font-size: 1.25rem; margin-bottom: 0.5rem; }
+    .stats p { font-size: 2rem; font-weight: bold; color: #3b82f6; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { border: 1px solid #d1d5db; padding: 0.75rem; text-align: left; }
+    th { background: #f3f4f6; font-weight: bold; }
+    tr:hover { background: #f9fafb; }
+    .status { padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.875rem; }
+    .status.upcoming { background: #fef3c7; color: #92400e; }
+    .status.ongoing { background: #dbeafe; color: #1e40af; }
+    .status.completed { background: #d1fae5; color: #065f46; }
+    .btn { padding: 0.5rem 1rem; border-radius: 0.25rem; font-weight: 500; text-decoration: none; display: inline-block; margin: 0.25rem; cursor: pointer; border: none; }
+    .btn-primary { background: #3b82f6; color: #fff; }
+    .btn-primary:hover { background: #2563eb; }
+    .btn-secondary { background: #d1d5db; color: #374151; }
+    .btn-secondary:hover { background: #9ca3af; }
+    .empty { text-align: center; padding: 3rem; background: #fef3c7; border-radius: 0.5rem; color: #92400e; }
+    .loading { text-align: center; padding: 3rem; font-style: italic; color: #6b7280; }
+    .admin-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+    .admin-card { background: #fff; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .admin-card h3 { margin: 0 0 0.5rem 0; font-size: 1.25rem; }
+    .admin-card p { margin: 0 0 0.5rem 0; color: #6b7280; }
+    .admin-actions { margin-top: 1rem; }
+    script { display: none; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="#" onclick="showPage('home')">Главная</a> |
+    <a href="#" onclick="showPage('participants')">Участники</a> |
+    <a href="#" onclick="showPage('schedule')">Расписание</a> |
+    <a href="#" onclick="showPage('admin')">Админ</a> |
+    <a href="#" onclick="showPage('profile')">Профиль</a>
+  </nav>
+
+  <!-- Home -->
+  <section id="home" class="page active">
+    <header>
+      <h1>Добро пожаловать в проект!</h1>
+      <p>Управление участниками и расписанием</p>
+    </header>
+    <main class="grid">
+      <div class="card stats">
+        <h2>Всего участников</h2>
+        <p>5</p>
+      </div>
+      <div class="card stats">
+        <h2>Активные</h2>
+        <p>3</p>
+      </div>
+      <div class="card stats">
+        <h2>Завершённые</h2>
+        <p>2</p>
+      </div>
+    </main>
+    <section class="grid">
+      <div class="card">
+        <h2>Участники</h2>
+        <p>Просмотр и управление списком.</p>
+        <a href="#" class="btn btn-primary" onclick="showPage('participants')">Перейти</a>
+      </div>
+      <div class="card">
+        <h2>Расписание</h2>
+        <p>Календарь событий.</p>
+        <a href="#" class="btn btn-primary" onclick="showPage('schedule')">Перейти</a>
+      </div>
+      <div class="card">
+        <h2>Админ</h2>
+        <p>Полный контроль.</p>
+        <a href="#" class="btn btn-primary" onclick="showPage('admin')">Перейти</a>
+      </div>
+    </section>
+  </section>
+
+  <!-- Schedule -->
+  <section id="schedule" class="page">
+    <header>
+      <h1>Расписание</h1>
+      <div>
+        <a href="#" class="btn btn-primary">Все</a>
+        <a href="#" class="btn btn-secondary">Предстоящие</a>
+        <a href="#" class="btn btn-secondary">Текущие</a>
+        <a href="#" class="btn btn-secondary">Завершённые</a>
+      </div>
+    </header>
+    <main>
+      <table>
+        <thead>
+          <tr>
+            <th>Название</th>
+            <th>Дата</th>
+            <th>Статус</th>
+            <th>Описание</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Встреча команды</td>
+            <td>25.01.2026, 14:00</td>
+            <td><span class="status upcoming">Предстоящее</span></td>
+            <td>Обсуждение плана</td>
+          </tr>
+          <tr>
+            <td>Демо проекта</td>
+            <td>24.01.2026, 10:00</td>
+            <td><span class="status ongoing">Текущее</span></td>
+            <td>Презентация</td>
+          </tr>
+          <tr>
+            <td>Ретроспектива</td>
+            <td>20.01.2026, 16:00</td>
+            <td><span class="status completed">Завершённое</span></td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
+  </section>
+
+  <!-- Admin -->
+  <section id="admin" class="page">
+    <header>
+      <h1>Админ-панель</h1>
+      <button class="btn btn-primary" onclick="document.getElementById('modal').style.display='block'">Добавить участника</button>
+    </header>
+    <main class="admin-list">
+      <div class="admin-card">
+        <h3>Ксения</h3>
+        <p>ksenia@example.com</p>
+        <p class="text-gray-500">Люблю React</p>
+        <div class="admin-actions">
+          <button class="btn btn-primary">Редактировать</button>
+          <button class="btn btn-secondary">Удалить</button>
+        </div>
+      </div>
+      <div class="admin-card">
+        <h3>Анна</h3>
+        <p>anna@example.com</p>
+        <p class="text-gray-500">Из Хельсинки</p>
+        <div class="admin-actions">
+          <button class="btn btn-primary">Редактировать</button>
+          <button class="btn btn-secondary">Удалить</button>
+        </div>
+      </div>
+    </main>
+    <!-- Простая модалка (статичная) -->
+    <div id="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; display:flex; align-items:center; justify-content:center;">
+      <div style="background:#fff; padding:2rem; border-radius:0.5rem; max-width:400px;">
+        <h2>Добавить участника</h2>
+        <input type="text" placeholder="Имя" style="width:100%; padding:0.5rem; margin-bottom:1rem; border:1px solid #d1d5db; border-radius:0.25rem;">
+        <input type="email" placeholder="Email" style="width:100%; padding:0.5rem; margin-bottom:1rem; border:1px solid #d1d5db; border-radius:0.25rem;">
+        <textarea placeholder="Био" style="width:100%; padding:0.5rem; margin-bottom:1rem; border:1px solid #d1d5db; border-radius:0.25rem; height:4rem;"></textarea>
+        <div style="display:flex; gap:1rem;">
+          <button class="btn btn-primary">Сохранить</button>
+          <button class="btn btn-secondary" onclick="document.getElementById('modal').style.display='none'">Отмена</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  </body>
+</html>
