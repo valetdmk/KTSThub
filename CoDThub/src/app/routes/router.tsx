@@ -1,9 +1,9 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import HomePage from "../../pages/home/home";
-import ParticipantsPage from "../../pages/participants/participants";
-import AdminPage from "../../pages/admin/admin";
-import SchedulePage from "../../pages/schedule/schedule";
-import ProfilePage from "../../pages/profile/profile";
+import { HomePage } from "../../pages/home/home";
+import { ParticipantsPage } from "../../pages/participants/participants";
+import { AdminPage } from "../../pages/admin/admin";
+import { SchedulePage } from "../../pages/schedule/schedule";
+import { ProfilePage } from "../../pages/profile/profile";
 
 const router = createBrowserRouter([
     {
