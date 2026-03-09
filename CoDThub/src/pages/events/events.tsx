@@ -5,15 +5,35 @@ import EventCard from "../../components/EventCard";
 
 export default function Events() {
     const [events, setEvents] = useState<Event[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchEvents = async () => {
+          try {
             const data = await getEvents();
             setEvents(data);
+          } catch (err) {
+            setError("Не удалось загрузить события");
+          } finally {
+            setLoading(false);
+          }
         };
 
         fetchEvents();
     }, []);
+
+    if (loading) {
+      return <div>Загрузка событий...</div>;
+    }
+
+    if (error) {
+      return <div>{error}</div>;
+    }
+
+    if (events.length === 0) {
+      return <div>Событий пока нет</div>;
+    }
 
     return (
     <div>
