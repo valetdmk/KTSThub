@@ -13,3 +13,8 @@ export const getEvents = async (): Promise<Event[]> => {
     const response = await axios.get("http://localhost:3000/events");
     return response.data;
 }
+
+export const getEventById = async (id: number): Promise<Event> => {
+    const response = await axios.get(`http://localhost:3000/events/${id}`);
+    return response.data;
+};

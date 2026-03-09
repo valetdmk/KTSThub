@@ -1,4 +1,5 @@
 import type { Event } from "../api/events";
+import { Link } from "react-router-dom";
 
 interface Props {
   event: Event;
@@ -6,18 +7,20 @@ interface Props {
 
 export default function EventCard({ event }: Props) {
   return (
-    <div className="event-card">
-      <h3>{event.title}</h3>
+    <Link to={`/event/${event.id}`}>
+      <div className="event-card">
+        <h3>{event.title}</h3>
 
-      <p><b>Тип:</b> {event.type}</p>
+        <p><b>Тип:</b> {event.type}</p>
 
-      <p><b>Дата начала:</b> {event.startDate}</p>
+        <p><b>Дата начала:</b> {event.startDate}</p>
 
-      <p><b>Дата окончания:</b> {event.endDate}</p>
+        <p><b>Дата окончания:</b> {event.endDate}</p>
 
-      <p>
-        <b>Стек:</b> {event.stack.join(", ")}
-      </p>
-    </div>
+        <p>
+          <b>Стек:</b> {event.stack.join(", ")}
+        </p>
+      </div>
+    </Link>
   );
 }
