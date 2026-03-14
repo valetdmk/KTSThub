@@ -4,8 +4,10 @@ import { ParticipantsPage } from "../../pages/participants/participants";
 import { AdminPage } from "../../pages/admin/admin";
 import { SchedulePage } from "../../pages/schedule/schedule";
 import { ProfilePage } from "../../pages/profile/profile";
+import Events from "../../pages/events/events";
+import EventPage from "../../pages/events/eventpage";
 
-const router = createBrowserRouter([
+export const router = createBrowserRouter([
     {
         path: '/',
         element: <HomePage />,
@@ -26,8 +28,16 @@ const router = createBrowserRouter([
         path: '/profile',
         element: <ProfilePage />,
     },
-])
+    {
+        path: '/events',
+        element: <Events/>,
+    },
+    {
+        path: '/events/:id',
+        element: <EventPage />,
+    },
+]);
 
 export const AppRouter = () => {
-    return <RouterProvider router={router} />
+    return <RouterProvider router={router} />;
 }

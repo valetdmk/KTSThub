@@ -1,4 +1,4 @@
-import type { Event } from "../api/events";
+import type { Event } from "../../../shared/api/events";
 import { Link } from "react-router-dom";
 
 interface Props {
@@ -7,7 +7,7 @@ interface Props {
 
 export default function EventCard({ event }: Props) {
   return (
-    <Link to={`/event/${event.id}`}>
+    <Link to={`/events/${event.id}`}>
       <div className="event-card">
         <h3>{event.title}</h3>
 
