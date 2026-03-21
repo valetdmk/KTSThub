@@ -10,11 +10,11 @@ export interface Event {
 }
 
 export const getEvents = async (): Promise<Event[]> => {
-    const response = await axios.get("http://localhost:3000/events");
+    const response = await axios.get("http://10.3.25.106:8080/events");
     return response.data;
 }
 
 export const getEventById = async (id: number): Promise<Event> => {
-    const response = await axios.get(`http://localhost:3000/events/${id}`);
+    const response = await axios.get(`http://10.3.25.106:8080/events/${id}`);
     return response.data;
 };

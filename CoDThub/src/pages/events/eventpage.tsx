@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getEventById } from "../../shared/api/events";
-import type { Event } from "../../shared/api/events";
+import { getEventById } from "../../app/api/events";
+import type { Event } from "../../app/api/events";
 
 export default function EventPage() {
     const { id } = useParams();

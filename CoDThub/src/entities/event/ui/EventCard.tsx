@@ -1,4 +1,4 @@
-import type { Event } from "../../../shared/api/events";
+import type { Event } from "../../../app/api/events";
 import { Link } from "react-router-dom";
 
 interface Props {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { getEvents } from "../../shared/api/events";
-import type { Event } from "../../shared/api/events";
+import { getEvents } from "../../app/api/events";
+import type { Event } from "../../app/api/events";
 import EventCard from "../../entities/event/ui/EventCard";
 
 export default function Events() {
