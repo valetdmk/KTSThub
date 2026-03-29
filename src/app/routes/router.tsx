@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
 import { HomePage } from "../../pages/home/home";
 import { ParticipantsPage } from "../../pages/participants/participants";
 import { AdminPage } from "../../pages/admin/admin";
@@ -37,6 +37,16 @@ export const router = createBrowserRouter([
         element: <EventPage />,
     },
 ]);
+
+export function ProtectedRoute({ children }: any) {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    return <Navigate to="/login" />;
+  }
+
+  return children;
+}
 
 export const AppRouter = () => {
     return <RouterProvider router={router} />;

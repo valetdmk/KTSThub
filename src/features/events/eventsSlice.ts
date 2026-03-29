@@ -1,0 +1,60 @@
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+
+export interface Event {
+    id: number;
+    title: string;
+    type: string;
+    startDate: string;
+    endDate: string;
+    stack: string[];
+}
+
+interface EventsState {
+    events: Event[];
+    selectedEvent: Event | null;
+    loading: boolean;
+    error: string | null;
+}
+
+const initialState: EventsState = {
+    events: [],
+    selectedEvent: null,
+    loading: false,
+    error: null,
+}
+
+const eventsSlice = createSlice({
+    name: "events",
+    initialState,
+    reducers: {
+        fetchEventsRequest(state) {
+            state.loading = true;
+            state.error = null;
+        },
+        fetchEventsSuccess(state, action: PayloadAction<Event[]>) {
+            state.loading = false;
+            state.events = action.payload;
+        },
+        fetchEventsFailure(state, action: PayloadAction<string>) {
+            state.loading = false;
+            state.error = action.payload;
+        },
+        fetchEventByIdRequest(state) {
+            state.loading = true;
+        },
+        fetchEventByIdSuccess(state, action: PayloadAction<Event>) {
+            state.loading = false;
+            state.selectedEvent = action.payload;
+        },
+    },
+});
+
+export const {
+    fetchEventsRequest,
+    fetchEventsSuccess,
+    fetchEventsFailure,
+    fetchEventByIdRequest,
+    fetchEventByIdSuccess,
+} = eventsSlice.actions;
+
+export default eventsSlice.reducer;
