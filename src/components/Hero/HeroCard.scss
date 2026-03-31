@@ -1,0 +1,64 @@
+.hero-card {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  border-radius: 20px;
+  max-width: 90vw;
+  border: 1px solid;
+  border-image: linear-gradient(135deg, #ff8a00, #7a00ff) 1;
+  width: clamp(320px, 22vw, 420px);
+  padding: 22px 26px;
+  position: absolute;
+  z-index: 4;
+  color: white;
+  overflow: hidden;
+}
+
+.hero-card h3 {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.hero-card .main {
+  font-weight: 600;
+}
+
+.hero-card .desc {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.hero-card.top-right {
+  top: 28%;
+  right: 13%;
+  transform: rotate(6deg);
+}
+
+.hero-card.bottom-left {
+  bottom: 13%;
+  left: -1%;
+  transform: rotate(-6deg);
+}
+
+.hero-card.bottom-right {
+  bottom: 8%;
+  right: 20%;
+  transform: rotate(4deg);
+}
+
+.hero-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  padding: 1px;
+
+  background: linear-gradient(135deg, #ff8a00, #7a00ff);
+
+  -webkit-mask: 
+    linear-gradient(#000 0 0) content-box, 
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+
+  pointer-events: none;
+}

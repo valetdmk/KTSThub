@@ -1,0 +1,111 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.hero {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  background: #000;
+  overflow: hidden;
+  color: #fff;
+  z-index: 0;
+}
+
+.hero_blocks {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: center;
+  transform: translateX(-7.75vw);
+}
+
+
+.hero_blocks img {
+  display: block;
+  margin: 0;
+}
+
+.hero_blocks img:nth-child(1) { transform: translateY(12vh); }
+.hero_blocks img:nth-child(2) { transform: translateY(8vh); }
+.hero_blocks img:nth-child(3) { transform: translateY(4vh); }
+.hero_blocks img:nth-child(4) { transform: translateY(1vh); }
+.hero_blocks img:nth-child(5) { transform: translateY(0); }
+
+.hero_blocks img:nth-child(6) { transform: translateY(-2vh); }
+
+.hero_blocks img:nth-child(7) { transform: translateY(0); }
+.hero_blocks img:nth-child(8) { transform: translateY(1vh); }
+.hero_blocks img:nth-child(9) { transform: translateY(4vh); }
+.hero_blocks img:nth-child(10) { transform: translateY(8vh); }
+.hero_blocks img:nth-child(11) { transform: translateY(12vh); }
+
+.hero_people {
+  position: absolute;
+  bottom: 5vh; /* чуть выше блоков */
+  left: 50%;
+  transform: translateX(calc(-50% - 7.85vw));
+  
+  display: flex;
+  align-items: flex-end;
+  gap: 700px;
+
+  z-index: 2;
+}
+
+.hero_boy,
+.hero_girl {
+  height: 60vh;
+  object-fit: contain;
+}
+
+.hero_boy {
+  transform: translateY(10px) rotate(-2deg);
+}
+
+.hero_girl {
+  transform: translateY(0) rotate(2deg);
+}
+
+.hero_bg {
+  position: fixed;
+  top: -20%;
+  width: auto;
+  max-width: none;
+  height: 150vh;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero_bg--left {
+  left: -5%;
+}
+
+.hero_bg--right {
+  right: -5%;
+  transform: translate(120px, -120px);
+}
+
+.hero_nav a {
+  color: #fff;
+  text-decoration: none;
+  position: relative;
+  z-index: 1;
+}
+
+.hero_content {
+  position: relative;
+  z-index: 3;
+}
+
+.hero-card {
+  position: absolute;
+  z-index: 4;
+}
+

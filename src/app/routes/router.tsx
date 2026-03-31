@@ -4,12 +4,17 @@ import { ParticipantsPage } from "../../pages/participants/participants";
 import { AdminPage } from "../../pages/admin/admin";
 import { SchedulePage } from "../../pages/schedule/schedule";
 import { ProfilePage } from "../../pages/profile/profile";
+import { Hero } from "../../components/Hero/Hero";
 import Events from "../../pages/events/events";
 import EventPage from "../../pages/events/eventpage";
 
 export const router = createBrowserRouter([
     {
         path: '/',
+        element: <Hero />,
+    },
+    {
+        path: '/home',
         element: <HomePage />,
     },
     {

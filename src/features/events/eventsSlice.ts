@@ -39,7 +39,7 @@ const eventsSlice = createSlice({
             state.loading = false;
             state.error = action.payload;
         },
-        fetchEventByIdRequest(state) {
+        fetchEventByIdRequest(state, _action: PayloadAction<number>) {
             state.loading = true;
         },
         fetchEventByIdSuccess(state, action: PayloadAction<Event>) {
