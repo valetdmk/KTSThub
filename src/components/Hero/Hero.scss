@@ -7,13 +7,9 @@
 .hero {
   position: relative;
   height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
   background: #000;
   overflow: hidden;
   color: #fff;
-  z-index: 0;
 }
 
 .hero_blocks {
@@ -22,8 +18,9 @@
   display: flex;
   flex-direction: row;
   align-items: flex-end;
+  transform: none;
   justify-content: center;
-  transform: translateX(-7.75vw);
+  bottom: 10vh;
 }
 
 
@@ -48,13 +45,13 @@
 
 .hero_people {
   position: absolute;
-  bottom: 5vh; /* чуть выше блоков */
+  bottom: 15vh;
   left: 50%;
-  transform: translateX(calc(-50% - 7.85vw));
-  
+  transform: translateX(-50%);
   display: flex;
-  align-items: flex-end;
   gap: 700px;
+  justify-content: space-between;
+  width: 100vw;
 
   z-index: 2;
 }
@@ -67,10 +64,12 @@
 
 .hero_boy {
   transform: translateY(10px) rotate(-2deg);
+  margin-right: auto;
 }
 
 .hero_girl {
   transform: translateY(0) rotate(2deg);
+  margin-left: auto;
 }
 
 .hero_bg {
@@ -102,10 +101,63 @@
 .hero_content {
   position: relative;
   z-index: 3;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .hero-card {
   position: absolute;
   z-index: 4;
+  
 }
 
+.hero_header {
+  position: absolute;
+  top: 5vh;
+  left: 50%;
+  transform: translateX(-50%);
+
+  padding: 20px 40px;
+
+  border-radius: 60px;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(1px);
+
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+}
+
+.hero_header_inner {
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 15px;
+  padding: 16px 32px;
+}
+
+.hero_nav {
+  display: flex;
+  gap: 80px;
+}
+
+.hero_nav a {
+  font-size: 24px;
+}
+
+.hero_header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 60px;
+  padding: 1px;
+
+  background: linear-gradient(135deg, #7a00ff, #ff8a00);
+
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+
+  pointer-events: none;
+}

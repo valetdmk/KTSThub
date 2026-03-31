@@ -1,10 +1,8 @@
 .hero-card {
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
-  border-radius: 20px;
+  border-radius: 30px;
   max-width: 90vw;
-  border: 1px solid;
-  border-image: linear-gradient(135deg, #ff8a00, #7a00ff) 1;
   width: clamp(320px, 22vw, 420px);
   padding: 22px 26px;
   position: absolute;
@@ -14,34 +12,36 @@
 }
 
 .hero-card h3 {
-  font-size: 28px;
+  font-weight: 600;
+  font-size: 30px;
   margin-bottom: 8px;
 }
 
 .hero-card .main {
   font-weight: 600;
+  margin-bottom: 8px;
 }
 
 .hero-card .desc {
-  font-size: 14px;
+  font-size: 18px;
   opacity: 0.7;
 }
 
 .hero-card.top-right {
-  top: 28%;
-  right: 13%;
+  top: 20%;
+  right: -15%;
   transform: rotate(6deg);
 }
 
 .hero-card.bottom-left {
-  bottom: 13%;
-  left: -1%;
+  bottom: 18%;
+  left: -10%;
   transform: rotate(-6deg);
 }
 
 .hero-card.bottom-right {
-  bottom: 8%;
-  right: 20%;
+  bottom: 18%;
+  right: -8%;
   transform: rotate(4deg);
 }
 
@@ -49,7 +49,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: 20px;
+  border-radius: 30px;
   padding: 1px;
 
   background: linear-gradient(135deg, #ff8a00, #7a00ff);

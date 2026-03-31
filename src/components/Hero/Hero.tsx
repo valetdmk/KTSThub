@@ -20,6 +20,7 @@ export const Hero = () => {
     return (
         <section className="hero">
             <header className="hero_header">
+                <div className="hero_header_inner">
                 <div className="hero_logo"></div>
                 <nav className="hero_nav">
                     <a href="">О нас</a>
@@ -28,6 +29,7 @@ export const Hero = () => {
                     <a href="">Партнеры</a>
                     <a href="">FAQ</a>
                 </nav>
+                </div>
             </header>
 
             <div className="hero_content">
