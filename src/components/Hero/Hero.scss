@@ -6,21 +6,21 @@
 
 .hero {
   position: relative;
-  height: 100vh;
+  min-height: 1000vh;
   background: #000;
   overflow: hidden;
   color: #fff;
 }
 
 .hero_logo {
-  position: absolute;
+  position: fixed;
   top: 40px;
   left: 60px;
 
   width: 100px;
   height: auto;
 
-  z-index: 2;
+  z-index: 4;
   pointer-events: none; 
 }
 
@@ -124,6 +124,7 @@
   max-width: 1400px;
   width: 100%;
   margin: 0 auto;
+  min-height: 120vh;
 }
 
 .hero-card {
@@ -134,7 +135,7 @@
 }
 
 .hero_header {
-  position: absolute;
+  position: fixed;
   top: 5vh;
   left: 50%;
   transform: translateX(-50%);
@@ -142,7 +143,6 @@
   padding: 10px 40px;
 
   border-radius: 60px;
-  background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(1px);
 
   z-index: 10;
@@ -151,7 +151,6 @@
 }
 
 .hero_header_inner {
-  background: rgba(0, 0, 0, 0.7);
   border-radius: 15px;
   padding: 16px 32px;
 }
@@ -212,6 +211,20 @@
 
   cursor: pointer;
   text-align: center;
+
+  transition: all 0.3s ease;
+}
+
+.hero_button:hover {
+  transform: translateY(490px) scale(1.05);
+
+  box-shadow:
+    0 0 20px rgba(122, 0, 255, 0.8),
+    0 0 35px rgba(255, 138, 0, 0.7);
+}
+
+.hero_button:active {
+  transform: translateY(490px) scale(0.97);
 }
 
 .hero_cards {
@@ -247,10 +260,9 @@
 }
 
 .card-down {
-  position: absolute;
-  top: 180px;
-  left: 50%;
-  transform: translateX(-50%);
+  width: 40px;
+  height: auto;
+  pointer-events: none;
 }
 
 .hero_center {
@@ -303,4 +315,46 @@
 
   max-width: 360px;
   text-align: right;
+}
+
+.cards_button {
+  position: absolute;
+  top: 180px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 220px;
+  height: 50px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 40px;
+  cursor: pointer;
+
+  background: radial-gradient(
+    circle at 50% 40%,
+    #7a00ff 0%,
+    #ff8a00 100%
+  );
+
+  box-shadow:
+    0 0 15px rgba(122, 0, 255, 0.6),
+    0 0 25px rgba(255, 138, 0, 0.5);
+
+  transition: 0.3s ease;
+}
+
+.cards_button:hover {
+  transform: translateX(-50%) scale(1.05);
+
+  box-shadow:
+    0 0 20px rgba(122, 0, 255, 0.9),
+    0 0 30px rgba(255, 138, 0, 0.7);
+}
+
+.cards_button:active {
+  transform: translateY(490px) scale(0.97);
 }

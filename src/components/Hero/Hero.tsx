@@ -22,6 +22,9 @@ import logo from "../../Photos/logo.png"
 import Hack from "../../Photos/HacK.png"
 import KCT from "../../Photos/KCT.png"
 
+const leftBlocks = [block1left, block2left, block3left, block4left, block5left];
+const rightBlocks = [block5right, block4right, block3right, block2right, block1right];
+
 export const Hero = () => {
     return (
         <section className="hero">
@@ -62,23 +65,23 @@ export const Hero = () => {
                     <img className="card card-left" src={card} />
                     <img className="card card-center" src={card} />
                     <img className="card card-right" src={card} />
+                    <button className="cards_button">
                     <img className="card-down" src={down} />
+                    </button>
                 </div>
 
                 
 
                 <div className="hero_blocks">
-                        <img src={block1left} />
-                        <img src={block2left} />
-                        <img src={block3left} />
-                        <img src={block4left} />
-                        <img src={block5left} />
+                        {leftBlocks.map((img, i) => (
+                            <img key={`left-${i}`} src={img} />
+                        ))}
+
                         <img src={blockcentral} />
-                        <img src={block5right} />
-                        <img src={block4right} />
-                        <img src={block3right} />
-                        <img src={block2right} />
-                        <img src={block1right} />
+
+                        {rightBlocks.map((img, i) => (
+                            <img key={`right-${i}`} src={img} />
+                        ))}
                 </div>
 
                 <div className="hero_people">
@@ -107,7 +110,7 @@ export const Hero = () => {
             </div>
             <img className="hero_bg hero_bg--left" src={Orange1} />
             <img className="hero_bg hero_bg--right" src={Purple1} />
-
         </section>
     )
 }
+
