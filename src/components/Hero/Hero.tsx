@@ -15,13 +15,20 @@ import block4right from "../../Photos/block4right.png"
 import block5right from "../../Photos/block5right.png"
 import Girl from "../../Photos/Girl.png"
 import Boy from "../../Photos/Boy.png"
+import card from "../../Photos/card.png"
+import down from "../../Photos/down.png"
+import numbers from "../../Photos/numbers.png"
+import logo from "../../Photos/logo.png"
+import Hack from "../../Photos/HacK.png"
+import KCT from "../../Photos/KCT.png"
 
 export const Hero = () => {
     return (
         <section className="hero">
+            <img  className="hero_logo" src={logo} />
+            <img className="hero_numbers" src={numbers} />
             <header className="hero_header">
                 <div className="hero_header_inner">
-                <div className="hero_logo"></div>
                 <nav className="hero_nav">
                     <a href="">О нас</a>
                     <a href="">Достижения</a>
@@ -33,18 +40,32 @@ export const Hero = () => {
             </header>
 
             <div className="hero_content">
-                <h1 className="hero_title">
-                    <span>КЦТ</span>
-                    Hack
-                </h1>
 
-                <p className="hero_subtitle">
-                    Вы переходите в мир нового уровня погружения в ИТ-сферу разработки
-                </p>
+                <div className="hero_center">
+                        <img className="kct" src={KCT} />
+                        <img className="hack" src={Hack} />
+
+                    <p className="text-bottom-left">
+                        Вы переходите в мир нового уровня погружения в ИТ-сферу разработки
+                    </p>
+
+                    <p className="text-top-right">
+                        Вы переходите не просто в платформу,
+                    </p>
+                </div>
 
                 <button className="hero_button">
                     Войти в мир хакатонов
                 </button>
+
+                <div className="hero_cards">
+                    <img className="card card-left" src={card} />
+                    <img className="card card-center" src={card} />
+                    <img className="card card-right" src={card} />
+                    <img className="card-down" src={down} />
+                </div>
+
+                
 
                 <div className="hero_blocks">
                         <img src={block1left} />
