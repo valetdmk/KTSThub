@@ -2,13 +2,16 @@ import { Link } from "react-router-dom";
 
 export const Navigation = () => {
     return (
-        <nav>
-            <Link to={"/"}>Главная</Link> |{" "}
-            <Link to={"/events"}>События</Link> |{" "}
-            <Link to={"/participants"}>Участники</Link> |{" "}
-            <Link to={"/schedule"}>Расписание</Link> |{" "}
-            <Link to={"/profile"}>Личный кабинет</Link> |{" "}
-            <Link to={"/admin"}>Админ</Link> |{" "}
-        </nav>
+        <header className="hero_header">
+            <div className="hero_header_inner">
+                <nav className="hero_nav">
+                    <Link to={"/aboutus"}>О нас</Link>
+                    <Link to={"/achievements"}>Достижения</Link>
+                    <Link to={"/developers"}>Разработчики</Link>
+                    <Link to={"/partners"}>Партнеры</Link> 
+                    <Link to={"/faq"}>FAQ</Link> 
+                </nav>
+            </div>
+        </header>
     );
 };

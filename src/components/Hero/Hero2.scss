@@ -1,0 +1,52 @@
+.secondslice {
+  position: relative;
+  min-height: 100vh;
+  color: white;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: repeat(3, auto);
+  gap: 40px 60px;
+  justify-items: center;
+  align-items: center;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.feature {
+  max-width: 250px;
+  text-align: center;
+}
+
+.secondslice_inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  min-height: 500px;
+}
+
+// .left-block {
+//   position: relative;
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+// }
+
+.second-top {
+  display: block;
+}
+
+.second-bottom {
+  display: block;
+  margin-top: -20px;
+}
+
+.boy2 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

@@ -1,3 +1,4 @@
+import "./Hero2.scss"
 import secondtop from "../../Photos/secondtop.png"
 import secondbottom from "../../Photos/secondbottom.png"
 import forstudent1 from "../../Photos/forstudent1.png"
@@ -14,8 +15,18 @@ const features = [
         text: "Личный кабинет с вашими активностями."
     },
     {
+        img: forstudent3,
+        title: "Контакт с HR компаний",
+        text: "IT-специалисты команды и проекты в одном месте"
+    },
+    {
         img: forstudentcircle,
         title: "Студентам",
+        text: "IT-специалисты команды и проекты в одном месте."
+    },
+    {
+        img: forstudent4,
+        title: "Рабочие проекты в портфолио",
         text: "IT-специалисты команды и проекты в одном месте."
     },
     {
@@ -23,26 +34,18 @@ const features = [
         title: "Опыт командной работы",
         text: "IT-специалисты команды и проекты в одном месте"
     },
-    {
-        img: forstudent3,
-        title: "Контакт с HR компаний",
-        text: "IT-специалисты команды и проекты в одном месте"
-    },
-    {
-        img: forstudent4,
-        title: "Рабочие проекты в портфолио",
-        text: "IT-специалисты команды и проекты в одном месте."
-    },
 ]
 
 export const SecondSection = () => {
     return (
         <section className="secondslice">
-            <div className="secondslice">
+            <div className="secondslice_inner">
 
-                <img className="second-top" src={secondtop} />
-                <img className="second-bottom" src={secondbottom} />
-                <img className="boy2" src={Boy} />
+                <div className="left-block">
+                    <img className="second-top" src={secondtop} />
+                    <img className="second-bottom" src={secondbottom} />
+                    <img className="boy2" src={Boy} />
+                </div>
 
                 
             </div>

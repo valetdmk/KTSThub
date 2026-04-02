@@ -1,0 +1,18 @@
+.bg {
+  position: fixed;
+  top: -20%;
+  width: auto;
+  max-width: none;
+  height: 150vh;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bg--left {
+  left: -5%;
+}
+
+.bg--right {
+  right: -5%;
+  transform: translate(120px, -120px);
+}

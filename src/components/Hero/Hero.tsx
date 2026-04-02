@@ -1,7 +1,5 @@
 import "./Hero.scss"
 import { HeroCard } from "./HeroCard";
-import Orange1 from "../../Photos/Orange1.png"
-import Purple1 from "../../Photos/Purple1.png"
 import blockcentral from "../../Photos/blockcentral.png"
 import block1left from "../../Photos/block1left.png"
 import block2left from "../../Photos/block2left.png"
@@ -30,17 +28,6 @@ export const Hero = () => {
         <section className="hero">
             <img  className="hero_logo" src={logo} />
             <img className="hero_numbers" src={numbers} />
-            <header className="hero_header">
-                <div className="hero_header_inner">
-                <nav className="hero_nav">
-                    <a href="">О нас</a>
-                    <a href="">Достижения</a>
-                    <a href="">Разработчики</a>
-                    <a href="">Партнеры</a>
-                    <a href="">FAQ</a>
-                </nav>
-                </div>
-            </header>
 
             <div className="hero_content">
 
@@ -108,8 +95,6 @@ export const Hero = () => {
                     description="На столько снижается время поиска первой работы благодаря участию в проекте."
                 />
             </div>
-            <img className="hero_bg hero_bg--left" src={Orange1} />
-            <img className="hero_bg hero_bg--right" src={Purple1} />
         </section>
     )
 }

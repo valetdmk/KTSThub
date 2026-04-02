@@ -4,15 +4,19 @@ import { ParticipantsPage } from "../../pages/participants/participants";
 import { AdminPage } from "../../pages/admin/admin";
 import { SchedulePage } from "../../pages/schedule/schedule";
 import { ProfilePage } from "../../pages/profile/profile";
-import { Hero } from "../../components/Hero/Hero";
 import Events from "../../pages/events/events";
 import EventPage from "../../pages/events/eventpage";
+import { AboutUs } from "../../pages/aboutus";
+import { Achievements } from "../../pages/achievements";
+import { Developers } from "../../pages/developers";
+import { Partners } from "../../pages/partners";
+import { FAQ } from "../../pages/faq";
 
 export const router = createBrowserRouter([
-    {
-        path: '/',
-        element: <Hero />,
-    },
+    // {
+    //     path: '/',
+    //     element: <Hero />,
+    // },
     {
         path: '/home',
         element: <HomePage />,
@@ -40,6 +44,26 @@ export const router = createBrowserRouter([
     {
         path: '/events/:id',
         element: <EventPage />,
+    },
+    {
+        path: '/aboutus',
+        element: <AboutUs />,
+    },
+    {
+        path: '/achievements',
+        element: <Achievements />,
+    },
+    {
+        path: '/developers',
+        element: <Developers />,
+    },
+    {
+        path: '/partners',
+        element: <Partners />,
+    },
+    {
+        path: '/faq',
+        element: <FAQ />,
     },
 ]);
 

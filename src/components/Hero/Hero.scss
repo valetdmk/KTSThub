@@ -6,9 +6,7 @@
 
 .hero {
   position: relative;
-  min-height: 1000vh;
-  background: #000;
-  overflow: hidden;
+  min-height: 100vh;
   color: #fff;
 }
 
@@ -99,24 +97,7 @@
   margin-left: auto;
 }
 
-.hero_bg {
-  position: fixed;
-  top: -20%;
-  width: auto;
-  max-width: none;
-  height: 150vh;
-  z-index: 0;
-  pointer-events: none;
-}
 
-.hero_bg--left {
-  left: -5%;
-}
-
-.hero_bg--right {
-  right: -5%;
-  transform: translate(120px, -120px);
-}
 
 .hero_content {
   position: relative;
@@ -356,5 +337,5 @@
 }
 
 .cards_button:active {
-  transform: translateY(490px) scale(0.97);
+  transform: translateX(-50%) scale(0.97);
 }
