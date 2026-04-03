@@ -1,4 +1,6 @@
 import "./Hero2.scss"
+import { useRef } from "react"
+
 import secondtop from "../../Photos/secondtop.png"
 import secondbottom from "../../Photos/secondbottom.png"
 import forstudent1 from "../../Photos/forstudent1.png"
@@ -8,37 +10,33 @@ import forstudent4 from "../../Photos/forstudent4.png"
 import forstudentcircle from "../../Photos/forstudentcircle.png"
 import Boy from "../../Photos/Boy.png"
 
-const features = [
-    {
-        img: forstudent1,
-        title: "Реальный опыт IT-индустрии",
-        text: "Личный кабинет с вашими активностями."
-    },
-    {
-        img: forstudent3,
-        title: "Контакт с HR компаний",
-        text: "IT-специалисты команды и проекты в одном месте"
-    },
-    {
-        img: forstudentcircle,
-        title: "Студентам",
-        text: "IT-специалисты команды и проекты в одном месте."
-    },
-    {
-        img: forstudent4,
-        title: "Рабочие проекты в портфолио",
-        text: "IT-специалисты команды и проекты в одном месте."
-    },
-    {
-        img: forstudent2,
-        title: "Опыт командной работы",
-        text: "IT-специалисты команды и проекты в одном месте"
-    },
-]
-
 export const SecondSection = () => {
+
+    const featuresRef = useRef<HTMLDivElement | null>(null)
+
+    const scrollUp = () => {
+        featuresRef.current?.scrollBy({
+            top: -200,
+            behavior: "smooth",
+        })
+    }
+
+    const scrollDown = () => {
+        featuresRef.current?.scrollBy({
+            top: 200,
+            behavior: "smooth",
+        })
+    }
+
     return (
         <section className="secondslice">
+
+            {/* СТРЕЛКИ */}
+            <div className="scroll-buttons">
+                <button onClick={scrollUp}>↑</button>
+                <button onClick={scrollDown}>↓</button>
+            </div>
+
             <div className="secondslice_inner">
 
                 <div className="left-block">
@@ -47,17 +45,59 @@ export const SecondSection = () => {
                     <img className="boy2" src={Boy} />
                 </div>
 
-                
-            </div>
+                {/* ВОТ ВАЖНО: обёртка со скроллом */}
+                <div className="features-scroll" ref={featuresRef}>
 
-            <div className="features">
-                {features.map((item, index) => (
-                    <div className="feature" key={index}>
-                        <img src={item.img} />
-                        <h1>{item.title}</h1>
-                        <p>{item.text}</p>
+                    <div className="features">
+
+                        {/* ТВОИ КАРТОЧКИ — БЕЗ ИЗМЕНЕНИЙ */}
+                        <div className="col left">
+                            <div className="feature">
+                                <img src={forstudent1} />
+                                <div className="content">
+                                    <h1>Реальный опыт IT-индустрии</h1>
+                                    <p>Личный кабинет с вашими активностями.</p>
+                                </div>
+                            </div>
+
+                            <div className="feature">
+                                <img src={forstudentcircle} />
+                                <div className="content">
+                                    <h1>Студентам</h1>
+                                    <p>IT-специалисты команды и проекты в одном месте.</p>
+                                </div>
+                            </div>
+
+                            <div className="feature">
+                                <img src={forstudent2} />
+                                <div className="content">
+                                    <h1>Опыт командной работы</h1>
+                                    <p>IT-специалисты команды и проекты в одном месте</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="col right">
+                            <div className="feature">
+                                <img src={forstudent3} />
+                                <div className="content">
+                                    <h1>Контакт с HR компаний</h1>
+                                    <p>IT-специалисты команды и проекты в одном месте</p>
+                                </div>
+                            </div>
+
+                            <div className="feature">
+                                <img src={forstudent4} />
+                                <div className="content">
+                                    <h1>Рабочие проекты в портфолио</h1>
+                                    <p>IT-специалисты команды и проекты в одном месте.</p>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-                ))}
+                </div>
+
             </div>
         </section>
     )

@@ -13,12 +13,8 @@ import { Partners } from "../../pages/partners";
 import { FAQ } from "../../pages/faq";
 
 export const router = createBrowserRouter([
-    // {
-    //     path: '/',
-    //     element: <Hero />,
-    // },
     {
-        path: '/home',
+        path: '/',
         element: <HomePage />,
     },
     {

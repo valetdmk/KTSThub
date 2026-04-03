@@ -20,6 +20,7 @@ import logo from "../../Photos/logo.png"
 import Hack from "../../Photos/HacK.png"
 import KCT from "../../Photos/KCT.png"
 
+
 const leftBlocks = [block1left, block2left, block3left, block4left, block5left];
 const rightBlocks = [block5right, block4right, block3right, block2right, block1right];
 
