@@ -297,7 +297,33 @@ export const Hero = () => {
 
             <section className="thirdslice">
                 <div className="thirdslice_inner">
-                    <img className="girl-mirrored" src={Girl} alt="Участница" />
+                    <img className="girl-mirrored" src={Girl} alt="Девушка" />
+                    <div className="thirdslice_columns">
+                        <div className="third-col">
+                            <div className="rect-block rect-block-info" onClick={() => window.location.href = '/block7'}>Блок 7</div>
+                            <div className="rect-block rect-block-info" onClick={() => window.location.href = '/block8'}>Блок 8</div>
+                        </div>
+                        <div className="third-col">
+                            <div className="rect-block rect-block-large" onClick={() => window.location.href = '/block1'}>Блок 1</div>
+                            <div className="rect-block" onClick={() => window.location.href = '/block2'}>Блок 2</div>
+                            <div className="rect-block" onClick={() => window.location.href = '/block3'}>Блок 3</div>
+                        </div>
+                        <div className="third-col">
+                            <div className="rect-block rect-block-large" onClick={() => window.location.href = '/block4'}>Блок 4</div>
+                            <div className="rect-block" onClick={() => window.location.href = '/block5'}>
+                                <div className="sub-blocks">
+                                    <div className="sub-block" onClick={(e) => { e.stopPropagation(); window.location.href = '/block5a' }}>5a</div>
+                                    <div className="sub-block" onClick={(e) => { e.stopPropagation(); window.location.href = '/block5b' }}>5b</div>
+                                </div>
+                            </div>
+                            <div className="rect-block" onClick={() => window.location.href = '/block6'}>
+                                <div className="sub-blocks">
+                                    <div className="sub-block" onClick={(e) => { e.stopPropagation(); window.location.href = '/block6a' }}>6a</div>
+                                    <div className="sub-block" onClick={(e) => { e.stopPropagation(); window.location.href = '/block6b' }}>6b</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
         </>

@@ -586,6 +586,10 @@ html, body {
   position: relative;
   width: 100%;
   height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding-bottom: 3vh;
 }
 
 .girl-mirrored {
@@ -595,4 +599,75 @@ html, body {
   height: 40vh;
   width: auto;
   transform: scaleX(-1);
+}
+
+.thirdslice_columns {
+  display: flex;
+  gap: 35px;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 5vw;
+}
+
+.third-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+}
+
+.rect-block {
+  width: 460px;
+  height: 200px;
+  background: linear-gradient(135deg, #000 0%, #9605CA 100%);
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(150, 5, 202, 0.5);
+  }
+}
+
+.rect-block-large {
+  width: 460px;
+  height: 240px;
+}
+
+.rect-block-info {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border: 2px solid #0f3460;
+  
+  &:hover {
+    border-color: #e94560;
+    box-shadow: 0 0 20px rgba(233, 69, 96, 0.4);
+  }
+}
+
+.sub-blocks {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+}
+
+.sub-block {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
 }
