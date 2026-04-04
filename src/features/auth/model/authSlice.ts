@@ -3,7 +3,7 @@ import type { LoginPayload } from "./authTypes";
 
 interface User {
     id: number;
-    usernamem: string;
+    username: string;
 }
 
 interface AuthState {

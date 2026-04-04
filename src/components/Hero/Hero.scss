@@ -4,6 +4,10 @@
   box-sizing: border-box;
 }
 
+html, body {
+  overflow-x: hidden;
+}
+
 .hero {
   position: relative;
   min-height: 100vh;
@@ -164,6 +168,16 @@
   -webkit-mask-composite: xor;
   mask-composite: exclude;
 
+  pointer-events: none;
+}
+
+.hero_header::after {
+  content: "";
+  position: absolute;
+  inset: -20px;
+  background: transparent;
+  transform: scale(1.1);
+  z-index: -1;
   pointer-events: none;
 }
 
@@ -338,4 +352,247 @@
 
 .cards_button:active {
   transform: translateX(-50%) scale(0.97);
+}
+
+.secondslice {
+  position: relative;
+  min-height: 100vh;
+  color: white;
+  margin-top: -15vh;
+}
+
+.secondslice_inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+}
+
+.left-block {
+  position: relative;
+  width: 30%;
+  min-height: 100vh;
+  flex-shrink: 0;
+  margin-top: -8vh;
+
+  .second-top {
+    display: block;
+    width: 190%;
+    height: auto;
+  }
+
+  .second-bottom {
+    display: block;
+    width: 190%;
+    height: auto;
+    margin-top: -180px;
+  }
+
+  .boy2 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 160%;
+    height: auto;
+    z-index: 1;
+  }
+}
+
+.center-block {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+.features {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  width: 100%;
+}
+
+.left-col,
+.right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.right-col {
+  margin-top: 220px;
+  gap: 40px;
+  margin-left: -30px;
+}
+
+.feature {
+  position: relative;
+  width: 280px;
+
+  img {
+    width: 100%;
+    display: block;
+  }
+}
+
+.content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+
+  h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+
+  p {
+    font-size: 18px;
+    opacity: 0.9;
+  }
+}
+
+.right-block {
+  width: 25%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  padding: 40px 20px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.info-card {
+  background: linear-gradient(135deg, #000 0%, #9605CA 100%);
+  border-radius: 24px;
+  padding: 24px;
+  width: 300px;
+  height: 300px;
+  box-sizing: border-box;
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+
+  .info-number {
+    display: block;
+    font-size: 64px;
+    font-weight: bold;
+    color: white;
+    position: absolute;
+    top: 24px;
+    right: 24px;
+  }
+
+  h2 {
+    font-size: 24px;
+    margin-top: 24px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    font-size: 18px;
+    line-height: 1.5;
+  }
+
+  &.active {
+    background: white;
+    color: black;
+    border-radius: 24px;
+    padding: 24px;
+    position: relative;
+    box-sizing: border-box;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 24px;
+      padding: 6px;
+
+      background: linear-gradient(135deg, #7a00ff, #ff8a00);
+
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+
+      pointer-events: none;
+    }
+
+    .info-number {
+      background: linear-gradient(to bottom, #9605CA, #F75A28);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    h2 {
+      color: black;
+    }
+
+    p {
+      color: black;
+      opacity: 0.8;
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  .secondslice_inner {
+    flex-wrap: wrap;
+  }
+
+  .left-block {
+    width: 100%;
+    min-height: 50vh;
+  }
+
+  .center-block {
+    width: 100%;
+  }
+
+  .right-block {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .info-card {
+    flex: 1;
+    min-width: 250px;
+  }
+}
+
+.thirdslice {
+  position: relative;
+  min-height: 100vh;
+}
+
+.thirdslice_inner {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+}
+
+.girl-mirrored {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 40vh;
+  width: auto;
+  transform: scaleX(-1);
 }

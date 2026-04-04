@@ -1,6 +1,13 @@
+import { useState } from "react";
 import "./Hero.scss"
-import { HeroCard } from "./HeroCard";
-import blockcentral from "../../Photos/blockcentral.png"
+import { HeroCard } from "./HeroCard"
+
+import logo from "../../Photos/logo.png"
+import numbers from "../../Photos/numbers.png"
+
+import Hack from "../../Photos/HacK.png"
+import KCT from "../../Photos/KCT.png"
+
 import block1left from "../../Photos/block1left.png"
 import block2left from "../../Photos/block2left.png"
 import block3left from "../../Photos/block3left.png"
@@ -11,92 +18,288 @@ import block2right from "../../Photos/block2right.png"
 import block3right from "../../Photos/block3right.png"
 import block4right from "../../Photos/block4right.png"
 import block5right from "../../Photos/block5right.png"
-import Girl from "../../Photos/Girl.png"
-import Boy from "../../Photos/Boy.png"
+import blockcentral from "../../Photos/blockcentral.png"
+
 import card from "../../Photos/card.png"
 import down from "../../Photos/down.png"
-import numbers from "../../Photos/numbers.png"
-import logo from "../../Photos/logo.png"
-import Hack from "../../Photos/HacK.png"
-import KCT from "../../Photos/KCT.png"
 
+import Boy from "../../Photos/Boy.png"
+import Girl from "../../Photos/Girl.png"
+
+import secondtop from "../../Photos/secondtop.png"
+import secondbottom from "../../Photos/secondbottom.png"
+import forstudent1 from "../../Photos/forstudent1.png"
+import forstudent2 from "../../Photos/forstudent2.png"
+import forstudent3 from "../../Photos/forstudent3.png"
+import forstudent4 from "../../Photos/forstudent4.png"
+import forstudentcircle from "../../Photos/forstudentcircle.png"
 
 const leftBlocks = [block1left, block2left, block3left, block4left, block5left];
 const rightBlocks = [block5right, block4right, block3right, block2right, block1right];
 
 export const Hero = () => {
+    const [activeCard, setActiveCard] = useState<number | null>(null);
+
+    const featuresContent = {
+        1: {
+            left: [
+                { img: forstudent1, title: "Реальный опыт IT-индустрии", desc: "Личный кабинет с вашими активностями." },
+                { img: forstudentcircle, title: "Студентам", desc: "IT-специалисты команды и проекты в одном месте" },
+                { img: forstudent2, title: "Опыт командной работы", desc: "IT-специалисты команды и проекты в одном месте" },
+            ],
+            right: [
+                { img: forstudent3, title: " Контакт с HR компаний", desc: "IT-специалисты команды и проекты в одном месте" },
+                { img: forstudent4, title: "Рабочие проекты в портфолио", desc: "IT-специалисты команды и проекты в одном месте" },
+            ]
+        },
+        2: {
+            left: [
+                { img: forstudent1, title: "Реальный опыт IT-индустрии", desc: "Личный кабинет с вашими активностями." },
+                { img: forstudentcircle, title: "Партнёрам", desc: "IT-специалисты команды и проекты в одном месте" },
+                { img: forstudent2, title: "Опыт командной работы", desc: "IT-специалисты команды и проекты в одном месте" },
+            ],
+            right: [
+                { img: forstudent3, title: " Контакт с HR компаний", desc: "IT-специалисты команды и проекты в одном месте" },
+                { img: forstudent4, title: "Рабочие проекты в портфолио", desc: "IT-специалисты команды и проекты в одном месте" },
+            ]
+        },
+        3: {
+            left: [
+                { img: forstudent1, title: "Реальный опыт IT-индустрии", desc: "Личный кабинет с вашими активностями." },
+                { img: forstudentcircle, title: "Судьям", desc: "IT-специалисты команды и проекты в одном месте" },
+                { img: forstudent2, title: "Опыт командной работы", desc: "IT-специалисты команды и проекты в одном месте" },
+            ],
+            right: [
+                { img: forstudent3, title: " Контакт с HR компаний", desc: "IT-специалисты команды и проекты в одном месте" },
+                { img: forstudent4, title: "Рабочие проекты в портфолио", desc: "IT-специалисты команды и проекты в одном месте" },
+            ]
+        }
+    };
+
+    const content = activeCard ? featuresContent[activeCard as keyof typeof featuresContent] : null;
+
     return (
-        <section className="hero">
-            <img  className="hero_logo" src={logo} />
-            <img className="hero_numbers" src={numbers} />
+        <>
+            <section className="hero">
+                <img  className="hero_logo" src={logo} alt="Логотип KTSThub" />
+                <img className="hero_numbers" src={numbers} alt="Статистика проекта" />
 
-            <div className="hero_content">
+                <div className="hero_content">
 
-                <div className="hero_center">
-                        <img className="kct" src={KCT} />
-                        <img className="hack" src={Hack} />
+                    <div className="hero_center">
+                            <img className="kct" src={KCT} alt="Логотип KCT" />
+                            <img className="hack" src={Hack} alt="Логотип Хакathon" />
 
-                    <p className="text-bottom-left">
-                        Вы переходите в мир нового уровня погружения в ИТ-сферу разработки
-                    </p>
+                        <p className="text-bottom-left">
+                            Вы переходите в мир нового уровня погружения в ИТ-сферу разработки
+                        </p>
 
-                    <p className="text-top-right">
-                        Вы переходите не просто в платформу,
-                    </p>
-                </div>
+                        <p className="text-top-right">
+                            Вы переходите не просто в платформу,
+                        </p>
+                    </div>
 
-                <button className="hero_button">
-                    Войти в мир хакатонов
-                </button>
-
-                <div className="hero_cards">
-                    <img className="card card-left" src={card} />
-                    <img className="card card-center" src={card} />
-                    <img className="card card-right" src={card} />
-                    <button className="cards_button">
-                    <img className="card-down" src={down} />
+                    <button className="hero_button">
+                        Войти в мир хакатонов
                     </button>
+
+                    <div className="hero_cards">
+                        <img className="card card-left" src={card} alt="Карточка участника" />
+                        <img className="card card-center" src={card} alt="Карточка участника" />
+                        <img className="card card-right" src={card} alt="Карточка участника" />
+                        <button className="cards_button">
+                        <img className="card-down" src={down} alt="Показать ещё" loading="lazy" />
+                        </button>
+                    </div>
+
+                    
+
+                    <div className="hero_blocks">
+                            {leftBlocks.map((img, i) => (
+                                <img key={`left-${i}`} src={img} alt={`Блок ${i + 1}`} loading="lazy" />
+                            ))}
+
+                            <img src={blockcentral} alt="Центральный блок" loading="lazy" />
+
+                            {rightBlocks.map((img, i) => (
+                                <img key={`right-${i}`} src={img} alt={`Блок ${5 - i}`} loading="lazy" />
+                            ))}
+                    </div>
+
+                    <div className="hero_people">
+                        <img className="hero_boy" src={Boy} alt="Участник" loading="lazy" />
+                        <img className="hero_girl" src={Girl} alt="Участница" loading="lazy" />
+                    </div>
+
+                    <HeroCard
+                        title="100+"
+                        text="Участников и подписчиков"
+                        className="top-right"
+                        description="Наша цель по количеству людей в Telegram-сообществе."
+                    />
+                    <HeroCard
+                        title="76%"
+                        text="Получают реальные кейсы"
+                        className="bottom-left"
+                        description="Доля студентов, для которых доступ к реальным проектам - ключевая ценность. "
+                    />
+                    <HeroCard
+                        title="40%"
+                        text="Сокращение пути к офферу"
+                        className="bottom-right"
+                        description="На столько снижается время поиска первой работы благодаря участию в проекте."
+                    />
                 </div>
+            </section>
 
-                
+            <section className="secondslice">
+                <div className="secondslice_inner">
 
-                <div className="hero_blocks">
-                        {leftBlocks.map((img, i) => (
-                            <img key={`left-${i}`} src={img} />
-                        ))}
+                    <div className="left-block">
+                        <img className="second-top" src={secondtop} alt="Фон верх" />
+                        <img className="second-bottom" src={secondbottom} alt="Фон низ" />
+                        <img className="boy2" src={Boy} alt="Участник" />
+                    </div>
 
-                        <img src={blockcentral} />
+                    <div className="center-block">
+                        <div className="features">
 
-                        {rightBlocks.map((img, i) => (
-                            <img key={`right-${i}`} src={img} />
-                        ))}
+                            <div className="left-col">
+                                {content ? (
+                                    <>
+                                        <div className="feature">
+                                            <img src={content.left[0].img} alt="Иконка" />
+                                            <div className="content">
+                                                <h1>{content.left[0].title}</h1>
+                                                <p>{content.left[0].desc}</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="feature">
+                                            <img src={content.left[1].img} alt="Иконка" />
+                                            <div className="content">
+                                                <h1>{content.left[1].title}</h1>
+                                                <p>{content.left[1].desc}</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="feature">
+                                            <img src={content.left[2].img} alt="Иконка" />
+                                            <div className="content">
+                                                <h1>{content.left[2].title}</h1>
+                                                <p>{content.left[2].desc}</p>
+                                            </div>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <>
+                                        <div className="feature">
+                                            <img src={forstudent1} alt="Иконка" />
+                                            <div className="content">
+                                                <h1>Реальный опыт IT-индустрии</h1>
+                                                <p>Личный кабинет с вашими активностями.</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="feature">
+                                            <img src={forstudentcircle} alt="Иконка" />
+                                            <div className="content">
+                                                <h1>Студентам</h1>
+                                                <p>IT-специалисты команды и проекты в одном месте.</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="feature">
+                                            <img src={forstudent2} alt="Иконка" />
+                                            <div className="content">
+                                                <h1>Опыт командной работы</h1>
+                                                <p>IT-специалисты команды и проекты в одном месте</p>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+
+                            <div className="right-col">
+                                {content ? (
+                                    <>
+                                        <div className="feature">
+                                            <img src={content.right[0].img} alt="Иконка" />
+                                            <div className="content">
+                                                <h1>{content.right[0].title}</h1>
+                                                <p>{content.right[0].desc}</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="feature">
+                                            <img src={content.right[1].img} alt="Иконка" />
+                                            <div className="content">
+                                                <h1>{content.right[1].title}</h1>
+                                                <p>{content.right[1].desc}</p>
+                                            </div>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <>
+                                        <div className="feature">
+                                            <img src={forstudent3} alt="Иконка" />
+                                            <div className="content">
+                                                <h1>Контакт с HR компаний</h1>
+                                                <p>IT-специалисты команды и проекты в одном месте</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="feature">
+                                            <img src={forstudent4} alt="Иконка" />
+                                            <div className="content">
+                                                <h1>Рабочие проекты в портфолио</h1>
+                                                <p>IT-специалисты команды и проекты в одном месте.</p>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div className="right-block">
+                        <div 
+                            className={`info-card ${activeCard === 1 ? 'active' : ''}`}
+                            onClick={() => setActiveCard(1)}
+                        >
+                            <span className="info-number">01</span>
+                            <h2>Для<br />студентов</h2>
+                            <p>Уникальная возможность раскрыть свой потенциал и сделать первый шаг к мечте!</p>
+                        </div>
+
+                        <div 
+                            className={`info-card ${activeCard === 2 ? 'active' : ''}`}
+                            onClick={() => setActiveCard(2)}
+                        >
+                            <span className="info-number">02</span>
+                            <h2>Для<br />Партнеров</h2>
+                            <p>Уникальная возможность раскрыть свой потенциал и сделать первый шаг к мечте!</p>
+                        </div>
+
+                        <div 
+                            className={`info-card ${activeCard === 3 ? 'active' : ''}`}
+                            onClick={() => setActiveCard(3)}
+                        >
+                            <span className="info-number">03</span>
+                            <h2>Для<br />Судей</h2>
+                            <p>Уникальная возможность раскрыть свой потенциал и сделать первый шаг к мечте!</p>
+                        </div>
+                    </div>
+
                 </div>
+            </section>
 
-                <div className="hero_people">
-                    <img className="hero_boy" src={Boy} />
-                    <img className="hero_girl" src={Girl} />
+            <section className="thirdslice">
+                <div className="thirdslice_inner">
+                    <img className="girl-mirrored" src={Girl} alt="Участница" />
                 </div>
-
-                <HeroCard
-                    title="100+"
-                    text="Участников и подписчиков"
-                    className="top-right"
-                    description="Наша цель по количеству людей в Telegram-сообществе."
-                />
-                <HeroCard
-                    title="76%"
-                    text="Получают реальные кейсы"
-                    className="bottom-left"
-                    description="Доля студентов, для которых доступ к реальным проектам - ключевая ценность. "
-                />
-                <HeroCard
-                    title="40%"
-                    text="Сокращение пути к офферу"
-                    className="bottom-right"
-                    description="На столько снижается время поиска первой работы благодаря участию в проекте."
-                />
-            </div>
-        </section>
+            </section>
+        </>
     )
 }
-

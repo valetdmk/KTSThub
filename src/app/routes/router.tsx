@@ -11,6 +11,8 @@ import { Achievements } from "../../pages/achievements";
 import { Developers } from "../../pages/developers";
 import { Partners } from "../../pages/partners";
 import { FAQ } from "../../pages/faq";
+import Login from "../../pages/Login";
+import Register from "../../pages/Register";
 
 export const router = createBrowserRouter([
     {
@@ -60,6 +62,14 @@ export const router = createBrowserRouter([
     {
         path: '/faq',
         element: <FAQ />,
+    },
+    {
+        path: '/login',
+        element: <Login />,
+    },
+    {
+        path: '/register',
+        element: <Register />,
     },
 ]);
 

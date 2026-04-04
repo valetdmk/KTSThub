@@ -1,4 +1,5 @@
 import { call, put, takeLatest } from "redux-saga/effects";
+import type { PayloadAction } from "@reduxjs/toolkit";
 import {
     loginRequest,
     loginSuccess,
@@ -8,7 +9,6 @@ import {
     registerFailure,
 } from "./authSlice";
 import { authApi } from "../../../app/api/auth";
-import type { PayloadAction } from "@reduxjs/toolkit";
 import type { LoginPayload } from "./authTypes";
 
 function* handleLogin(action: PayloadAction<LoginPayload>) {

@@ -1,15 +1,16 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../app/store/hooks";
 import { loginRequest } from "../features/auth/model/authSlice";
 import { useState } from "react";
+import type { FormEvent } from "react";
 
 export default function Login() {
-  const dispatch = useDispatch();
-  const { loading, error } = useSelector((state: any) => state.auth);
+  const dispatch = useAppDispatch();
+  const { loading, error } = useAppSelector((state) => state.auth);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (e: any) => {
+  const handleLogin = (e: FormEvent) => {
     e.preventDefault();
 
     dispatch(
