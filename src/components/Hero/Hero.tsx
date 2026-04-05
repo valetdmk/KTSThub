@@ -34,6 +34,14 @@ import forstudent3 from "../../Photos/forstudent3.png"
 import forstudent4 from "../../Photos/forstudent4.png"
 import forstudentcircle from "../../Photos/forstudentcircle.png"
 
+import ikon from "../../Photos/ikon.png"
+import LOGOTIP from "../../Photos/LOGOTIP.png"
+
+import pazl from "../../Photos/pazl.png"
+import brain from "../../Photos/brain.png"
+import game from "../../Photos/game.png"
+import unicorn from "../../Photos/unicorn.png"
+
 const leftBlocks = [block1left, block2left, block3left, block4left, block5left];
 const rightBlocks = [block5right, block4right, block3right, block2right, block1right];
 
@@ -300,8 +308,9 @@ export const Hero = () => {
                     <img className="girl-mirrored" src={Girl} alt="Девушка" />
                     <div className="thirdslice_columns">
                         <div className="third-col">
-                            <div className="rect-block rect-block-info" onClick={() => window.location.href = '/block7'}>Блок 7</div>
-                            <div className="rect-block rect-block-info" onClick={() => window.location.href = '/block8'}>Блок 8</div>
+                            <p>Кадры с ивентов результаты<br /> хакатонов<br />и успехи команд</p>
+                            <div className="rect-block rect-block-info-bign" onClick={() => window.location.href = '/block7'}>Блок 7</div>
+                            <div className="rect-block rect-block-info-small" onClick={() => window.location.href = '/block8'}>Блок 8</div>
                         </div>
                         <div className="third-col">
                             <div className="rect-block rect-block-large" onClick={() => window.location.href = '/block1'}>Блок 1</div>
@@ -323,9 +332,51 @@ export const Hero = () => {
                                 </div>
                             </div>
                         </div>
+                        <div className="third-col">
+                            <div className="rect-block rect-block-info" onClick={() => window.location.href = '/block9'}>Блок 9</div>
+                            <div className="rect-block rect-block-info-big" onClick={() => window.location.href = '/block10'}>Блок 10</div>
+                        </div>
                     </div>
                 </div>
             </section>
-        </>
-    )
-}
+
+            <section className="fourthslice">
+                            <div className="rectangle-top">
+                                <img src={LOGOTIP} alt="Логотип" />
+                            </div>
+                            <div className="left-shapes">
+                                <div className="shape-group">
+                                    <img src={game} alt="game" />
+                                    <img src={unicorn} alt="unicorn" />
+                                </div>
+                                <div className="shape-group">
+                                    <img src={pazl} alt="pazl" />
+                                    <img src={brain} alt="brain" />
+                                </div>
+                            </div>
+                            <div className="right-shapes">
+                                <div className="shape-group">
+                                    <img src={game} alt="game" />
+                                    <img src={unicorn} alt="unicorn" />
+                                </div>
+                                <div className="shape-group">
+                                    <img src={pazl} alt="pazl" />
+                                    <img src={brain} alt="brain" />
+                                </div>
+                            </div>
+                            <div className="fourthslice_inner">
+                                <h2>Все активности вашего соревнования на брендированной под вас платформе</h2>
+                                <p>Самая удобная платформа по отзывам участников. От классического ИТ-марафона (Хакатона) и кейс-чемпионата до ИИ‑чемпионата с поддержкой докера и Быстрых собеседований (One Day/Weekend Offer). Все в одном месте: регистрация, тимбилдинг, полное брендирование и интерактивные инструменты.</p>
+
+                                <div className="info-block">
+                                    <img className="info-icon" src={ikon} alt="Иконка" />
+                                    <div className="info-content">
+                                        <h3>Регистрация участников</h3>
+                                        <p>Сбор данных: анкета, мотивация, резюме, маркетинговая аналитика.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </>
+                )
+            }
