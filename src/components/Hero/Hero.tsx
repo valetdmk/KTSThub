@@ -42,6 +42,11 @@ import brain from "../../Photos/brain.png"
 import game from "../../Photos/game.png"
 import unicorn from "../../Photos/unicorn.png"
 
+import back5left from "../../Photos/back5left.png"
+import back5right from "../../Photos/back5right.png"
+
+
+
 const leftBlocks = [block1left, block2left, block3left, block4left, block5left];
 const rightBlocks = [block5right, block4right, block3right, block2right, block1right];
 
@@ -377,6 +382,18 @@ export const Hero = () => {
                                 </div>
                             </div>
                         </section>
+
+                        <section className="fifthslice">
+                            <img className="back5left" src={back5left} alt="" />
+                            <img className="back5right" src={back5right} alt="" />
+                            <div className="fifthslice_inner">
+                                <div className="fifthslice_rect">
+                                    <p className="fifthslice_text">TEXT</p>
+                                    <p className="fifthslice_title">PM/UX-UI дизайнер/Глава проекта</p>
+                                    <p className="fifthslice_desc">Главное лицо проекта бла бла бла бла сделал там то то се пятое десятое</p>
+                                </div>
+                            </div>
+                        </section>
                     </>
-                )
+                );
             }

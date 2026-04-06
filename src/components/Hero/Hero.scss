@@ -130,7 +130,7 @@ html, body {
   border-radius: 60px;
   backdrop-filter: blur(1px);
 
-  z-index: 10;
+  z-index: 11;
   display: flex;
   justify-content: center;
 }
@@ -787,7 +787,7 @@ html, body {
   }
 
 .fourthslice_inner {
-    min-height: 75vh;
+    min-height: 80vh;
     background: #000;
     border-radius: 20px;
     margin-top: 50px;
@@ -809,14 +809,14 @@ html, body {
     color: #fff;
     font-weight: 700;
     text-align: center;
-    max-width: 600px;
+    max-width: 500px;
     margin-bottom: 20px;
   }
 
   p {
     font-size: 24px;
     color: #fff;
-    max-width: 600px;
+    max-width: 500px;
   }
 }
 
@@ -856,5 +856,78 @@ html, body {
       color: #fff;
       max-width: none;
     }
+  }
+}
+
+.fifthslice {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.back5left {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(5%, -10%);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.back5right {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(69%, -10%);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.fifthslice_inner {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.fifthslice_rect {
+  width: 438px;
+  height: 700px;
+  border-radius: 219px;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  text-align: left;
+  padding: 60px 40px 60px 60px;
+  margin-top: 160px;
+
+  .fifthslice_text {
+    font-size: 32px;
+    color: #fff;
+    font-weight: 700;
+    margin-bottom: 20px;
+    margin-left: -30px;
+  }
+
+  .fifthslice_title {
+    font-size: 24px;
+    color: #fff;
+    margin-bottom: 20px;
+    margin-left: -30px;
+  }
+
+  .fifthslice_desc {
+    font-size: 18px;
+    color: #fff;
+    opacity: 0.8;
+    margin-bottom: 80px;
+    margin-left: -30px;
   }
 }
