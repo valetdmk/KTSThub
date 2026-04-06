@@ -42,16 +42,29 @@ import brain from "../../Photos/brain.png"
 import game from "../../Photos/game.png"
 import unicorn from "../../Photos/unicorn.png"
 
+import joystick from "../../Photos/joystick.png"
+import molniya from "../../Photos/molniya.png"
+import kybok from "../../Photos/kybok.png"
+import raceta from "../../Photos/raceta.png"
+import lamp from "../../Photos/lamp.png"
+
 import back5left from "../../Photos/back5left.png"
 import back5right from "../../Photos/back5right.png"
-
-
 
 const leftBlocks = [block1left, block2left, block3left, block4left, block5left];
 const rightBlocks = [block5right, block4right, block3right, block2right, block1right];
 
 export const Hero = () => {
     const [activeCard, setActiveCard] = useState<number | null>(null);
+    const [activeTopBlock, setActiveTopBlock] = useState<number | null>(null);
+
+    const topBlockContent = {
+        1: { text: "TEXT1", title: "PM/UX-UI дизайнер/Глава проекта", desc: "Главное лицо проекта бла бла бла бла сделал там то то се пятое десятое" },
+        2: { text: "TEXT2", title: "Backend разработка/Команда", desc: "Команда разработчиков, которые сделали проект" },
+        3: { text: "TEXT3", title: "QA Инженер/Тестировщик", desc: "Специалист по тестированию и контролю качества" },
+    };
+
+    const currentTopContent = activeTopBlock ? topBlockContent[activeTopBlock as keyof typeof topBlockContent] : null;
 
     const featuresContent = {
         1: {
@@ -120,7 +133,7 @@ export const Hero = () => {
                         <img className="card card-left" src={card} alt="Карточка участника" />
                         <img className="card card-center" src={card} alt="Карточка участника" />
                         <img className="card card-right" src={card} alt="Карточка участника" />
-                        <button className="cards_button">
+                        <button className="cards_button" onClick={() => document.getElementById('secondslice')?.scrollIntoView({ behavior: 'smooth' })}>
                         <img className="card-down" src={down} alt="Показать ещё" loading="lazy" />
                         </button>
                     </div>
@@ -165,7 +178,7 @@ export const Hero = () => {
                 </div>
             </section>
 
-            <section className="secondslice">
+            <section id="secondslice" className="secondslice">
                 <div className="secondslice_inner">
 
                     <div className="left-block">
@@ -387,10 +400,41 @@ export const Hero = () => {
                             <img className="back5left" src={back5left} alt="" />
                             <img className="back5right" src={back5right} alt="" />
                             <div className="fifthslice_inner">
+                                <div className="fifthslice_left_images">
+                                    <div className="img-group-close">
+                                        <img className="img-most-left" src={joystick} alt="" />
+                                        <img className="img-top-left" src={kybok} alt="" />
+                                    </div>
+                                    <img className="img-right" src={molniya} alt="" />
+                                    <img className="img-most-right" src={raceta} alt="" />
+                                    <img className="img-right img-lamp" src={lamp} alt="" />
+                                </div>
                                 <div className="fifthslice_rect">
-                                    <p className="fifthslice_text">TEXT</p>
-                                    <p className="fifthslice_title">PM/UX-UI дизайнер/Глава проекта</p>
-                                    <p className="fifthslice_desc">Главное лицо проекта бла бла бла бла сделал там то то се пятое десятое</p>
+                                    <p className="fifthslice_text">{currentTopContent ? currentTopContent.text : "TEXT"}</p>
+                                    <p className="fifthslice_title">{currentTopContent ? currentTopContent.title : "PM/UX-UI дизайнер/Глава проекта"}</p>
+                                    <p className="fifthslice_desc">{currentTopContent ? currentTopContent.desc : "Главное лицо проекта бла бла бла бла сделал там то то се пятое десятое"}</p>
+                                </div>
+                                <div className="fifthslice_right_images">
+                                    <img className="right-pazl" src={pazl} alt="" />
+                                    <img className="right-game" src={game} alt="" />
+                                    <img className="right-brain" src={brain} alt="" />
+                                    <img className="right-unicorn" src={unicorn} alt="" />
+                                    <img className="right-game-second" src={game} alt="" />
+                                    <img className="right-molniya" src={molniya} alt="" />
+                                </div>
+                                <div className="fifthslice_top_right">
+                                    <div 
+                                        className={`top-right-block ${activeTopBlock === 1 ? 'active' : ''}`}
+                                        onClick={() => setActiveTopBlock(1)}
+                                    >TEXT</div>
+                                    <div 
+                                        className={`top-right-block ${activeTopBlock === 2 ? 'active' : ''}`}
+                                        onClick={() => setActiveTopBlock(2)}
+                                    >TEXT</div>
+                                    <div 
+                                        className={`top-right-block ${activeTopBlock === 3 ? 'active' : ''}`}
+                                        onClick={() => setActiveTopBlock(3)}
+                                    >TEXT</div>
                                 </div>
                             </div>
                         </section>
