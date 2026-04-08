@@ -438,6 +438,69 @@ export const Hero = () => {
                                 </div>
                             </div>
                         </section>
+
+                        <section className="sixthslice">
+                            <img className="back5left" src={back5left} alt="" />
+                            <img className="back5right" src={back5right} alt="" />
+                            <div className="fifthslice_inner">
+                                <div className="fifthslice_left_images">
+                                    <div className="img-group-close">
+                                        <img className="img-most-left" src={joystick} alt="" />
+                                        <img className="img-top-left" src={kybok} alt="" />
+                                    </div>
+                                    <img className="img-right" src={molniya} alt="" />
+                                    <img className="img-most-right" src={raceta} alt="" />
+                                    <img className="img-right img-lamp" src={lamp} alt="" />
+                                </div>
+                                    <div className="fifthslice_rect sixth_left_1">
+                                    <p className="fifthslice_text">{currentTopContent ? currentTopContent.text : "TEXT"}</p>
+                                    <p className="fifthslice_title">{currentTopContent ? currentTopContent.title : "PM/UX-UI дизайнер/Глава проекта"}</p>
+                                    <p className="fifthslice_desc">{currentTopContent ? currentTopContent.desc : "Главное лицо проекта бла бла бла бла сделал там то то се пятое десятое"}</p>
+                                    </div>
+                                    <div className="fifthslice_rect sixth_left_2">
+                                    <p className="fifthslice_text">{currentTopContent ? currentTopContent.text : "TEXT"}</p>
+                                    <p className="fifthslice_title">{currentTopContent ? currentTopContent.title : "PM/UX-UI дизайнер/Глава проекта"}</p>
+                                    <p className="fifthslice_desc">{currentTopContent ? currentTopContent.desc : "Главное лицо проекта бла бла бла бла сделал там то то се пятое десятое"}</p>
+                                    </div>
+                                    <div className="fifthslice_rect sixth_center">
+                                    <p className="fifthslice_text">{currentTopContent ? currentTopContent.text : "TEXT"}</p>
+                                    <p className="fifthslice_title">{currentTopContent ? currentTopContent.title : "PM/UX-UI дизайнер/Глава проекта"}</p>
+                                    <p className="fifthslice_desc">{currentTopContent ? currentTopContent.desc : "Главное лицо проекта бла бла бла бла сделал там то то се пятое десятое"}</p>
+                                    </div>
+                                    <div className="fifthslice_rect sixth_right_1">
+                                    <p className="fifthslice_text">{currentTopContent ? currentTopContent.text : "TEXT"}</p>
+                                    <p className="fifthslice_title">{currentTopContent ? currentTopContent.title : "PM/UX-UI дизайнер/Глава проекта"}</p>
+                                    <p className="fifthslice_desc">{currentTopContent ? currentTopContent.desc : "Главное лицо проекта бла бла бла бла сделал там то то се пятое десятое"}</p>
+                                    </div>
+                                    <div className="fifthslice_rect sixth_right_2">
+                                    <p className="fifthslice_text">{currentTopContent ? currentTopContent.text : "TEXT"}</p>
+                                    <p className="fifthslice_title">{currentTopContent ? currentTopContent.title : "PM/UX-UI дизайнер/Глава проекта"}</p>
+                                    <p className="fifthslice_desc">{currentTopContent ? currentTopContent.desc : "Главное лицо проекта бла бла бла бла сделал там то то се пятое десятое"}</p>
+                                    </div>
+                                <div className="fifthslice_right_images">
+                                    <img className="right-pazl" src={pazl} alt="" />
+                                    <img className="right-game" src={game} alt="" />
+                                    <img className="right-brain" src={brain} alt="" />
+                                    <img className="right-unicorn" src={unicorn} alt="" />
+                                    <img className="right-game-second" src={game} alt="" />
+                                    <img className="right-molniya" src={molniya} alt="" />
+                                </div>
+                                <div className="fifthslice_top_right">
+                                    <div 
+                                        className={`top-right-block ${activeTopBlock === 1 ? 'active' : ''}`}
+                                        onClick={() => setActiveTopBlock(1)}
+                                    >TEXT</div>
+                                    <div 
+                                        className={`top-right-block ${activeTopBlock === 2 ? 'active' : ''}`}
+                                        onClick={() => setActiveTopBlock(2)}
+                                    >TEXT</div>
+                                    <div 
+                                        className={`top-right-block ${activeTopBlock === 3 ? 'active' : ''}`}
+                                        onClick={() => setActiveTopBlock(3)}
+                                    >TEXT</div>
+                                </div>
+                            </div>
+                        </section>
                     </>
                 );
             }
