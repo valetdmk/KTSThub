@@ -54,17 +54,40 @@ import back5right from "../../Photos/back5right.png"
 const leftBlocks = [block1left, block2left, block3left, block4left, block5left];
 const rightBlocks = [block5right, block4right, block3right, block2right, block1right];
 
+const sixthsliceData = {
+    1: [
+        { text: "Компания А", title: "Спонсор", desc: "Генеральный партнёр хакатона" },
+        { text: "Компания Б", title: "Спонсор", desc: "Технологический партнёр" },
+        { text: "Компания В", title: "Спонсор", desc: "Партнёр программы" },
+        { text: "Компания Г", title: "Спонсор", desc: "Стратегический партнёр" },
+        { text: "Компания Д", title: "Спонсор", desc: "Информационный партнёр" },
+    ],
+    2: [
+        { text: "Мария", title: "Разработчик", desc: "Менеджер проекта" },
+        { text: "Данил", title: "Разработчик", desc: "Backend разработчик" },
+        { text: "Ксения", title: "Разработчик", desc: "Frontend разработчик" },
+        { text: "Арсений", title: "Разработчик", desc: "Дизайнер" },
+        { text: "Артём", title: "Разработчик", desc: "Backend разработчик" },
+    ],
+    3: [
+        { text: "Сергей", title: "Партнер", desc: "CTO компании Х" },
+        { text: "Анна", title: "Партнер", desc: "Руководитель IT проектов" },
+        { text: "Павел", title: "Партнер", desc: "Технический директор" },
+        { text: "Наталья", title: "Партнер", desc: "Head of Development" },
+        { text: "Артём", title: "Партнер", desc: "Product Manager" },
+    ],
+};
+
 export const Hero = () => {
     const [activeCard, setActiveCard] = useState<number | null>(null);
-    const [activeTopBlock, setActiveTopBlock] = useState<number | null>(null);
+    const [activeTopBlock, setActiveTopBlock] = useState<number | null>(1);
+    const [carouselOffset, setCarouselOffset] = useState(0);
 
     const topBlockContent = {
         1: { text: "TEXT1", title: "PM/UX-UI дизайнер/Глава проекта", desc: "Главное лицо проекта бла бла бла бла сделал там то то се пятое десятое" },
         2: { text: "TEXT2", title: "Backend разработка/Команда", desc: "Команда разработчиков, которые сделали проект" },
         3: { text: "TEXT3", title: "QA Инженер/Тестировщик", desc: "Специалист по тестированию и контролю качества" },
     };
-
-    const currentTopContent = activeTopBlock ? topBlockContent[activeTopBlock as keyof typeof topBlockContent] : null;
 
     const featuresContent = {
         1: {
@@ -102,7 +125,36 @@ export const Hero = () => {
         }
     };
 
+    const currentTopContent = activeTopBlock ? topBlockContent[activeTopBlock as keyof typeof topBlockContent] : null;
     const content = activeCard ? featuresContent[activeCard as keyof typeof featuresContent] : null;
+
+    const currentData = activeTopBlock ? sixthsliceData[activeTopBlock as keyof typeof sixthsliceData] : sixthsliceData[1];
+
+    const handlePrev = () => {
+        setCarouselOffset(prev => prev - 1);
+    };
+
+    const handleNext = () => {
+        setCarouselOffset(prev => prev + 1);
+    };
+
+    const getDisplayItems = () => {
+        const items = [];
+        const totalItems = currentData.length;
+
+        for (let i = -2; i <= 2; i++) {
+            const index = ((carouselOffset + i) % totalItems + totalItems) % totalItems;
+            items.push({
+                ...currentData[index],
+                position: i,
+                key: `${activeTopBlock}-${carouselOffset}-${i}`
+            });
+        }
+
+        return items;
+    };
+
+    const displayItems = getDisplayItems();
 
     return (
         <>
@@ -442,7 +494,7 @@ export const Hero = () => {
                         <section className="sixthslice">
                             <img className="back5left" src={back5left} alt="" />
                             <img className="back5right" src={back5right} alt="" />
-                            <div className="fifthslice_inner">
+                            <div className="sixthslice_container">
                                 <div className="fifthslice_left_images">
                                     <div className="img-group-close">
                                         <img className="img-most-left" src={joystick} alt="" />
@@ -452,31 +504,24 @@ export const Hero = () => {
                                     <img className="img-most-right" src={raceta} alt="" />
                                     <img className="img-right img-lamp" src={lamp} alt="" />
                                 </div>
-                                    <div className="fifthslice_rect sixth_left_1">
-                                    <p className="fifthslice_text">{currentTopContent ? currentTopContent.text : "TEXT"}</p>
-                                    <p className="fifthslice_title">{currentTopContent ? currentTopContent.title : "PM/UX-UI дизайнер/Глава проекта"}</p>
-                                    <p className="fifthslice_desc">{currentTopContent ? currentTopContent.desc : "Главное лицо проекта бла бла бла бла сделал там то то се пятое десятое"}</p>
-                                    </div>
-                                    <div className="fifthslice_rect sixth_left_2">
-                                    <p className="fifthslice_text">{currentTopContent ? currentTopContent.text : "TEXT"}</p>
-                                    <p className="fifthslice_title">{currentTopContent ? currentTopContent.title : "PM/UX-UI дизайнер/Глава проекта"}</p>
-                                    <p className="fifthslice_desc">{currentTopContent ? currentTopContent.desc : "Главное лицо проекта бла бла бла бла сделал там то то се пятое десятое"}</p>
-                                    </div>
-                                    <div className="fifthslice_rect sixth_center">
-                                    <p className="fifthslice_text">{currentTopContent ? currentTopContent.text : "TEXT"}</p>
-                                    <p className="fifthslice_title">{currentTopContent ? currentTopContent.title : "PM/UX-UI дизайнер/Глава проекта"}</p>
-                                    <p className="fifthslice_desc">{currentTopContent ? currentTopContent.desc : "Главное лицо проекта бла бла бла бла сделал там то то се пятое десятое"}</p>
-                                    </div>
-                                    <div className="fifthslice_rect sixth_right_1">
-                                    <p className="fifthslice_text">{currentTopContent ? currentTopContent.text : "TEXT"}</p>
-                                    <p className="fifthslice_title">{currentTopContent ? currentTopContent.title : "PM/UX-UI дизайнер/Глава проекта"}</p>
-                                    <p className="fifthslice_desc">{currentTopContent ? currentTopContent.desc : "Главное лицо проекта бла бла бла бла сделал там то то се пятое десятое"}</p>
-                                    </div>
-                                    <div className="fifthslice_rect sixth_right_2">
-                                    <p className="fifthslice_text">{currentTopContent ? currentTopContent.text : "TEXT"}</p>
-                                    <p className="fifthslice_title">{currentTopContent ? currentTopContent.title : "PM/UX-UI дизайнер/Глава проекта"}</p>
-                                    <p className="fifthslice_desc">{currentTopContent ? currentTopContent.desc : "Главное лицо проекта бла бла бла бла сделал там то то се пятое десятое"}</p>
-                                    </div>
+                                <button className="carousel-arrow carousel-arrow-left" onClick={handlePrev}>
+                                    ←
+                                </button>
+                                <div className="sixthslice_cards">
+                                    {displayItems.map((item) => (
+                                        <div 
+                                            key={item.key} 
+                                            className={`fifthslice_rect sixth_${item.position === -2 ? 'left_2' : item.position === -1 ? 'left_1' : item.position === 0 ? 'center' : item.position === 1 ? 'right_1' : 'right_2'}`}
+                                        >
+                                            <p className="fifthslice_text">{item.text}</p>
+                                            <p className="fifthslice_title">{item.title}</p>
+                                            <p className="fifthslice_desc">{item.desc}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                                <button className="carousel-arrow carousel-arrow-right" onClick={handleNext}>
+                                    →
+                                </button>
                                 <div className="fifthslice_right_images">
                                     <img className="right-pazl" src={pazl} alt="" />
                                     <img className="right-game" src={game} alt="" />
@@ -488,16 +533,16 @@ export const Hero = () => {
                                 <div className="fifthslice_top_right">
                                     <div 
                                         className={`top-right-block ${activeTopBlock === 1 ? 'active' : ''}`}
-                                        onClick={() => setActiveTopBlock(1)}
-                                    >TEXT</div>
+                                        onClick={() => { setActiveTopBlock(1); setCarouselOffset(0); }}
+                                    >СПОНСОРЫ</div>
                                     <div 
                                         className={`top-right-block ${activeTopBlock === 2 ? 'active' : ''}`}
-                                        onClick={() => setActiveTopBlock(2)}
-                                    >TEXT</div>
+                                        onClick={() => { setActiveTopBlock(2); setCarouselOffset(0); }}
+                                    >РАЗРАБОТЧИКИ</div>
                                     <div 
                                         className={`top-right-block ${activeTopBlock === 3 ? 'active' : ''}`}
-                                        onClick={() => setActiveTopBlock(3)}
-                                    >TEXT</div>
+                                        onClick={() => { setActiveTopBlock(3); setCarouselOffset(0); }}
+                                    >СУДЬИ</div>
                                 </div>
                             </div>
                         </section>
