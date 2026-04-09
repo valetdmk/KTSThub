@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import "./Hero.scss"
 import { HeroCard } from "./HeroCard"
 
@@ -82,6 +82,62 @@ export const Hero = () => {
     const [activeCard, setActiveCard] = useState<number | null>(null);
     const [activeTopBlock, setActiveTopBlock] = useState<number | null>(1);
     const [carouselOffset, setCarouselOffset] = useState(0);
+    const [currentSection, setCurrentSection] = useState(1);
+
+    const scrollToSection = useCallback((sectionNum: number) => {
+        const container = document.querySelector('.sections-container');
+        const target = document.getElementById(`slice${sectionNum}`);
+        if (target && container) {
+            target.scrollIntoView({ behavior: 'smooth' });
+            setCurrentSection(sectionNum);
+        }
+    }, []);
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+                e.preventDefault();
+                scrollToSection(currentSection < 6 ? currentSection + 1 : 6);
+            } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+                e.preventDefault();
+                scrollToSection(currentSection > 1 ? currentSection - 1 : 1);
+            }
+        };
+
+        const handlePopState = (e: PopStateEvent) => {
+            e.preventDefault();
+        };
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        const sectionNum = parseInt(entry.target.id.replace('slice', ''));
+                        setCurrentSection(sectionNum);
+                    }
+                });
+            },
+            { threshold: 0.5 }
+        );
+
+        const sections = document.querySelectorAll('[id^="slice"]');
+        sections.forEach((section) => observer.observe(section));
+
+        window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('popstate', handlePopState);
+        
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('popstate', handlePopState);
+            observer.disconnect();
+        };
+    }, [currentSection, scrollToSection]);
+
+    const goToNextSection = () => {
+        if (currentSection < 6) {
+            scrollToSection(currentSection + 1);
+        }
+    };
 
     const topBlockContent = {
         1: { text: "TEXT1", title: "PM/UX-UI дизайнер/Глава проекта", desc: "Главное лицо проекта бла бла бла бла сделал там то то се пятое десятое" },
@@ -157,8 +213,8 @@ export const Hero = () => {
     const displayItems = getDisplayItems();
 
     return (
-        <>
-            <section className="hero">
+        <div className="sections-container">
+            <section id="slice1" className="hero">
                 <img  className="hero_logo" src={logo} alt="Логотип KTSThub" />
                 <img className="hero_numbers" src={numbers} alt="Статистика проекта" />
 
@@ -185,7 +241,7 @@ export const Hero = () => {
                         <img className="card card-left" src={card} alt="Карточка участника" />
                         <img className="card card-center" src={card} alt="Карточка участника" />
                         <img className="card card-right" src={card} alt="Карточка участника" />
-                        <button className="cards_button" onClick={() => document.getElementById('secondslice')?.scrollIntoView({ behavior: 'smooth' })}>
+                        <button className="cards_button" onClick={goToNextSection}>
                         <img className="card-down" src={down} alt="Показать ещё" loading="lazy" />
                         </button>
                     </div>
@@ -230,7 +286,7 @@ export const Hero = () => {
                 </div>
             </section>
 
-            <section id="secondslice" className="secondslice">
+            <section id="slice2" className="secondslice">
                 <div className="secondslice_inner">
 
                     <div className="left-block">
@@ -373,7 +429,7 @@ export const Hero = () => {
                 </div>
             </section>
 
-            <section className="thirdslice">
+            <section id="slice3" className="thirdslice">
                 <div className="thirdslice_inner">
                     <img className="girl-mirrored" src={Girl} alt="Девушка" />
                     <div className="thirdslice_columns">
@@ -410,7 +466,7 @@ export const Hero = () => {
                 </div>
             </section>
 
-            <section className="fourthslice">
+            <section id="slice4" className="fourthslice">
                             <div className="rectangle-top">
                                 <img src={LOGOTIP} alt="Логотип" />
                             </div>
@@ -448,7 +504,7 @@ export const Hero = () => {
                             </div>
                         </section>
 
-                        <section className="fifthslice">
+                        <section id="slice5" className="fifthslice">
                             <img className="back5left" src={back5left} alt="" />
                             <img className="back5right" src={back5right} alt="" />
                             <div className="fifthslice_inner">
@@ -491,7 +547,7 @@ export const Hero = () => {
                             </div>
                         </section>
 
-                        <section className="sixthslice">
+                        <section id="slice6" className="sixthslice">
                             <img className="back5left" src={back5left} alt="" />
                             <img className="back5right" src={back5right} alt="" />
                             <div className="sixthslice_container">
@@ -546,6 +602,6 @@ export const Hero = () => {
                                 </div>
                             </div>
                         </section>
-                    </>
+                    </div>
                 );
             }

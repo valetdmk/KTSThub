@@ -4,11 +4,28 @@
   box-sizing: border-box;
 }
 
-html {
-  scroll-behavior: smooth;
+html, body {
+  overflow-x: hidden;
+  margin: 0;
+  max-width: 100vw;
+  overscroll-behavior: none;
 }
 
-html, body {
+.sections-container {
+  height: 100vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  width: 100vw;
+  overscroll-behavior: none;
+}
+
+section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  min-height: 100vh;
+  width: 100%;
   overflow-x: hidden;
 }
 
