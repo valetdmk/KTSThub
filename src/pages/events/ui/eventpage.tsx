@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchEventByIdRequest } from "../../features/events/eventsSlice";
-import type { RootState } from "../../app/store/store";
+import { fetchEventByIdRequest } from "../../../features/events/eventsSlice";
+import type { RootState } from "../../../app/store/store";
 
 export default function EventPage() {
   const { id } = useParams();

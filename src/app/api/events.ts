@@ -1,13 +1,5 @@
 import { api } from "."
-
-export interface Event {
-    id: number;
-    title: string;
-    type: string;
-    startDate: string;
-    endDate: string;
-    stack: string[];
-}
+import type { Event } from "../../entities/event/model"
 
 export const eventsApi = {
   getEvents: async (): Promise<Event[]> => {

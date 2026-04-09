@@ -1,6 +1,6 @@
 import { call, put, takeLatest, all } from "redux-saga/effects";
 import { eventsApi } from "../../app/api/events";
-import type { Event } from "./eventsSlice";
+import type { Event } from "../../entities/event/model";
 import {
     fetchEventsRequest,
     fetchEventsSuccess,

@@ -1,5 +1,5 @@
-import { useAppDispatch, useAppSelector } from "../app/store/hooks";
-import { loginRequest } from "../features/auth/model/authSlice";
+import { useAppDispatch, useAppSelector } from "../../../app/store/hooks";
+import { loginRequest } from "../../../features/auth/model/authSlice";
 import { useState } from "react";
 import type { FormEvent } from "react";
 

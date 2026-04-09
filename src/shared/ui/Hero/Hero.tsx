@@ -1,55 +1,55 @@
 import { useState, useEffect, useCallback } from "react";
 import "./Hero.scss"
-import { HeroCard } from "./HeroCard"
+import { HeroCard } from "../HeroCard"
 
-import logo from "../../Photos/logo.png"
-import numbers from "../../Photos/numbers.png"
+import logo from "../../assets/logo.png"
+import numbers from "../../assets/numbers.png"
 
-import Hack from "../../Photos/HacK.png"
-import KCT from "../../Photos/KCT.png"
+import Hack from "../../assets/HacK.png"
+import KCT from "../../assets/KCT.png"
 
-import block1left from "../../Photos/block1left.png"
-import block2left from "../../Photos/block2left.png"
-import block3left from "../../Photos/block3left.png"
-import block4left from "../../Photos/block4left.png"
-import block5left from "../../Photos/block5left.png"
-import block1right from "../../Photos/block1right.png"
-import block2right from "../../Photos/block2right.png"
-import block3right from "../../Photos/block3right.png"
-import block4right from "../../Photos/block4right.png"
-import block5right from "../../Photos/block5right.png"
-import blockcentral from "../../Photos/blockcentral.png"
+import block1left from "../../assets/block1left.png"
+import block2left from "../../assets/block2left.png"
+import block3left from "../../assets/block3left.png"
+import block4left from "../../assets/block4left.png"
+import block5left from "../../assets/block5left.png"
+import block1right from "../../assets/block1right.png"
+import block2right from "../../assets/block2right.png"
+import block3right from "../../assets/block3right.png"
+import block4right from "../../assets/block4right.png"
+import block5right from "../../assets/block5right.png"
+import blockcentral from "../../assets/blockcentral.png"
 
-import card from "../../Photos/card.png"
-import down from "../../Photos/down.png"
+import card from "../../assets/card.png"
+import down from "../../assets/down.png"
 
-import Boy from "../../Photos/Boy.png"
-import Girl from "../../Photos/Girl.png"
+import Boy from "../../assets/Boy.png"
+import Girl from "../../assets/Girl.png"
 
-import secondtop from "../../Photos/secondtop.png"
-import secondbottom from "../../Photos/secondbottom.png"
-import forstudent1 from "../../Photos/forstudent1.png"
-import forstudent2 from "../../Photos/forstudent2.png"
-import forstudent3 from "../../Photos/forstudent3.png"
-import forstudent4 from "../../Photos/forstudent4.png"
-import forstudentcircle from "../../Photos/forstudentcircle.png"
+import secondtop from "../../assets/secondtop.png"
+import secondbottom from "../../assets/secondbottom.png"
+import forstudent1 from "../../assets/forstudent1.png"
+import forstudent2 from "../../assets/forstudent2.png"
+import forstudent3 from "../../assets/forstudent3.png"
+import forstudent4 from "../../assets/forstudent4.png"
+import forstudentcircle from "../../assets/forstudentcircle.png"
 
-import ikon from "../../Photos/ikon.png"
-import LOGOTIP from "../../Photos/LOGOTIP.png"
+import ikon from "../../assets/ikon.png"
+import LOGOTIP from "../../assets/LOGOTIP.png"
 
-import pazl from "../../Photos/pazl.png"
-import brain from "../../Photos/brain.png"
-import game from "../../Photos/game.png"
-import unicorn from "../../Photos/unicorn.png"
+import pazl from "../../assets/pazl.png"
+import brain from "../../assets/brain.png"
+import game from "../../assets/game.png"
+import unicorn from "../../assets/unicorn.png"
 
-import joystick from "../../Photos/joystick.png"
-import molniya from "../../Photos/molniya.png"
-import kybok from "../../Photos/kybok.png"
-import raceta from "../../Photos/raceta.png"
-import lamp from "../../Photos/lamp.png"
+import joystick from "../../assets/joystick.png"
+import molniya from "../../assets/molniya.png"
+import kybok from "../../assets/kybok.png"
+import raceta from "../../assets/raceta.png"
+import lamp from "../../assets/lamp.png"
 
-import back5left from "../../Photos/back5left.png"
-import back5right from "../../Photos/back5right.png"
+import back5left from "../../assets/back5left.png"
+import back5right from "../../assets/back5right.png"
 
 const leftBlocks = [block1left, block2left, block3left, block4left, block5left];
 const rightBlocks = [block5right, block4right, block3right, block2right, block1right];
@@ -598,7 +598,7 @@ export const Hero = () => {
                                     <div 
                                         className={`top-right-block ${activeTopBlock === 3 ? 'active' : ''}`}
                                         onClick={() => { setActiveTopBlock(3); setCarouselOffset(0); }}
-                                    >СУДЬИ</div>
+                                    >ПАРТНЁРЫ</div>
                                 </div>
                             </div>
                         </section>

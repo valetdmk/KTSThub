@@ -1,18 +1,18 @@
 import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
-import { HomePage } from "../../pages/home/home";
-import { ParticipantsPage } from "../../pages/participants/participants";
-import { AdminPage } from "../../pages/admin/admin";
-import { SchedulePage } from "../../pages/schedule/schedule";
-import { ProfilePage } from "../../pages/profile/profile";
-import Events from "../../pages/events/events";
-import EventPage from "../../pages/events/eventpage";
-import { AboutUs } from "../../pages/aboutus";
-import { Achievements } from "../../pages/achievements";
-import { Developers } from "../../pages/developers";
-import { Partners } from "../../pages/partners";
-import { FAQ } from "../../pages/faq";
-import Login from "../../pages/Login";
-import Register from "../../pages/Register";
+import { HomePage } from "../../pages/home/ui";
+import { ParticipantsPage } from "../../pages/participants/ui";
+import { AdminPage } from "../../pages/admin/ui";
+import { SchedulePage } from "../../pages/schedule/ui";
+import { ProfilePage } from "../../pages/profile/ui";
+import Events from "../../pages/events/ui";
+import EventPage from "../../pages/events/ui/eventpage";
+import { AboutUs } from "../../pages/aboutus/ui";
+import { Achievements } from "../../pages/achievements/ui";
+import { Developers } from "../../pages/developers/ui";
+import { Partners } from "../../pages/partners/ui";
+import { FAQ } from "../../pages/faq/ui";
+import Login from "../../pages/login/ui";
+import Register from "../../pages/register/ui";
 
 export const router = createBrowserRouter([
     {

@@ -1,5 +1,5 @@
-import Orange1 from "../../Photos/Orange1.png";
-import Purple1 from "../../Photos/Purple1.png";
+import Orange1 from "../../assets/Orange1.png";
+import Purple1 from "../../assets/Purple1.png";
 import "./Background.scss";
 
 export const Background = () => {

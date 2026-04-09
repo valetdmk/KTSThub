@@ -1,10 +1,8 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchEventsRequest } from "../../features/events/eventsSlice";
-// import { getEvents } from "../../app/api/events";
-// import type { Event } from "../../app/api/events";
-import EventCard from "../../entities/event/ui/EventCard";
-import type { RootState } from "../../app/store/store";
+import { fetchEventsRequest } from "../../../features/events/eventsSlice";
+import EventCard from "../../../entities/event/ui/EventCard";
+import type { RootState } from "../../../app/store/store";
 
 export default function Events() {
   const dispatch = useDispatch();
