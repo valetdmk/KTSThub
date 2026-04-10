@@ -519,12 +519,12 @@ export const Hero = () => {
                             <div className="fifthslice_inner">
                                 <div className="fifthslice_left_images">
                                     <div className="img-group-close">
-                                        <img className="img-most-left" src={joystick} alt="" />
-                                        <img className="img-top-left" src={kybok} alt="" />
+                                        <img className="img-most-left-5" src={joystick} alt="" />
+                                        <img className="img-top-left-5" src={kybok} alt="" />
                                     </div>
-                                    <img className="img-right" src={molniya} alt="" />
-                                    <img className="img-most-right" src={raceta} alt="" />
-                                    <img className="img-right img-lamp" src={lamp} alt="" />
+                                    <img className="img-right-5" src={molniya} alt="" />
+                                    <img className="img-most-right-5" src={raceta} alt="" />
+                                    <img className="img-right-5 img-lamp-5" src={lamp} alt="" />
                                 </div>
                                 <div className="fifthslice_rect">
                                     <p className="fifthslice_text">{currentTopContent ? currentTopContent.text : "TEXT"}</p>
@@ -532,12 +532,12 @@ export const Hero = () => {
                                     <p className="fifthslice_desc">{currentTopContent ? currentTopContent.desc : "Главное лицо проекта бла бла бла бла сделал там то то се пятое десятое"}</p>
                                 </div>
                                 <div className="fifthslice_right_images">
-                                    <img className="right-pazl" src={pazl} alt="" />
-                                    <img className="right-game" src={game} alt="" />
-                                    <img className="right-brain" src={brain} alt="" />
-                                    <img className="right-unicorn" src={unicorn} alt="" />
-                                    <img className="right-game-second" src={game} alt="" />
-                                    <img className="right-molniya" src={molniya} alt="" />
+                                    <img className="right-pazl-5" src={pazl} alt="" />
+                                    <img className="right-game-5" src={game} alt="" />
+                                    <img className="right-brain-5" src={brain} alt="" />
+                                    <img className="right-unicorn-5" src={unicorn} alt="" />
+                                    <img className="right-game-second-5" src={game} alt="" />
+                                    <img className="right-molniya-5" src={molniya} alt="" />
                                 </div>
                                 <div className="fifthslice_top_right">
                                     <div 
