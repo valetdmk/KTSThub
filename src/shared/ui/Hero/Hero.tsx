@@ -291,8 +291,17 @@ export const Hero = () => {
 
                     <div className="left-block">
                         <img className="second-top" src={secondtop} alt="Фон верх" />
-                        <img className="second-bottom" src={secondbottom} alt="Фон низ" />
+                        <img className="molniya-top" src={molniya} alt="Молния" />
+                        <img className="kybok-top" src={kybok} alt="Кубок" />
+                        <img className="unicorn-top" src={unicorn} alt="Единорог" />
+                        <img className="lamp-top" src={lamp} alt="Лампа" />
                         <img className="boy2" src={Boy} alt="Участник" />
+                        <img className="game-left" src={game} alt="Игра" />
+                        <img className="raceta-bottom" src={raceta} alt="Ракета" />
+                        <img className="joystick-bottom" src={joystick} alt="Джойстик" />
+                        <img className="brain-bottom" src={brain} alt="Мозг" />
+                        <img className="pazl-bottom" src={pazl} alt="Пазл" />
+                        <img className="second-bottom" src={secondbottom} alt="Фон низ" />
                     </div>
 
                     <div className="center-block">
