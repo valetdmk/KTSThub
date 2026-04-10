@@ -8,7 +8,6 @@ import {
     setActiveTopBlock,
     setCarouselOffset,
     setCurrentSection,
-    setBlocks,
     setImages,
     selectSixthsliceData,
     selectFeaturesContent,
@@ -20,17 +19,19 @@ import numbers from "../../assets/numbers.png"
 import Hack from "../../assets/HacK.png"
 import KCT from "../../assets/KCT.png"
 
-import block1left from "../../assets/block1left.png"
-import block2left from "../../assets/block2left.png"
-import block3left from "../../assets/block3left.png"
-import block4left from "../../assets/block4left.png"
-import block5left from "../../assets/block5left.png"
-import block1right from "../../assets/block1right.png"
-import block2right from "../../assets/block2right.png"
-import block3right from "../../assets/block3right.png"
-import block4right from "../../assets/block4right.png"
-import block5right from "../../assets/block5right.png"
-import blockcentral from "../../assets/blockcentral.png"
+import {
+    Block1Left,
+    Block2Left,
+    Block3Left,
+    Block4Left,
+    Block5Left,
+    Block1Right,
+    Block2Right,
+    Block3Right,
+    Block4Right,
+    Block5Right,
+    BlockCentral,
+} from "./HeroImages";
 
 import card from "../../assets/card.png"
 import down from "../../assets/down.png"
@@ -74,8 +75,6 @@ export const Hero = () => {
     const stateData = useSelector((state: RootState) => state.hero);
     const sixthsliceData = useSelector(selectSixthsliceData);
     const featuresContent = useSelector(selectFeaturesContent);
-    const leftBlocks = stateData.leftBlocks;
-    const rightBlocks = stateData.rightBlocks;
 
     const scrollToSection = useCallback((sectionNum: number) => {
         const container = document.querySelector('.sections-container');
@@ -127,10 +126,6 @@ export const Hero = () => {
     }, [currentSection, scrollToSection, dispatch]);
 
     useEffect(() => {
-        dispatch(setBlocks({
-            leftBlocks: [block1left, block2left, block3left, block4left, block5left],
-            rightBlocks: [block5right, block4right, block3right, block2right, block1right],
-        }));
         dispatch(setImages({
             forstudent1,
             forstudent2,
@@ -215,15 +210,19 @@ export const Hero = () => {
                     
 
                     <div className="hero_blocks">
-                            {leftBlocks.map((img, i) => (
-                                <img key={`left-${i}`} src={img} alt={`Блок ${i + 1}`} loading="lazy" />
-                            ))}
+                            <Block1Left />
+                            <Block2Left />
+                            <Block3Left />
+                            <Block4Left />
+                            <Block5Left />
 
-                            <img src={blockcentral} alt="Центральный блок" loading="lazy" />
+                            <BlockCentral />
 
-                            {rightBlocks.map((img, i) => (
-                                <img key={`right-${i}`} src={img} alt={`Блок ${5 - i}`} loading="lazy" />
-                            ))}
+                            <Block1Right />
+                            <Block2Right />
+                            <Block3Right />
+                            <Block4Right />
+                            <Block5Right />
                     </div>
 
                     <div className="hero_people">
