@@ -1,7 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap');
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
 }
 
 html, body {
@@ -164,7 +167,7 @@ section {
 
 .hero_nav {
   display: flex;
-  gap: 80px;
+  gap: 50px;
 }
 
 .hero_nav a {
@@ -172,7 +175,8 @@ section {
   text-decoration: none;
   position: relative;
   z-index: 1;
-  font-size: 24px;
+  font-size: 20px;
+  flex-shrink: 0;
 }
 
 .hero_header::before {
@@ -580,6 +584,7 @@ section {
   padding: 40px 20px;
   flex-shrink: 0;
   cursor: pointer;
+  font-family: 'Roboto', sans-serif;
 }
 
 .info-card {
@@ -602,6 +607,7 @@ section {
     position: absolute;
     top: 24px;
     right: 24px;
+    font-family: 'Pixelated Elegance', 'Courier New', monospace;
   }
 
   h2 {

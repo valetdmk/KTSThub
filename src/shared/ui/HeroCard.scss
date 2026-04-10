@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
 .hero-card {
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
@@ -9,6 +11,7 @@
   z-index: 4;
   color: white;
   overflow: hidden;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .hero-card h3 {
