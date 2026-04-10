@@ -1,6 +1,18 @@
-import { useState, useEffect, useCallback } from "react";
+import { useEffect, useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import "./Hero.scss"
 import { HeroCard } from "../HeroCard"
+import type { RootState } from "../../../app/store/store";
+import {
+    setActiveCard,
+    setActiveTopBlock,
+    setCarouselOffset,
+    setCurrentSection,
+    setBlocks,
+    setImages,
+    selectSixthsliceData,
+    selectFeaturesContent,
+} from "../../../features/hero/heroSlice";
 
 import logo from "../../assets/logo.png"
 import numbers from "../../assets/numbers.png"
@@ -51,47 +63,28 @@ import lamp from "../../assets/lamp.png"
 import back5left from "../../assets/back5left.png"
 import back5right from "../../assets/back5right.png"
 
-const leftBlocks = [block1left, block2left, block3left, block4left, block5left];
-const rightBlocks = [block5right, block4right, block3right, block2right, block1right];
 
-const sixthsliceData = {
-    1: [
-        { text: "Компания А", title: "Спонсор", desc: "Генеральный партнёр хакатона" },
-        { text: "Компания Б", title: "Спонсор", desc: "Технологический партнёр" },
-        { text: "Компания В", title: "Спонсор", desc: "Партнёр программы" },
-        { text: "Компания Г", title: "Спонсор", desc: "Стратегический партнёр" },
-        { text: "Компания Д", title: "Спонсор", desc: "Информационный партнёр" },
-    ],
-    2: [
-        { text: "Мария", title: "Разработчик", desc: "Менеджер проекта" },
-        { text: "Данил", title: "Разработчик", desc: "Backend разработчик" },
-        { text: "Ксения", title: "Разработчик", desc: "Frontend разработчик" },
-        { text: "Арсений", title: "Разработчик", desc: "Дизайнер" },
-        { text: "Артём", title: "Разработчик", desc: "Backend разработчик" },
-    ],
-    3: [
-        { text: "Сергей", title: "Партнер", desc: "CTO компании Х" },
-        { text: "Анна", title: "Партнер", desc: "Руководитель IT проектов" },
-        { text: "Павел", title: "Партнер", desc: "Технический директор" },
-        { text: "Наталья", title: "Партнер", desc: "Head of Development" },
-        { text: "Артём", title: "Партнер", desc: "Product Manager" },
-    ],
-};
 
 export const Hero = () => {
-    const [activeCard, setActiveCard] = useState<number | null>(null);
-    const [activeTopBlock, setActiveTopBlock] = useState<number | null>(1);
-    const [carouselOffset, setCarouselOffset] = useState(0);
-    const [currentSection, setCurrentSection] = useState(1);
+    const dispatch = useDispatch();
+    const activeCard = useSelector((state: RootState) => state.hero.activeCard);
+    const activeTopBlock = useSelector((state: RootState) => state.hero.activeTopBlock);
+    const carouselOffset = useSelector((state: RootState) => state.hero.carouselOffset);
+    const currentSection = useSelector((state: RootState) => state.hero.currentSection);
+    const stateData = useSelector((state: RootState) => state.hero);
+    const sixthsliceData = useSelector(selectSixthsliceData);
+    const featuresContent = useSelector(selectFeaturesContent);
+    const leftBlocks = stateData.leftBlocks;
+    const rightBlocks = stateData.rightBlocks;
 
     const scrollToSection = useCallback((sectionNum: number) => {
         const container = document.querySelector('.sections-container');
         const target = document.getElementById(`slice${sectionNum}`);
         if (target && container) {
             target.scrollIntoView({ behavior: 'smooth' });
-            setCurrentSection(sectionNum);
+            dispatch(setCurrentSection(sectionNum));
         }
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -113,7 +106,7 @@ export const Hero = () => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
                         const sectionNum = parseInt(entry.target.id.replace('slice', ''));
-                        setCurrentSection(sectionNum);
+                        dispatch(setCurrentSection(sectionNum));
                     }
                 });
             },
@@ -131,7 +124,21 @@ export const Hero = () => {
             window.removeEventListener('popstate', handlePopState);
             observer.disconnect();
         };
-    }, [currentSection, scrollToSection]);
+    }, [currentSection, scrollToSection, dispatch]);
+
+    useEffect(() => {
+        dispatch(setBlocks({
+            leftBlocks: [block1left, block2left, block3left, block4left, block5left],
+            rightBlocks: [block5right, block4right, block3right, block2right, block1right],
+        }));
+        dispatch(setImages({
+            forstudent1,
+            forstudent2,
+            forstudent3,
+            forstudent4,
+            forstudentcircle,
+        }));
+    }, [dispatch]);
 
     const goToNextSection = () => {
         if (currentSection < 6) {
@@ -139,59 +146,18 @@ export const Hero = () => {
         }
     };
 
-    const topBlockContent = {
-        1: { text: "TEXT1", title: "PM/UX-UI дизайнер/Глава проекта", desc: "Главное лицо проекта бла бла бла бла сделал там то то се пятое десятое" },
-        2: { text: "TEXT2", title: "Backend разработка/Команда", desc: "Команда разработчиков, которые сделали проект" },
-        3: { text: "TEXT3", title: "QA Инженер/Тестировщик", desc: "Специалист по тестированию и контролю качества" },
-    };
-
-    const featuresContent = {
-        1: {
-            left: [
-                { img: forstudent1, title: "Реальный опыт IT-индустрии", desc: "Личный кабинет с вашими активностями." },
-                { img: forstudentcircle, title: "Студентам", desc: "IT-специалисты команды и проекты в одном месте" },
-                { img: forstudent2, title: "Опыт командной работы", desc: "IT-специалисты команды и проекты в одном месте" },
-            ],
-            right: [
-                { img: forstudent3, title: " Контакт с HR компаний", desc: "IT-специалисты команды и проекты в одном месте" },
-                { img: forstudent4, title: "Рабочие проекты в портфолио", desc: "IT-специалисты команды и проекты в одном месте" },
-            ]
-        },
-        2: {
-            left: [
-                { img: forstudent1, title: "Реальный опыт IT-индустрии", desc: "Личный кабинет с вашими активностями." },
-                { img: forstudentcircle, title: "Партнёрам", desc: "IT-специалисты команды и проекты в одном месте" },
-                { img: forstudent2, title: "Опыт командной работы", desc: "IT-специалисты команды и проекты в одном месте" },
-            ],
-            right: [
-                { img: forstudent3, title: " Контакт с HR компаний", desc: "IT-специалисты команды и проекты в одном месте" },
-                { img: forstudent4, title: "Рабочие проекты в портфолио", desc: "IT-специалисты команды и проекты в одном месте" },
-            ]
-        },
-        3: {
-            left: [
-                { img: forstudent1, title: "Реальный опыт IT-индустрии", desc: "Личный кабинет с вашими активностями." },
-                { img: forstudentcircle, title: "Судьям", desc: "IT-специалисты команды и проекты в одном месте" },
-                { img: forstudent2, title: "Опыт командной работы", desc: "IT-специалисты команды и проекты в одном месте" },
-            ],
-            right: [
-                { img: forstudent3, title: " Контакт с HR компаний", desc: "IT-специалисты команды и проекты в одном месте" },
-                { img: forstudent4, title: "Рабочие проекты в портфолио", desc: "IT-специалисты команды и проекты в одном месте" },
-            ]
-        }
-    };
-
-    const currentTopContent = activeTopBlock ? topBlockContent[activeTopBlock as keyof typeof topBlockContent] : null;
-    const content = activeCard ? featuresContent[activeCard as keyof typeof featuresContent] : null;
+    const topBlockContent = stateData.topBlockContent;
+    const currentTopContent = activeTopBlock ? topBlockContent[activeTopBlock] : null;
+    const content = activeCard ? featuresContent[activeCard] : null;
 
     const currentData = activeTopBlock ? sixthsliceData[activeTopBlock as keyof typeof sixthsliceData] : sixthsliceData[1];
 
     const handlePrev = () => {
-        setCarouselOffset(prev => prev - 1);
+        dispatch(setCarouselOffset(carouselOffset - 1));
     };
 
     const handleNext = () => {
-        setCarouselOffset(prev => prev + 1);
+        dispatch(setCarouselOffset(carouselOffset + 1));
     };
 
     const getDisplayItems = () => {
@@ -409,7 +375,7 @@ export const Hero = () => {
                     <div className="right-block">
                         <div 
                             className={`info-card ${activeCard === 1 ? 'active' : ''}`}
-                            onClick={() => setActiveCard(1)}
+                            onClick={() => dispatch(setActiveCard(1))}
                         >
                             <span className="info-number">01</span>
                             <h2>Для<br />студентов</h2>
@@ -418,7 +384,7 @@ export const Hero = () => {
 
                         <div 
                             className={`info-card ${activeCard === 2 ? 'active' : ''}`}
-                            onClick={() => setActiveCard(2)}
+                            onClick={() => dispatch(setActiveCard(2))}
                         >
                             <span className="info-number">02</span>
                             <h2>Для<br />Партнеров</h2>
@@ -427,7 +393,7 @@ export const Hero = () => {
 
                         <div 
                             className={`info-card ${activeCard === 3 ? 'active' : ''}`}
-                            onClick={() => setActiveCard(3)}
+                            onClick={() => dispatch(setActiveCard(3))}
                         >
                             <span className="info-number">03</span>
                             <h2>Для<br />Судей</h2>
@@ -542,15 +508,15 @@ export const Hero = () => {
                                 <div className="fifthslice_top_right">
                                     <div 
                                         className={`top-right-block ${activeTopBlock === 1 ? 'active' : ''}`}
-                                        onClick={() => setActiveTopBlock(1)}
+                                        onClick={() => dispatch(setActiveTopBlock(1))}
                                     >TEXT</div>
                                     <div 
                                         className={`top-right-block ${activeTopBlock === 2 ? 'active' : ''}`}
-                                        onClick={() => setActiveTopBlock(2)}
+                                        onClick={() => dispatch(setActiveTopBlock(2))}
                                     >TEXT</div>
                                     <div 
                                         className={`top-right-block ${activeTopBlock === 3 ? 'active' : ''}`}
-                                        onClick={() => setActiveTopBlock(3)}
+                                        onClick={() => dispatch(setActiveTopBlock(3))}
                                     >TEXT</div>
                                 </div>
                             </div>
@@ -598,15 +564,24 @@ export const Hero = () => {
                                 <div className="fifthslice_top_right">
                                     <div 
                                         className={`top-right-block ${activeTopBlock === 1 ? 'active' : ''}`}
-                                        onClick={() => { setActiveTopBlock(1); setCarouselOffset(0); }}
+                                        onClick={() => { 
+                                            dispatch(setActiveTopBlock(1)); 
+                                            dispatch(setCarouselOffset(0)); 
+                                        }}
                                     >СПОНСОРЫ</div>
                                     <div 
                                         className={`top-right-block ${activeTopBlock === 2 ? 'active' : ''}`}
-                                        onClick={() => { setActiveTopBlock(2); setCarouselOffset(0); }}
+                                        onClick={() => { 
+                                            dispatch(setActiveTopBlock(2)); 
+                                            dispatch(setCarouselOffset(0)); 
+                                        }}
                                     >РАЗРАБОТЧИКИ</div>
                                     <div 
                                         className={`top-right-block ${activeTopBlock === 3 ? 'active' : ''}`}
-                                        onClick={() => { setActiveTopBlock(3); setCarouselOffset(0); }}
+                                        onClick={() => { 
+                                            dispatch(setActiveTopBlock(3)); 
+                                            dispatch(setCarouselOffset(0)); 
+                                        }}
                                     >ПАРТНЁРЫ</div>
                                 </div>
                             </div>
