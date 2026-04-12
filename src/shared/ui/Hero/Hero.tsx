@@ -1,5 +1,6 @@
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import "./Hero.scss"
 import { HeroCard } from "../HeroCard"
 import type { RootState } from "../../../app/store/store";
@@ -173,6 +174,7 @@ export const Hero = () => {
 
     const displayItems = getDisplayItems();
     const showStickyHeader = currentSection >= 2;
+    const navigate = useNavigate();
 
     return (
         <div className="sections-container">
@@ -195,7 +197,7 @@ export const Hero = () => {
                         </p>
                     </div>
 
-                    <button className={`hero_button ${showStickyHeader ? 'move-to-nav' : ''}`}>
+                    <button className={`hero_button ${showStickyHeader ? 'move-to-nav' : ''}`} onClick={() => navigate('/auth')}>
                         Войти в мир хакатонов
                     </button>
 

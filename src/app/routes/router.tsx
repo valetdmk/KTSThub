@@ -13,6 +13,7 @@ import { Partners } from "../../pages/partners/ui";
 import { FAQ } from "../../pages/faq/ui";
 import Login from "../../pages/login/ui";
 import Register from "../../pages/register/ui";
+import { AuthPage } from "../../pages/auth/ui";
 
 export const router = createBrowserRouter([
     {
@@ -70,6 +71,10 @@ export const router = createBrowserRouter([
     {
         path: '/register',
         element: <Register />,
+    },
+    {
+        path: '/auth',
+        element: <AuthPage />,
     },
 ]);
 
