@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import "./Hero.scss"
 import { HeroCard } from "../HeroCard"
@@ -172,11 +172,12 @@ export const Hero = () => {
     };
 
     const displayItems = getDisplayItems();
+    const showStickyHeader = currentSection >= 2;
 
     return (
         <div className="sections-container">
             <section id="slice1" className="hero">
-                <img  className="hero_logo" src={logo} alt="Логотип KTSThub" />
+                <img className={`hero_logo ${showStickyHeader ? 'fixed-on-scroll' : ''}`} src={logo} alt="Логотип KTSThub" />
                 <img className="hero_numbers" src={numbers} alt="Статистика проекта" />
 
                 <div className="hero_content">
@@ -194,7 +195,7 @@ export const Hero = () => {
                         </p>
                     </div>
 
-                    <button className="hero_button">
+                    <button className={`hero_button ${showStickyHeader ? 'move-to-nav' : ''}`}>
                         Войти в мир хакатонов
                     </button>
 
