@@ -7,18 +7,10 @@ export default function Login() {
 
   return (
     <div className="login-page">
-      <img 
-        className="logo" 
-        src={logo} 
-        alt="Логотип KTSThub" 
-      />
-      
-      <div className="greeting">
-        <p>Welcome back<br />to platform</p>
-      </div>
 
       <div className="login-form-container">
-        <h2>Вход в систему</h2>
+        <img className="logoLogin" src={logo} alt="Логотип KTSThub" />
+        <h2>Welcome back<br />to platform</h2>
         <form>
           <input type="text" placeholder="Имя пользователя" />
           <input type="password" placeholder="Пароль" />
