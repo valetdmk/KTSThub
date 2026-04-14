@@ -1,36 +1,33 @@
-import { useAppDispatch, useAppSelector } from "../../../app/store/hooks";
-import { loginRequest } from "../../../features/auth/model/authSlice";
-import { useState } from "react";
-import type { FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
+import "./index.scss";
+import logo from "../../../shared/assets/logo.png";
 
 export default function Login() {
-  const dispatch = useAppDispatch();
-  const { loading, error } = useAppSelector((state) => state.auth);
-
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleLogin = (e: FormEvent) => {
-    e.preventDefault();
-
-    dispatch(
-      loginRequest({
-        username,
-        password,
-      })
-    );
-  };
+  const navigate = useNavigate();
 
   return (
-    <form onSubmit={handleLogin}>
-      <input onChange={(e) => setUsername(e.target.value)} />
-      <input type="password" onChange={(e) => setPassword(e.target.value)} />
+    <div className="login-page">
+      <img 
+        className="logo" 
+        src={logo} 
+        alt="Логотип KTSThub" 
+      />
+      
+      <div className="greeting">
+        <p>Welcome back<br />to platform</p>
+      </div>
 
-      <button disabled={loading}>
-        {loading ? "Загрузка..." : "Войти"}
-      </button>
-
-      {error && <p>{error}</p>}
-    </form>
+      <div className="login-form-container">
+        <h2>Вход в систему</h2>
+        <form>
+          <input type="text" placeholder="Имя пользователя" />
+          <input type="password" placeholder="Пароль" />
+          <button type="submit">Войти</button>
+        </form>
+        <p className="login-link">
+          Нет аккаунта? <span onClick={() => navigate("/register")}>Зарегистрироваться</span>
+        </p>
+      </div>
+    </div>
   );
 }

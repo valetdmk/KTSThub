@@ -50,17 +50,18 @@
         left: 50%;
         transform: translate(-50%, -50%);
       }
+    }
 
-      .center-dot {
-        position: absolute;
-        width: 30px;
-        height: 30px;
-        background: #fff;
-        border-radius: 50%;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
+    span .cross-dot {
+      display: block;
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      background: #fff;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
   }
 
@@ -155,4 +156,58 @@
     gap: 20px;
     z-index: 1;
   }
+}
+
+.logo {
+  position: absolute;
+  top: 40px;
+  left: 60px;
+
+  width: 100px;
+  height: auto;
+
+  z-index: 4;
+  pointer-events: none; 
+}
+
+.greeting {
+  position: absolute;
+  top: 180px;
+  left: 60px;
+  z-index: 5;
+
+  p {
+    color: #fff;
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0 0 15px 0;
+    line-height: 1.4;
+    text-align: center;
+  }
+
+  .cardregistration {
+    width: 320px;
+    height: auto;
+  }
+}
+
+.boyregistration {
+  position: absolute;
+  left: 42%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 890px;
+  height: auto;
+  z-index: 5;
+}
+
+.registration_center {
+  position: absolute;
+  bottom: 50px;
+  left: 60px;
+  width: 70%;
+  max-width: 800px;
+  height: 300px;
+
+  z-index: 4;
 }

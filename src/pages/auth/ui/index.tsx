@@ -1,13 +1,36 @@
 import { useNavigate } from "react-router-dom";
 import "./index.scss";
+import logo from "../../../shared/assets/logo.png"
+import boyregistration from "../../../shared/assets/boyregistration.png"
+import Hack from "../../../shared/assets/HacK.png"
+import KCT from "../../../shared/assets/KCT.png"
+import card from "../../../shared/assets/card.png"
 
 export const AuthPage = () => {
   const navigate = useNavigate();
 
   return (
     <div className="auth-page">
+      <img className="logo" src={logo} alt="Логотип KTSThub" />
+      <img className="boyregistration" src={boyregistration} alt="Мальчик" />
+      <div className="registration_center">
+        <img className="kct" src={KCT} alt="Логотип KCT" />
+        <img className="hack" src={Hack} alt="Логотип Хакathon" />
+
+        <p className="text-bottom-left">
+          Вы переходите в мир нового уровня погружения в ИТ-сферу разработки
+        </p>
+
+        <p className="text-top-right">
+          Вы переходите не просто в платформу,
+        </p>
+      </div>
+      <div className="greeting">
+        <p>Welcome to<br />platform</p>
+        <img className="cardregistration" src={card} alt="Карточка" />
+      </div>
       <div className="vertical-lines">
-        <span></span>
+        <span><span className="cross-dot"></span></span>
         <span></span>
         <span></span>
       </div>
