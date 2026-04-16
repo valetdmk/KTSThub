@@ -3,7 +3,10 @@
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
-  background: #000000;
+  background: 
+    radial-gradient(80% 80% at 0% 0%, #9605CA 0%, rgba(0, 0, 0, 0) 60%),
+    radial-gradient(80% 80% at 100% 100%, #B51601 0%, rgba(0, 0, 0, 0) 60%),
+    linear-gradient(180deg, #000000 0%, #0a0a0a 100%);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -11,19 +14,39 @@
   overflow: hidden;
   padding: 40px;
 
-  // &::before {
-  //   content: '';
-  //   position: absolute;
-  //   top: 20px;
-  //   bottom: 20px;
-  //   left: 20px;
-  //   right: 20px;
-  //   border: 2px solid;
-  //   border-image-source: linear-gradient(133.71deg, #FF5100 25.57%, #9605CA 61.06%, #FF5100 82.61%);
-  //   border-image-slice: 1;
-  //   pointer-events: none;
-  //   z-index: 100;
-  // }
+  &::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    border: 2px solid;
+    border-image-source: linear-gradient(133.71deg, #FF5100 25.57%, #9605CA 61.06%, #FF5100 82.61%);
+    border-image-slice: 1;
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  .loginTop {
+    position: absolute;
+    top: -25px;
+    left: -15px;
+    width: 930px;
+    height: 800px;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .loginBottom {
+    position: absolute;
+    bottom: 0;
+    left: 35px;
+    width: 930px;
+    height: 424px;
+    z-index: 1;
+    pointer-events: none;
+  }
 
   .register-title {
     color: #fff;
@@ -57,6 +80,33 @@
       position: relative;
       overflow: visible;
       transition: transform 0.2s;
+
+      .boyregistration-wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 180px;
+        overflow: hidden;
+        z-index: 0;
+
+        .boyregistration {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center center;
+          pointer-events: none;
+        }
+
+        &.mirrored {
+          .boyregistration {
+            transform: scaleX(-1);
+            top: 40px;
+            left: 10px;
+          }
+        }
+      }
 
       &:hover {
         transform: scale(1.02);
@@ -99,14 +149,14 @@
         transform: rotate(180deg);
       }
 
-      .role-number, .role-label-wrapper, .select-btn {
+      .role-number, .role-label-wrapper, .select-btn, .role-bottom-right, .role-top-right {
         position: relative;
         z-index: 1;
       }
 
       .role-number {
         color: #fff;
-        font-size: 36px;
+        font-size: 64px;
         font-weight: 700;
         margin-bottom: 15px;
         text-align: center;
@@ -121,7 +171,7 @@
         &.bottom-right {
           position: absolute;
           bottom: 40px;
-          right: -25px;
+          right: -85px;
         }
       }
 
@@ -140,7 +190,7 @@
           position: static !important;
           margin-bottom: 5px;
           color: #fff;
-          font-size: 36px;
+          font-size: 64px;
           font-weight: 700;
 }
       }
@@ -152,6 +202,8 @@
         padding: 8px 20px;
         margin-bottom: 30px;
         align-self: center;
+        max-width: 180px;
+        border-radius: 10px;
 
         .role-label {
           color: #fff;
@@ -160,6 +212,8 @@
           text-align: center;
           display: block;
           transform: skewX(20deg);
+          white-space: normal;
+          word-wrap: break-word;
         }
       }
       }

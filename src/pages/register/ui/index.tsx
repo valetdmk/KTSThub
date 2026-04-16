@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import "./index.scss";
 import Backregister from "../../../shared/assets/Backregister.png"
+import boyregistration from "../../../shared/assets/boyregistration.png"
 
 const roles = [
   { id: "student", number: "01", label: "STUDENT" },
@@ -25,6 +26,9 @@ export default function Register() {
             key={role.id} 
             className={`role-card ${role.id === 'business_partner' || role.id === 'organizer' ? 'offset-down' : ''} ${role.id === 'student' || role.id === 'judge' ? 'offset-up' : ''}`}
           >
+              <div className={`boyregistration-wrapper ${role.id === 'business_partner' || role.id === 'judge' ? 'mirrored' : ''}`}>
+                <img className="boyregistration" src={boyregistration} alt="" />
+              </div>
               {role.id === 'business_partner' || role.id === 'organizer' ? (
                 <div className="role-bottom-right bottom-right">
                   <span className="role-number">{role.number}</span>
