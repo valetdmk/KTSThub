@@ -28,6 +28,50 @@
     z-index: 100;
   }
 
+  .loginTop {
+    position: absolute;
+    top: -25px;
+    left: -15px;
+    width: 930px;
+    height: 800px;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .loginBottom {
+    position: absolute;
+    bottom: 0;
+    left: 35px;
+    width: 930px;
+    height: 424px;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .boy {
+    position: absolute;
+    width: 822px;
+    height: 750px;
+    top: 103px;
+    left: -50px;
+    transform: rotate(18.89deg);
+    opacity: 1;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  .girl {
+    position: absolute;
+    width: 617px;
+    height: 613px;
+    top: 82px;
+    left: 540px;
+    transform: rotate(5.44deg);
+    opacity: 1;
+    z-index: 10;
+    pointer-events: none;
+  }
+
   .greeting {
     position: absolute;
     top: 180px;
@@ -49,7 +93,7 @@
     top: 57%;
     right: 10%;
     transform: translateY(-50%);
-    width: 496px;
+    width: 586px;
     height: 770px;
     background: linear-gradient(204deg, #FFD6C3 0.95%, #FF712F 26.24%, #A919AE 88.14%, #9605CA 102.09%);
     backdrop-filter: blur(10px);
@@ -65,9 +109,9 @@
     .unionTop {
       position: absolute;
       top: 0px;
-      left: 57%;
+      left: 53%;
       transform: translateX(-50%);
-      width: 400px;
+      width: 536px;
       height: auto;
       z-index: 0;
     }
@@ -77,7 +121,7 @@
       bottom: -3px;
       left: 50%;
       transform: translateX(-50%);
-      width: 497px;
+      width: 586px;
       height: auto;
       z-index: 0;
     }
@@ -92,7 +136,7 @@
 
     h2 {
       color: #fff;
-      font-size: 24px;
+      font-size: 32px;
       margin: 30px 0 30px 0;
       text-align: center;
       z-index: 10;
@@ -131,7 +175,7 @@
 
       .or-text {
         color: rgba(255, 255, 255, 0.8);
-        font-size: 14px;
+        font-size: 32px;
       }
     }
 
@@ -182,10 +226,10 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      width: 100%;
+      width: 110%;
       padding: 18px;
       margin-top: 20px;
-      font-size: 18px;
+      font-size: 32px;
       cursor: pointer;
       border-radius: 50px;
       border: 2px solid rgba(255, 255, 255, 0.3);

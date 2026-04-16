@@ -3,12 +3,21 @@ import "./index.scss";
 import logo from "../../../shared/assets/logo.png";
 import UnionTop from "../../../shared/assets/UnionTop.png"
 import UnionBottom from "../../../shared/assets/UnionBottom.png"
+import Boy from "../../../shared/assets/Boy.png"
+import Girl from "../../../shared/assets/Girl.png"
+import loginTop from "../../../shared/assets/loginTop.png"
+import loginBottom from "../../../shared/assets/loginBottom.png"
 
 export default function Login() {
   const navigate = useNavigate();
 
   return (
     <div className="login-page">
+
+      <img className="loginTop" src={loginTop} alt="" />
+      <img className="loginBottom" src={loginBottom} alt="" />
+      <img className="boy" src={Boy} alt="" />
+      <img className="girl" src={Girl} alt="" />
 
       <div className="login-form-container">
         <img className="unionTop" src={UnionTop} alt="" />
@@ -28,9 +37,9 @@ export default function Login() {
         </div>
 
         <div className="email-section">
-          <input type="text" placeholder="Имя пользователя" />
+          <input type="text" placeholder="Username" />
           <div className="email-row">
-            <input type="email" placeholder="Почта" />
+            <input type="email" placeholder="Email address" />
             <button type="button" className="get-code-btn">получить код</button>
           </div>
         </div>
