@@ -25,15 +25,33 @@ export default function Register() {
             key={role.id} 
             className={`role-card ${role.id === 'business_partner' || role.id === 'organizer' ? 'offset-down' : ''} ${role.id === 'student' || role.id === 'judge' ? 'offset-up' : ''}`}
           >
-              <span className="role-number">{role.number}</span>
-              <span className="role-label-wrapper">
-                <span className="role-label">{role.label}</span>
-              </span>
+              {role.id === 'business_partner' || role.id === 'organizer' ? (
+                <div className="role-bottom-right bottom-right">
+                  <span className="role-number">{role.number}</span>
+                  <span className="role-label-wrapper">
+                    <span className="role-label">{role.label}</span>
+                  </span>
+                </div>
+              ) : role.id === 'student' || role.id === 'judge' ? (
+                <div className="role-top-right top-right">
+                  <span className="role-number">{role.number}</span>
+                  <span className="role-label-wrapper">
+                    <span className="role-label">{role.label}</span>
+                  </span>
+                </div>
+              ) : (
+                <>
+                  <span className="role-number">{role.number}</span>
+                  <span className="role-label-wrapper">
+                    <span className="role-label">{role.label}</span>
+                  </span>
+                </>
+              )}
               <button 
-              className="select-btn"
+              className={`select-btn ${role.id === 'student' || role.id === 'judge' ? 'bottom-right' : ''} ${role.id === 'business_partner' || role.id === 'organizer' ? 'top-right' : ''}`}
               onClick={() => handleSelect(role.id)}
             >
-              выбрать
+              Выбрать
             </button>
           </div>
         ))}
