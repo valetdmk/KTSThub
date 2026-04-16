@@ -1,49 +1,44 @@
-import { useState } from "react";
-import { api } from "../../../app/api";
+import { useNavigate } from "react-router-dom";
+import "./index.scss";
+import Backregister from "../../../shared/assets/Backregister.png"
+
+const roles = [
+  { id: "student", number: "01", label: "STUDENT" },
+  { id: "business_partner", number: "02", label: "BUSINESS PARTNER" },
+  { id: "judge", number: "03", label: "JUDGE" },
+  { id: "organizer", number: "04", label: "ORGANIZER" },
+];
 
 export default function Register() {
-    const [form, setform] = useState({
-        name: "",
-        lastname: "",
-        username: "",
-        birthday: "",
-        email: "",
-        password: "",
-    });
+  const navigate = useNavigate();
 
-    const [error, setError] = useState("");
+  const handleSelect = (roleId: string) => {
+    console.log("Selected role:", roleId);
+  };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setform({
-            ...form,
-            [e.target.name]: e.target.value,
-        });
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-
-        try {
-            await api.post("/auth/signup", form);
-
-            alert("Регистрация успешна!");
-        } catch (err: any) {
-            setError(err.response?.data?.message || "Ошибка регистрации");
-        }
-    };
-
-        return (
-            <form onSubmit={handleSubmit}>
-                <input name="name" placeholder="Имя" onChange={handleChange} />
-                <input name="lastname" placeholder="Фамилия" onChange={handleChange} />
-                <input name="username" placeholder="username" onChange={handleChange} />
-                <input name="birthday" type="date" onChange={handleChange} />
-                <input name="email" placeholder="Email" onChange={handleChange} />
-                <input name="password" type="password" onChange={handleChange} />
-
-                <button>Зарегистрироваться</button>
-
-                {error && <p>{error}</p>}
-            </form>
-        )
-    }
+  return (
+    <div className="register-role-page">
+      <h1 className="register-title">Выберите вашу роль</h1>
+      <div className="roles-grid">
+        {roles.map((role) => (
+          <div 
+            key={role.id} 
+            className={`role-card ${role.id === 'business_partner' || role.id === 'organizer' ? 'offset-down' : ''} ${role.id === 'student' || role.id === 'judge' ? 'offset-up' : ''}`}
+          >
+              <span className="role-number">{role.number}</span>
+              <span className="role-label-wrapper">
+                <span className="role-label">{role.label}</span>
+              </span>
+              <button 
+              className="select-btn"
+              onClick={() => handleSelect(role.id)}
+            >
+              выбрать
+            </button>
+          </div>
+        ))}
+      </div>
+      <img className="backregister" src={Backregister} alt="" />
+    </div>
+  );
+}
