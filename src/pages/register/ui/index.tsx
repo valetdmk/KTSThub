@@ -17,9 +17,14 @@ const roles = [
 export default function Register() {
   const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSelect = (roleId: string) => {
     setSelectedRole(roleId);
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -28,25 +33,62 @@ export default function Register() {
         <>
           <img className="loginTop" src={loginTop} alt="" />
           <img className="loginBottom" src={loginBottom} alt="" />
-          <div className="login-form-container">
+          <div className="register-form-container">
             <img className="logoLogin" src={logo} alt="Логотип KTSThub" />
             <h2>Welcome to platform</h2>
             
             <div className="input-group">
-              <input type="text" />
-              <input type="password" />
-              <input type="text" />
+              <input type="text" placeholder="Surname" />
+              <input type="text" placeholder="Name" />
             </div>
 
-            <div className="email-section">
-              <input type="text" placeholder="Username" />
-              <div className="email-row">
-                <input type="email" placeholder="Email address" />
-                <button type="button" className="get-code-btn">получить код</button>
+            <div className="birthday-section">
+              <input type="date" placeholder="Дата рождения" className="birthday-input" />
+            </div>
+            
+            <div className="phone-gender-row">
+              <input type="tel" placeholder="Номер телефона" className="phone-input" />
+              <div className="gender-selector">
+                <div className="gender-options">
+                  <label className="gender-option">
+                    <input type="radio" name="gender" value="male" />
+                    <span>М</span>
+                  </label>
+                  <label className="gender-option">
+                    <input type="radio" name="gender" value="female" />
+                    <span>Ж</span>
+                  </label>
+                </div>
               </div>
             </div>
 
-            <input type="text" placeholder="Код" className="code-input" />
+            <input type="email" placeholder="Email address" />
+
+            <div className="password-wrapper">
+              <input 
+                type={showPassword ? "text" : "password"} 
+                placeholder="Password" 
+                className="password-input" 
+              />
+              <button 
+                type="button" 
+                className="password-toggle" 
+                onClick={togglePasswordVisibility}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? (
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                  </svg>
+                ) : (
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                )}
+              </button>
+            </div>
 
             <button type="submit" className="signup-btn">
               Продолжить <span>→</span>
