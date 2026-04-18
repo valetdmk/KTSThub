@@ -3,8 +3,7 @@ import { useState } from "react";
 import "./index.scss";
 import Backregister from "../../../shared/assets/Backregister.png"
 import boyregistration from "../../../shared/assets/boyregistration.png"
-import loginTop from "../../../shared/assets/loginTop.png"
-import loginBottom from "../../../shared/assets/loginBottom.png"
+import loginnregistr from "../../../shared/assets/loginnregistr.png"
 import logo from "../../../shared/assets/logo.png"
 
 const roles = [
@@ -36,9 +35,10 @@ export default function Register() {
     <div className={`register-role-page ${selectedRole ? 'role-selected' : ''}`}>
       {selectedRole ? (
         <>
-          <img className="loginTop" src={loginTop} alt="" />
-          <img className="loginBottom" src={loginBottom} alt="" />
+          <img className="loginnregistr" src={loginnregistr} alt="" />
+          <img className="boyforma" src={boyregistration} alt="" />
           <div className="register-form-container">
+            <div className="logo-block"></div>
             <img className="logoLogin" src={logo} alt="Логотип KTSThub" />
             <h2>Welcome to platform</h2>
             

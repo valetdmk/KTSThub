@@ -5,8 +5,7 @@ import UnionTop from "../../../shared/assets/UnionTop.png"
 import UnionBottom from "../../../shared/assets/UnionBottom.png"
 import Boy from "../../../shared/assets/Boy.png"
 import Girl from "../../../shared/assets/Girl.png"
-import loginTop from "../../../shared/assets/loginTop.png"
-import loginBottom from "../../../shared/assets/loginBottom.png"
+import loginnregistr from "../../../shared/assets/loginnregistr.png"
 
 export default function Login() {
   const navigate = useNavigate();
@@ -14,13 +13,13 @@ export default function Login() {
   return (
     <div className="login-page">
 
-      <img className="loginTop" src={loginTop} alt="" />
-      <img className="loginBottom" src={loginBottom} alt="" />
+      <img className="loginnregistr" src={loginnregistr} alt="" />
       <img className="boy" src={Boy} alt="" />
       <img className="girl" src={Girl} alt="" />
 
       <div className="login-form-container">
         <img className="unionTop" src={UnionTop} alt="" />
+        {/* <div className="logo-block"></div> */}
         <img className="logoLogin" src={logo} alt="Логотип KTSThub" />
         <h2>Welcome back<br />to platform</h2>
         
