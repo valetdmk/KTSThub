@@ -289,17 +289,28 @@
      align-items: center;
      gap: 20px;
 
-     .logo-block {
-       width: 150px;
-       height: 33px;
-       background: #000;
-       border-radius: 90px;
-       box-shadow: 
-         6px -3px 5px 0px #FF5100 inset,
-         1px 3px 8.6px 0px #FF5100 inset;
-     }
+.logo-block {
+        width: 150px;
+        height: 33px;
+        background: #000;
+        border-radius: 90px;
+        box-shadow: 
+          6px -3px 5px 0px #FF5100 inset,
+          1px 3px 8.6px 0px #FF5100 inset;
+      }
 
-     h2 {
+      .logoLogin {
+        width: 150px;
+        height: auto;
+        transition: width 0.5s ease-in-out;
+      }
+
+      .register-form-container:has(.success-message) .logoLogin {
+        width: 270px;
+        height: auto;
+      }
+
+      h2 {
        color: #fff;
        font-size: 32px;
        margin: 0;
@@ -307,69 +318,122 @@
        z-index: 10;
      }
 
-     .input-group {
-       display: flex;
-       flex-direction: row;
-       gap: 20px;
-       width: 100%;
-       z-index: 10;
+.input-group {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        width: 100%;
+        z-index: 10;
+        margin-bottom: 20px;
 
-       input {
-         flex: 1;
-         width: calc(50% - 10px);
-         min-width: 0;
-       }
-     }
+        input {
+          flex: 1;
+          width: calc(50% - 10px);
+          min-width: 0;
+        }
+      }
 
-     .divider {
-       display: flex;
-       align-items: center;
-       width: 100%;
-       margin: 0;
-       gap: 20px;
-       z-index: 10;
+      .birthday-section {
+        margin-bottom: 20px;
+      }
 
-       .line {
-         flex: 1;
-         height: 1px;
-         background: rgba(255, 255, 255, 0.5);
-       }
+      .phone-gender-row {
+        margin-bottom: 20px;
+      }
 
-       .or-text {
-         color: rgba(255, 255, 255, 0.8);
-         font-size: 32px;
-       }
-     }
+      input[type="email"] {
+        margin-bottom: 20px;
+      }
 
-     .signup-btn {
-       display: flex;
-       align-items: center;
-       justify-content: center;
-       gap: 20px;
-       width: 110%;
-       padding: 18px;
-       font-size: 32px;
-       cursor: pointer;
-       border-radius: 50px;
-       border: 2px solid rgba(255, 255, 255, 0.3);
-       background: rgba(255, 255, 255, 0.1);
-       color: #fff;
-       font-weight: 600;
-       transition: transform 0.2s;
-       z-index: 10;
+      .password-wrapper {
+        margin-bottom: 20px;
+      }
 
-       span {
-         font-size: 20px;
-       }
+.signup-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        width: 100%;
+        padding: 18px;
+        font-size: 32px;
+        cursor: pointer;
+        border-radius: 50px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        font-weight: 600;
+        transition: transform 0.2s;
+        z-index: 10;
+        margin-top: auto;
 
-       &:hover {
-         transform: scale(1.05);
-       }
+        span {
+          font-size: 20px;
+        }
 
-       &:active {
-         transform: scale(0.98);
-       }
-     }
+        &:hover:not(.disabled) {
+          transform: scale(1.05);
+        }
+
+        &:active:not(.disabled) {
+          transform: scale(0.98);
+        }
+
+        &.disabled {
+          cursor: not-allowed;
+          opacity: 0.5;
+        }
+
+        .loading-text {
+          animation: pulse 1.5s infinite;
+        }
+      }
+
+      @keyframes pulse {
+        0%, 100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      .success-message {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: 20px;
+        padding: 40px 20px;
+        z-index: 10;
+
+        h3 {
+          color: #fff;
+          font-size: 52px;
+          margin: 0;
+        }
+
+        p {
+          color: rgba(255, 255, 255, 0.9);
+          font-size: 32px;
+          margin: 0;
+        }
+      }
+
+      @keyframes scaleIn {
+        0% {
+          transform: scale(0);
+          opacity: 0;
+        }
+        50% {
+          transform: scale(1.2);
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
 
      .birthday-section {
        width: 100%;
