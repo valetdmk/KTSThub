@@ -18,6 +18,7 @@ export default function Register() {
   const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [selectedGender, setSelectedGender] = useState<string | null>(null);
 
   const handleSelect = (roleId: string) => {
     setSelectedRole(roleId);
@@ -25,6 +26,10 @@ export default function Register() {
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+
+  const handleGenderSelect = (gender: string) => {
+    setSelectedGender(gender);
   };
 
   return (
@@ -50,14 +55,20 @@ export default function Register() {
               <input type="tel" placeholder="Номер телефона" className="phone-input" />
               <div className="gender-selector">
                 <div className="gender-options">
-                  <label className="gender-option">
-                    <input type="radio" name="gender" value="male" />
-                    <span>М</span>
-                  </label>
-                  <label className="gender-option">
-                    <input type="radio" name="gender" value="female" />
-                    <span>Ж</span>
-                  </label>
+                  <button 
+                    type="button"
+                    className={`gender-btn ${selectedGender === 'male' ? 'active' : ''}`}
+                    onClick={() => handleGenderSelect('male')}
+                  >
+                    М
+                  </button>
+                  <button 
+                    type="button"
+                    className={`gender-btn ${selectedGender === 'female' ? 'active' : ''}`}
+                    onClick={() => handleGenderSelect('female')}
+                  >
+                    Ж
+                  </button>
                 </div>
               </div>
             </div>

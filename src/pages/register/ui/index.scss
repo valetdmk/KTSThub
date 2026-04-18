@@ -302,10 +302,8 @@
       justify-content: center;
 
       input {
-        width: 220px !important;
-        height: 60px !important;
         padding: 10px;
-        font-size: 24px;
+        font-size: 16px;
         border-radius: 20px;
       }
     }
@@ -328,48 +326,6 @@
         color: rgba(255, 255, 255, 0.8);
         font-size: 32px;
       }
-    }
-
-    .email-section {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      width: 100%;
-      z-index: 10;
-      border-radius: 20px;
-
-      .email-row {
-        display: flex;
-        gap: 10px;
-
-        input {
-          flex: 1;
-          border-radius: 20px;
-        }
-
-        .get-code-btn {
-          padding: 15px 20px;
-          border-radius: 20px;
-          border: 2px solid rgba(255, 255, 255, 0.3);
-          background: rgba(255, 255, 255, 0.1);
-          color: #fff;
-          font-size: 14px;
-          cursor: pointer;
-          white-space: nowrap;
-          transition: all 0.2s;
-
-          &:hover {
-            background: rgba(255, 255, 255, 0.2);
-          }
-        }
-      }
-    }
-
-    .code-input {
-      width: 100%;
-      margin-top: 15px;
-      z-index: 10;
-      border-radius: 20px;
     }
 
     .signup-btn {
@@ -438,22 +394,29 @@
           display: flex;
           gap: 10px;
 
-          .gender-option {
-            display: flex;
-            align-items: center;
-            gap: 5px;
+          .gender-btn {
+            padding: 8px 20px;
+            border-radius: 50px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.2s;
 
-            input[type="radio"] {
-              accent-color: #FF5100;
-              width: 18px;
-              height: 18px;
-              cursor: pointer;
+            &:hover {
+              background: rgba(255, 255, 255, 0.2);
             }
 
-            span {
+            &.active {
+              background: #D9D9D933;
+              border: 2px solid rgba(255, 255, 255, 0.3);
               color: #fff;
-              font-size: 16px;
+            }
+
+            &:not(.active) {
+              opacity: 0.5;
             }
           }
         }
