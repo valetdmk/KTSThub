@@ -12,6 +12,20 @@ const roles = [
   { id: "organizer", number: "04", label: "ORGANIZER" },
 ];
 
+const roleOptions = [
+  { id: "frontend", label: "Frontend-разработчик" },
+  { id: "backend", label: "Backend-разработчик" },
+  { id: "uxui", label: "UX/UI-разработчик" },
+  { id: "project_manager", label: "Project Manager" },
+  { id: "gamedev", label: "Gamedev" },
+];
+
+const statusOptions = [
+  { id: "beginner", label: "Начинающий" },
+  { id: "middle", label: "Средний" },
+  { id: "advanced", label: "Продвинутый" },
+];
+
 export default function Register() {
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
@@ -28,6 +42,17 @@ export default function Register() {
     password: ""
   });
 
+  const [step2Data, setStep2Data] = useState({
+    role: "",
+    status: "",
+    hardSkills: false,
+    softSkills: false,
+    description: ""
+  });
+
+  const [isRoleDropdownOpen, setIsRoleDropdownOpen] = useState(false);
+  const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
+
   const handleSelect = (roleId: string) => {
     setSelectedRole(roleId);
   };
@@ -43,6 +68,10 @@ export default function Register() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSkillToggle = (skill: "hardSkills" | "softSkills") => {
+    setStep2Data(prev => ({ ...prev, [skill]: !prev[skill] }));
   };
 
   const isFormValid = () => {
@@ -147,10 +176,121 @@ export default function Register() {
     </form>
   );
 
-  const renderSuccess = () => (
-    <div className="success-message">
-      <h3>Поздравляем!</h3>
-      <p>Вы прошли первый шаг!</p>
+  const renderStep2 = () => (
+    <div className="step2-form">
+      <div className="avatar-section">
+        <div className="avatar-placeholder">
+          <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </div>
+      </div>
+
+      <div className="role-section">
+        <div 
+          className={`custom-dropdown ${isRoleDropdownOpen ? 'open' : ''}`}
+          onClick={() => setIsRoleDropdownOpen(!isRoleDropdownOpen)}
+        >
+          <div className="dropdown-selected">
+            {step2Data.role 
+              ? roleOptions.find(r => r.id === step2Data.role)?.label 
+              : "Выберите роль"}
+          </div>
+          <div className="dropdown-arrow">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+              <path d="M6 8L1 3h10z"/>
+            </svg>
+          </div>
+          {isRoleDropdownOpen && (
+            <div className="dropdown-options">
+              {roleOptions.map(option => (
+                <div 
+                  key={option.id}
+                  className={`dropdown-option ${step2Data.role === option.id ? 'selected' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setStep2Data(prev => ({ ...prev, role: option.id }));
+                    setIsRoleDropdownOpen(false);
+                  }}
+                >
+                  {option.label}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="status-section">
+        <label>Статус: </label>
+        <div 
+          className={`custom-dropdown status-dropdown ${isStatusDropdownOpen ? 'open' : ''}`}
+          onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
+        >
+          <div className="dropdown-selected">
+            {step2Data.status 
+              ? statusOptions.find(s => s.id === step2Data.status)?.label 
+              : "Выберите статус"}
+          </div>
+          <div className="dropdown-arrow">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+              <path d="M6 8L1 3h10z"/>
+            </svg>
+          </div>
+          {isStatusDropdownOpen && (
+            <div className="dropdown-options">
+              {statusOptions.map(option => (
+                <div 
+                  key={option.id}
+                  className={`dropdown-option ${step2Data.status === option.id ? 'selected' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setStep2Data(prev => ({ ...prev, status: option.id }));
+                    setIsStatusDropdownOpen(false);
+                  }}
+                >
+                  {option.label}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="skills-section">
+        <button 
+          type="button"
+          className={`skill-btn hard-skills ${step2Data.hardSkills ? 'active' : ''}`}
+          onClick={() => handleSkillToggle('hardSkills')}
+        >
+          Выбрать
+          Hard-skills
+        </button>
+        <button 
+          type="button"
+          className={`skill-btn soft-skills ${step2Data.softSkills ? 'active' : ''}`}
+          onClick={() => handleSkillToggle('softSkills')}
+        >
+          Выбрать
+          Soft-skills
+        </button>
+      </div>
+
+      <button type="button" className="add-description-btn">
+        + добавить описание
+      </button>
+      <button 
+        type="submit" 
+        className={`signup-btn ${!isFormValid() ? 'disabled' : ''}`}
+        disabled={!isFormValid() || isLoading}
+      >
+        {isLoading ? (
+          <span className="loading-text">Загрузка...</span>
+        ) : (
+          <>Продолжить <span>→</span></>
+        )}
+      </button>
     </div>
   );
 
@@ -162,9 +302,13 @@ export default function Register() {
           <img className="boyforma" src={boyregistration} alt="" />
           <div className="register-form-container">
             <div className="logo-block"></div>
-            <img className="logoLogin" src={logo} alt="Логотип KTSThub" />
-            {!isSuccess && <h2>Welcome to platform</h2>}
-            {isSuccess ? renderSuccess() : renderForm()}
+            {isSuccess ? renderStep2() : (
+              <>
+                <img className="logoLogin" src={logo} alt="Логотип KTSThub" />
+                <h2>Welcome to platform</h2>
+                {renderForm()}
+              </>
+            )}
           </div>
         </>
       ) : (
