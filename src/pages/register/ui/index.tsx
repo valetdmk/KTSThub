@@ -47,11 +47,25 @@ export default function Register() {
     status: "",
     hardSkills: false,
     softSkills: false,
-    description: ""
+    description: "",
+    hardSkillsList: "",
+    softSkillsList: ""
   });
 
   const [isRoleDropdownOpen, setIsRoleDropdownOpen] = useState(false);
   const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
+  const [skillsModal, setSkillsModal] = useState<"hardSkills" | "softSkills" | null>(null);
+  const [enteredSkills, setEnteredSkills] = useState("");
+
+  const recommendedHardSkills = [
+    "JavaScript", "TypeScript", "React", "Node.js", "Python", "Java", "C++", 
+    "Unity", "Unreal Engine", "Figma", "SQL", "Git"
+  ];
+
+  const recommendedSoftSkills = [
+    "Коммуникабельность", "Работа в команде", "Тайм-менеджмент", 
+    "Креативность", "Адаптивность", "Лидерство"
+  ];
 
   const handleSelect = (roleId: string) => {
     setSelectedRole(roleId);
@@ -70,8 +84,18 @@ export default function Register() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSkillToggle = (skill: "hardSkills" | "softSkills") => {
-    setStep2Data(prev => ({ ...prev, [skill]: !prev[skill] }));
+  const openSkillsModal = (type: "hardSkills" | "softSkills") => {
+    setSkillsModal(type);
+  };
+
+  const closeSkillsModal = () => {
+    if (skillsModal === 'hardSkills') {
+      setStep2Data(prev => ({ ...prev, hardSkills: true, hardSkillsList: enteredSkills }));
+    } else if (skillsModal === 'softSkills') {
+      setStep2Data(prev => ({ ...prev, softSkills: true, softSkillsList: enteredSkills }));
+    }
+    setSkillsModal(null);
+    setEnteredSkills("");
   };
 
   const isFormValid = () => {
@@ -262,24 +286,73 @@ export default function Register() {
         <button 
           type="button"
           className={`skill-btn hard-skills ${step2Data.hardSkills ? 'active' : ''}`}
-          onClick={() => handleSkillToggle('hardSkills')}
+          onClick={() => openSkillsModal('hardSkills')}
         >
-          Выбрать
-          Hard-skills
+          <span className="skill-label">Hard-skills</span>
+          <span className="skill-value">{step2Data.hardSkillsList || "Выбрать"}</span>
         </button>
         <button 
           type="button"
           className={`skill-btn soft-skills ${step2Data.softSkills ? 'active' : ''}`}
-          onClick={() => handleSkillToggle('softSkills')}
+          onClick={() => openSkillsModal('softSkills')}
         >
-          Выбрать
-          Soft-skills
+          <span className="skill-label">Soft-skills</span>
+          <span className="skill-value">{step2Data.softSkillsList || "Выбрать"}</span>
         </button>
       </div>
 
-      <button type="button" className="add-description-btn">
-        + добавить описание
-      </button>
+      {skillsModal && (
+        <div className="skills-modal-overlay" onClick={closeSkillsModal}>
+          <div className="skills-modal" onClick={e => e.stopPropagation()}>
+            <button className="modal-close" onClick={closeSkillsModal}>×</button>
+            <h3>
+              {skillsModal === 'hardSkills' 
+                ? 'Какими Hard-skills владеете?' 
+                : 'Какими Soft-skills владеете?'}
+            </h3>
+            <textarea
+              value={enteredSkills}
+              onChange={(e) => setEnteredSkills(e.target.value)}
+              placeholder={skillsModal === 'hardSkills' 
+                ? 'Введите ваши Hard-skills...' 
+                : 'Введите ваши Soft-skills...'}
+              className="skills-textarea"
+            />
+            <div className="recommended-skills">
+              <p>Рекомендованные навыки</p>
+              <div className="recommended-skills-list">
+                {(skillsModal === 'hardSkills' ? recommendedHardSkills : recommendedSoftSkills).map(skill => (
+                  <button 
+                    key={skill}
+                    className="recommended-skill-btn"
+                    onClick={() => setEnteredSkills(prev => prev ? `${prev}, ${skill}` : skill)}
+                  >
+                    {skill}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <button className="modal-save-btn" onClick={closeSkillsModal}>
+              Сохранить
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="description-section">
+        <textarea
+          value={step2Data.description}
+          onChange={(e) => {
+            if (e.target.value.length <= 250) {
+              setStep2Data(prev => ({ ...prev, description: e.target.value }));
+            }
+          }}
+          placeholder="Добавить описание..."
+          className="description-input"
+          maxLength={250}
+        />
+        <span className="char-count">{step2Data.description.length}/250</span>
+      </div>
       <button 
         type="submit" 
         className={`signup-btn ${!isFormValid() ? 'disabled' : ''}`}
