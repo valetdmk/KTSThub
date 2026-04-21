@@ -5,6 +5,8 @@ import boyregistration from "../../../shared/assets/boyregistration.png"
 import loginnregistr from "../../../shared/assets/loginnregistr.png"
 import logo from "../../../shared/assets/logo.png"
 
+const API_BASE_URL = "http://10.3.25.106:8080/api";
+
 const roles = [
   { id: "student", number: "01", label: "STUDENT" },
   { id: "business_partner", number: "02", label: "BUSINESS PARTNER" },
@@ -12,27 +14,34 @@ const roles = [
   { id: "organizer", number: "04", label: "ORGANIZER" },
 ];
 
-const roleOptions = [
-  { id: "frontend", label: "Frontend-разработчик" },
-  { id: "backend", label: "Backend-разработчик" },
-  { id: "uxui", label: "UX/UI-разработчик" },
-  { id: "project_manager", label: "Project Manager" },
-  { id: "gamedev", label: "Gamedev" },
+const jobOptions = [
+  { id: "FRONT", label: "Frontend-разработчик" },
+  { id: "BACK", label: "Backend-разработчик" },
+  { id: "DESIGNER", label: "UX/UI-разработчик" },
+  { id: "PROJECT", label: "Project Manager" },
+  { id: "GAME", label: "Gamedev" },
 ];
 
-const statusOptions = [
-  { id: "beginner", label: "Начинающий" },
-  { id: "middle", label: "Средний" },
-  { id: "advanced", label: "Продвинутый" },
+const levelOptions = [
+  { id: "BEGINNER", label: "Начинающий" },
+  { id: "INTERMEDIATE", label: "Средний" },
+  { id: "ADVANCED", label: "Продвинутый" },
 ];
+
+interface ApiError {
+  message?: string;
+  error?: string;
+}
 
 export default function Register() {
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
-  const [selectedGender, setSelectedGender] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
+  const [error, setError] = useState<string | null>(null);
+  const [authToken, setAuthToken] = useState<string | null>(null);
+  const [userId, setUserId] = useState<number | null>(null);
 
   const calculateAge = (birthday: string) => {
     if (!birthday) return "";
@@ -46,15 +55,10 @@ export default function Register() {
     return age;
   };
 
-  const getGenderLabel = (gender: string | null) => {
-    if (gender === 'male') return "М";
-    if (gender === 'female') return "Ж";
-    return "";
-  };
-
   const [formData, setFormData] = useState({
-    surname: "",
     name: "",
+    lastname: "",
+    username: "",
     birthday: "",
     phone: "",
     email: "",
@@ -62,17 +66,18 @@ export default function Register() {
   });
 
   const [step2Data, setStep2Data] = useState({
-    role: "",
-    status: "",
+    job: "",
+    level: "",
     hardSkills: false,
     softSkills: false,
     description: "",
     hardSkillsList: "",
-    softSkillsList: ""
+    softSkillsList: "",
+    telegram: ""
   });
 
-  const [isRoleDropdownOpen, setIsRoleDropdownOpen] = useState(false);
-  const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
+  const [isJobDropdownOpen, setIsJobDropdownOpen] = useState(false);
+  const [isLevelDropdownOpen, setIsLevelDropdownOpen] = useState(false);
   const [skillsModal, setSkillsModal] = useState<"hardSkills" | "softSkills" | null>(null);
   const [enteredSkills, setEnteredSkills] = useState("");
 
@@ -94,13 +99,14 @@ export default function Register() {
     setShowPassword(!showPassword);
   };
 
-  const handleGenderSelect = (gender: string) => {
-    setSelectedGender(gender);
-  };
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleStep2InputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setStep2Data(prev => ({ ...prev, [name]: value }));
   };
 
   const openSkillsModal = (type: "hardSkills" | "softSkills") => {
@@ -119,75 +125,185 @@ export default function Register() {
 
   const isFormValid = () => {
     return (
-      formData.surname.trim() !== "" &&
-      formData.name.trim() !== "" &&
+      formData.name.trim().length >= 2 &&
+      formData.lastname.trim().length >= 2 &&
+      formData.username.trim() !== "" &&
       formData.birthday !== "" &&
-      formData.phone.trim() !== "" &&
       formData.email.trim() !== "" &&
-      formData.password.trim() !== "" &&
-      selectedGender !== null
+      formData.password.length >= 8
     );
   };
 
   const isStep2Valid = () => {
     return (
-      step2Data.role !== "" &&
-      step2Data.status !== "" &&
-      step2Data.description.trim() !== ""
+      step2Data.job !== "" &&
+      step2Data.level !== ""
     );
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isFormValid()) return;
 
     setIsLoading(true);
-    
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    setIsLoading(false);
-    setIsSuccess(true);
+    setError(null);
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/signup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          lastname: formData.lastname,
+          username: formData.username,
+          birthday: formData.birthday,
+          email: formData.email,
+          password: formData.password
+        }),
+      });
+
+      if (response.ok) {
+        const signinResponse = await fetch(`${API_BASE_URL}/auth/signin`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: formData.username,
+            password: formData.password
+          }),
+        });
+
+        if (signinResponse.ok) {
+          const signinData = await signinResponse.json();
+          setAuthToken(signinData.token);
+        }
+
+        setIsSuccess(true);
+        setCurrentStep(2);
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || errorData.error || "Ошибка регистрации");
+      }
+    } catch (err) {
+      setError("Ошибка подключения к серверу");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleStep2Submit = () => {
-    if (!isStep2Valid()) return;
-    setCurrentStep(3);
+  const handleStep2Submit = async () => {
+    if (!isStep2Valid() || !authToken) return;
+    
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const skillsArray: { skillId: number; level: number }[] = [];
+      
+      if (step2Data.hardSkillsList) {
+        const hardSkillsItems = step2Data.hardSkillsList.split(",").map(s => s.trim()).filter(Boolean);
+        hardSkillsItems.forEach((_, index) => {
+          skillsArray.push({ skillId: index + 1, level: 5 });
+        });
+      }
+
+      const updateResponse = await fetch(`${API_BASE_URL}/user/${userId || 1}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${authToken}`
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          lastName: formData.lastname,
+          username: formData.username,
+          birthday: formData.birthday,
+          email: formData.email,
+          phone: formData.phone || null,
+          telegram: step2Data.telegram || null,
+          job: step2Data.job,
+          level: step2Data.level,
+          skills: skillsArray
+        }),
+      });
+
+      if (updateResponse.ok || updateResponse.status === 404) {
+        setCurrentStep(3);
+      } else {
+        const errorData = await updateResponse.json();
+        setError(errorData.message || "Ошибка обновления профиля");
+        setCurrentStep(3);
+      }
+    } catch (err) {
+      setError("Ошибка подключения к серверу");
+      setCurrentStep(3);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const renderForm = () => (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSignup}>
+      {error && <div className="error-message">{error}</div>}
       <div className="input-group">
-        <input type="text" name="surname" value={formData.surname} onChange={handleInputChange} placeholder="Surname" />
-        <input type="text" name="name" value={formData.name} onChange={handleInputChange} placeholder="Name" />
+        <input 
+          type="text" 
+          name="name" 
+          value={formData.name} 
+          onChange={handleInputChange} 
+          placeholder="Name" 
+        />
+        <input 
+          type="text" 
+          name="lastname" 
+          value={formData.lastname} 
+          onChange={handleInputChange} 
+          placeholder="Surname" 
+        />
+      </div>
+
+      <div className="input-group">
+        <input 
+          type="text" 
+          name="username" 
+          value={formData.username} 
+          onChange={handleInputChange} 
+          placeholder="Username" 
+        />
       </div>
 
       <div className="birthday-section">
-        <input type="date" name="birthday" value={formData.birthday} onChange={handleInputChange} placeholder="Дата рождения" className="birthday-input" />
+        <input 
+          type="date" 
+          name="birthday" 
+          value={formData.birthday} 
+          onChange={handleInputChange} 
+          placeholder="Дата рождения" 
+          className="birthday-input" 
+        />
       </div>
       
       <div className="phone-gender-row">
-        <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} placeholder="Номер телефона" className="phone-input" />
-        <div className="gender-selector">
-          <div className="gender-options">
-            <button 
-              type="button"
-              className={`gender-btn ${selectedGender === 'male' ? 'active' : ''}`}
-              onClick={() => handleGenderSelect('male')}
-            >
-              М
-            </button>
-            <button 
-              type="button"
-              className={`gender-btn ${selectedGender === 'female' ? 'active' : ''}`}
-              onClick={() => handleGenderSelect('female')}
-            >
-              Ж
-            </button>
-          </div>
-        </div>
+        <input 
+          type="tel" 
+          name="phone" 
+          value={formData.phone} 
+          onChange={handleInputChange} 
+          placeholder="Номер телефона" 
+          className="phone-input" 
+        />
       </div>
 
-      <input type="email" name="email" value={formData.email} onChange={handleInputChange} placeholder="Email address" />
+      <input 
+        type="email" 
+        name="email" 
+        value={formData.email} 
+        onChange={handleInputChange} 
+        placeholder="Email address" 
+      />
 
       <div className="password-wrapper">
         <input 
@@ -195,7 +311,7 @@ export default function Register() {
           name="password"
           value={formData.password} 
           onChange={handleInputChange}
-          placeholder="Password" 
+          placeholder="Password (min 8 characters)" 
           className="password-input" 
         />
         <button 
@@ -245,29 +361,29 @@ export default function Register() {
 
       <div className="role-section">
         <div 
-          className={`custom-dropdown ${isRoleDropdownOpen ? 'open' : ''}`}
-          onClick={() => setIsRoleDropdownOpen(!isRoleDropdownOpen)}
+          className={`custom-dropdown ${isJobDropdownOpen ? 'open' : ''}`}
+          onClick={() => setIsJobDropdownOpen(!isJobDropdownOpen)}
         >
           <div className="dropdown-selected">
-            {step2Data.role 
-              ? roleOptions.find(r => r.id === step2Data.role)?.label 
-              : "Выберите роль"}
+            {step2Data.job 
+              ? jobOptions.find(r => r.id === step2Data.job)?.label 
+              : "Выберите направление (job)"}
           </div>
           <div className="dropdown-arrow">
             <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
               <path d="M6 8L1 3h10z"/>
             </svg>
           </div>
-          {isRoleDropdownOpen && (
+          {isJobDropdownOpen && (
             <div className="dropdown-options">
-              {roleOptions.map(option => (
+              {jobOptions.map(option => (
                 <div 
                   key={option.id}
-                  className={`dropdown-option ${step2Data.role === option.id ? 'selected' : ''}`}
+                  className={`dropdown-option ${step2Data.job === option.id ? 'selected' : ''}`}
                   onClick={(e) => {
                     e.stopPropagation();
-                    setStep2Data(prev => ({ ...prev, role: option.id }));
-                    setIsRoleDropdownOpen(false);
+                    setStep2Data(prev => ({ ...prev, job: option.id }));
+                    setIsJobDropdownOpen(false);
                   }}
                 >
                   {option.label}
@@ -279,31 +395,31 @@ export default function Register() {
       </div>
 
       <div className="status-section">
-        <label>Статус: </label>
+        <label>Уровень: </label>
         <div 
-          className={`custom-dropdown status-dropdown ${isStatusDropdownOpen ? 'open' : ''}`}
-          onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
+          className={`custom-dropdown status-dropdown ${isLevelDropdownOpen ? 'open' : ''}`}
+          onClick={() => setIsLevelDropdownOpen(!isLevelDropdownOpen)}
         >
           <div className="dropdown-selected">
-            {step2Data.status 
-              ? statusOptions.find(s => s.id === step2Data.status)?.label 
-              : "Выберите статус"}
+            {step2Data.level 
+              ? levelOptions.find(s => s.id === step2Data.level)?.label 
+              : "Выберите уровень (level)"}
           </div>
           <div className="dropdown-arrow">
             <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
               <path d="M6 8L1 3h10z"/>
             </svg>
           </div>
-          {isStatusDropdownOpen && (
+          {isLevelDropdownOpen && (
             <div className="dropdown-options">
-              {statusOptions.map(option => (
+              {levelOptions.map(option => (
                 <div 
                   key={option.id}
-                  className={`dropdown-option ${step2Data.status === option.id ? 'selected' : ''}`}
+                  className={`dropdown-option ${step2Data.level === option.id ? 'selected' : ''}`}
                   onClick={(e) => {
                     e.stopPropagation();
-                    setStep2Data(prev => ({ ...prev, status: option.id }));
-                    setIsStatusDropdownOpen(false);
+                    setStep2Data(prev => ({ ...prev, level: option.id }));
+                    setIsLevelDropdownOpen(false);
                   }}
                 >
                   {option.label}
@@ -371,6 +487,17 @@ export default function Register() {
         </div>
       )}
 
+      <div className="social-networks">
+        <input 
+          type="text" 
+          name="telegram" 
+          value={step2Data.telegram} 
+          onChange={handleStep2InputChange} 
+          placeholder="Telegram (https://t.me/username)" 
+          className="social-input"
+        />
+      </div>
+
       <div className="description-section">
         <textarea
           value={step2Data.description}
@@ -404,19 +531,13 @@ export default function Register() {
     <div className="step3-form">
       <div className="user-info-section">
         <div className="user-name-display">
-          {formData.surname && <p className="surname-display">{formData.surname}</p>}
+          {formData.lastname && <p className="surname-display">{formData.lastname}</p>}
           {formData.name && <p className="name-display">{formData.name}</p>}
         </div>
 
         {formData.birthday && (
           <div className="birthday-section">
             <span className="age-display">{calculateAge(formData.birthday)} лет</span>
-          </div>
-        )}
-
-        {selectedGender && (
-          <div className="gender-selector">
-            <span className="gender-display">{getGenderLabel(selectedGender)}</span>
           </div>
         )}
 
@@ -429,15 +550,39 @@ export default function Register() {
           </div>
         </div>
 
-        {step2Data.role && (
+        {step2Data.job && (
           <div className="role-section">
-            <span className="role-display">{roleOptions.find(r => r.id === step2Data.role)?.label}</span>
+            <span className="role-display">{jobOptions.find(r => r.id === step2Data.job)?.label}</span>
           </div>
         )}
 
-        {step2Data.status && (
+        {step2Data.level && (
           <div className="status-section">
-            <span className="status-display">{statusOptions.find(s => s.id === step2Data.status)?.label}</span>
+            <span className="status-display">{levelOptions.find(s => s.id === step2Data.level)?.label}</span>
+          </div>
+        )}
+
+        {(step2Data.hardSkillsList || step2Data.softSkillsList) && (
+          <div className="skills-preview">
+            {step2Data.hardSkillsList && (
+              <div className="skills-list">
+                <span className="skills-label">Hard-skills:</span>
+                <span className="skills-value">{step2Data.hardSkillsList}</span>
+              </div>
+            )}
+            {step2Data.softSkillsList && (
+              <div className="skills-list">
+                <span className="skills-label">Soft-skills:</span>
+                <span className="skills-value">{step2Data.softSkillsList}</span>
+              </div>
+            )}
+          </div>
+        )}
+
+        {step2Data.telegram && (
+          <div className="telegram-preview">
+            <span className="telegram-label">Telegram:</span>
+            <span className="telegram-value">{step2Data.telegram}</span>
           </div>
         )}
 
@@ -449,15 +594,11 @@ export default function Register() {
       </div>
 
       <button 
-        type="submit" 
+        type="button" 
         className="signup-btn"
-        onClick={handleSubmit}
+        onClick={() => window.location.href = "/login"}
       >
-        {isLoading ? (
-          <span className="loading-text">Загрузка...</span>
-        ) : (
-          <>Завершить <span>→</span></>
-        )}
+        Завершить регистрацию
       </button>
     </div>
   );
