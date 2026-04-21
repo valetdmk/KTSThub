@@ -14,10 +14,6 @@
   overflow: hidden;
   padding: 40px;
 
-  &.role-selected {
-    overflow: visible;
-  }
-
   &::before {
     content: '';
     position: absolute;
@@ -978,6 +974,261 @@
           &:hover {
             background: rgba(255, 255, 255, 0.2);
             transform: scale(1.02);
+          }
+        }
+      }
+
+      .age-section {
+        margin-bottom: 20px;
+        width: 100%;
+
+        .age-input {
+          width: 100%;
+          padding: 15px 20px;
+          border-radius: 20px;
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          background: rgba(255, 255, 255, 0.1);
+          color: #fff;
+          font-size: 16px;
+          outline: none;
+          box-sizing: border-box;
+
+          &::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+          }
+
+          &:focus {
+            border-color: #fff;
+          }
+
+          &::-webkit-inner-spin-button,
+          &::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+          }
+        }
+      }
+
+      .social-networks {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+        margin-bottom: 20px;
+
+        .social-input {
+          width: 100%;
+          padding: 15px 20px;
+          border-radius: 20px;
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          background: rgba(255, 255, 255, 0.1);
+          color: #fff;
+          font-size: 16px;
+          outline: none;
+          box-sizing: border-box;
+
+          &::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+          }
+
+          &:focus {
+            border-color: #fff;
+          }
+        }
+      }
+
+      .step3-summary {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        gap: 20px;
+        z-index: 10;
+
+        .summary-avatar {
+          width: 120px;
+          height: 120px;
+          border-radius: 50%;
+          border: 3px solid rgba(255, 255, 255, 0.3);
+          background: rgba(255, 255, 255, 0.1);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: rgba(255, 255, 255, 0.7);
+        }
+
+        .summary-name {
+          h3 {
+            color: #fff;
+            font-size: 28px;
+            margin: 0;
+            text-align: center;
+          }
+        }
+
+        .summary-role {
+          .role-badge {
+            padding: 8px 20px;
+            border-radius: 20px;
+            background: linear-gradient(90deg, rgba(247, 90, 40, 0.6) 0%, rgba(150, 5, 202, 0.6) 100%);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+          }
+        }
+
+        .summary-info {
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+
+          .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 15px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+
+            .info-label {
+              color: rgba(255, 255, 255, 0.7);
+            }
+
+            .info-value {
+              color: #fff;
+              font-weight: 500;
+            }
+          }
+        }
+
+        .summary-description {
+          width: 100%;
+          padding: 15px;
+          border-radius: 15px;
+          background: rgba(255, 255, 255, 0.1);
+
+          h4 {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            margin: 0 0 10px 0;
+          }
+
+          p {
+            color: #fff;
+            font-size: 14px;
+            margin: 0;
+          }
+        }
+
+        .finish-btn {
+          width: 100%;
+          padding: 18px;
+          border-radius: 50px;
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          background: rgba(255, 255, 255, 0.1);
+          color: #fff;
+          font-size: 24px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.02);
+          }
+        }
+      }
+
+      .step3-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 100%;
+        z-index: 10;
+
+        .user-info-section {
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+          align-items: center;
+
+          .user-name-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+
+            .surname-display,
+            .name-display {
+              color: #fff;
+              font-size: 24px;
+              font-weight: 600;
+              margin: 0;
+              text-align: center;
+            }
+          }
+
+          .birthday-section {
+            .age-display {
+              color: rgba(255, 255, 255, 0.8);
+              font-size: 16px;
+            }
+          }
+
+          .gender-selector {
+            .gender-display {
+              color: #fff;
+              font-size: 18px;
+              font-weight: 600;
+            }
+          }
+
+          .avatar-section {
+            display: flex;
+            justify-content: center;
+            margin: 10px 0;
+
+            .avatar-placeholder {
+              width: 120px;
+              height: 120px;
+              border-radius: 50%;
+              border: 3px solid rgba(255, 255, 255, 0.3);
+              background: rgba(255, 255, 255, 0.1);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: rgba(255, 255, 255, 0.7);
+            }
+          }
+
+          .role-section {
+            .role-display {
+              color: #fff;
+              font-size: 16px;
+              padding: 8px 20px;
+              border-radius: 20px;
+              background: linear-gradient(90deg, rgba(247, 90, 40, 0.6) 0%, rgba(150, 5, 202, 0.6) 100%);
+            }
+          }
+
+          .status-section {
+            .status-display {
+              color: rgba(255, 255, 255, 0.8);
+              font-size: 14px;
+            }
+          }
+
+          .description-section {
+            width: 100%;
+            padding: 15px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.1);
+
+            .description-display {
+              color: #fff;
+              font-size: 14px;
+              margin: 0;
+            }
           }
         }
       }

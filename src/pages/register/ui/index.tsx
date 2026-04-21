@@ -32,6 +32,25 @@ export default function Register() {
   const [selectedGender, setSelectedGender] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [currentStep, setCurrentStep] = useState(1);
+
+  const calculateAge = (birthday: string) => {
+    if (!birthday) return "";
+    const today = new Date();
+    const birthDate = new Date(birthday);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
+
+  const getGenderLabel = (gender: string | null) => {
+    if (gender === 'male') return "М";
+    if (gender === 'female') return "Ж";
+    return "";
+  };
 
   const [formData, setFormData] = useState({
     surname: "",
@@ -110,6 +129,14 @@ export default function Register() {
     );
   };
 
+  const isStep2Valid = () => {
+    return (
+      step2Data.role !== "" &&
+      step2Data.status !== "" &&
+      step2Data.description.trim() !== ""
+    );
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isFormValid()) return;
@@ -120,6 +147,11 @@ export default function Register() {
     
     setIsLoading(false);
     setIsSuccess(true);
+  };
+
+  const handleStep2Submit = () => {
+    if (!isStep2Valid()) return;
+    setCurrentStep(3);
   };
 
   const renderForm = () => (
@@ -354,14 +386,77 @@ export default function Register() {
         <span className="char-count">{step2Data.description.length}/250</span>
       </div>
       <button 
-        type="submit" 
-        className={`signup-btn ${!isFormValid() ? 'disabled' : ''}`}
-        disabled={!isFormValid() || isLoading}
+        type="button" 
+        className={`signup-btn ${!isStep2Valid() ? 'disabled' : ''}`}
+        disabled={!isStep2Valid() || isLoading}
+        onClick={handleStep2Submit}
       >
         {isLoading ? (
           <span className="loading-text">Загрузка...</span>
         ) : (
           <>Продолжить <span>→</span></>
+        )}
+      </button>
+    </div>
+  );
+
+  const renderStep3 = () => (
+    <div className="step3-form">
+      <div className="user-info-section">
+        <div className="user-name-display">
+          {formData.surname && <p className="surname-display">{formData.surname}</p>}
+          {formData.name && <p className="name-display">{formData.name}</p>}
+        </div>
+
+        {formData.birthday && (
+          <div className="birthday-section">
+            <span className="age-display">{calculateAge(formData.birthday)} лет</span>
+          </div>
+        )}
+
+        {selectedGender && (
+          <div className="gender-selector">
+            <span className="gender-display">{getGenderLabel(selectedGender)}</span>
+          </div>
+        )}
+
+        <div className="avatar-section">
+          <div className="avatar-placeholder">
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+        </div>
+
+        {step2Data.role && (
+          <div className="role-section">
+            <span className="role-display">{roleOptions.find(r => r.id === step2Data.role)?.label}</span>
+          </div>
+        )}
+
+        {step2Data.status && (
+          <div className="status-section">
+            <span className="status-display">{statusOptions.find(s => s.id === step2Data.status)?.label}</span>
+          </div>
+        )}
+
+        {step2Data.description && (
+          <div className="description-section">
+            <p className="description-display">{step2Data.description}</p>
+          </div>
+        )}
+      </div>
+
+      <button 
+        type="submit" 
+        className="signup-btn"
+        onClick={handleSubmit}
+      >
+        {isLoading ? (
+          <span className="loading-text">Загрузка...</span>
+        ) : (
+          <>Завершить <span>→</span></>
         )}
       </button>
     </div>
@@ -375,7 +470,7 @@ export default function Register() {
           <img className="boyforma" src={boyregistration} alt="" />
           <div className="register-form-container">
             <div className="logo-block"></div>
-            {isSuccess ? renderStep2() : (
+            {currentStep === 3 ? renderStep3() : isSuccess ? renderStep2() : (
               <>
                 <img className="logoLogin" src={logo} alt="Логотип KTSThub" />
                 <h2>Welcome to platform</h2>
