@@ -1,15 +1,11 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import {
-    loginRequest,
-    loginSuccess,
-    loginFailure,
-    registerRequest,
-    registerSuccess,
-    registerFailure,
-} from "./authSlice";
-import { authApi } from "../../../app/api/auth";
+import { actions } from "./authSlice";
 import type { LoginPayload } from "./authTypes";
+import type { AxiosInstance } from "axios";
+import { authApi } from "../../../app/api/auth";
+
+const { loginRequest, loginSuccess, loginFailure, registerRequest, registerSuccess, registerFailure } = actions;
 
 function* handleLogin(action: PayloadAction<LoginPayload>) {
     try {
@@ -36,7 +32,7 @@ function* handleRegister(action: PayloadAction<LoginPayload>) {
     }
 }
 
-export function* authSaga() {
+export function* authSaga(api: AxiosInstance) {
     yield takeLatest(loginRequest.type, handleLogin);
     yield takeLatest(registerRequest.type, handleRegister);
 }
