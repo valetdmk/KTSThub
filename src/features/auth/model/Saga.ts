@@ -1,7 +1,7 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { actions } from "./authSlice";
-import type { LoginPayload } from "./authTypes";
+import { actions } from "./Slice";
+import type { LoginPayload } from "./Types";
 import type { AxiosInstance } from "axios";
 import { authApi } from "../../../app/api/auth";
 

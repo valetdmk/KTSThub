@@ -3,8 +3,8 @@
 // export * from "./model/authSlice";
 // export * from "./model/authTypes"
 
-import { actions, name, reducer } from "./model/authSlice";
-import { authSaga } from "./model/authSaga";
+import { actions, name, reducer } from "./model/Slice";
+import { authSaga } from "./model/Saga";
 
 export const init = authSaga;
 

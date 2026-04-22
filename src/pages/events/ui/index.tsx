@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchEventsRequest } from "../../../features/events/eventsSlice";
+import { fetchEventsRequest } from "../../../features/events/Slice";
 import EventCard from "../../../entities/event/ui/EventCard";
 import type { RootState } from "../../../app/store/store";
 

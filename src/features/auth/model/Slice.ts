@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { LoginPayload } from "./authTypes";
+import type { LoginPayload } from "./Types";
 
 interface User {
     id: number;

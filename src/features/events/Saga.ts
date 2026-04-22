@@ -7,7 +7,7 @@ import {
     fetchEventsFailure,
     fetchEventByIdRequest,
     fetchEventByIdSuccess,
-} from "./eventsSlice";
+} from "./Slice";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 function* handleFetchEvents(): Generator {
