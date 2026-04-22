@@ -1,12 +1,15 @@
-import { actions, name, reducer } from "./model/Slice";
+import { actions, reducer, name } from "./model/Slice";
 import { registerSaga } from "./model/Saga";
 
-export const init = registerSaga;
-
-export const Register = {
-    actions,
-    reducer: {
-        [name]: reducer
-    },
-    selectors: {}
-}
+export { actions, name, registerSaga };
+export const registerReducer = reducer;
+export { 
+    setStep,
+    registerRequest,
+    registerSuccess,
+    registerFailure,
+    updateProfileRequest,
+    updateProfileSuccess,
+    updateProfileFailure,
+    resetRegister,
+} from "./model/Slice";

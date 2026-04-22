@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import "./index.scss";
 import logo from "../../../shared/assets/logo.png";
 import UnionTop from "../../../shared/assets/UnionTop.png"
@@ -8,8 +7,6 @@ import Girl from "../../../shared/assets/Girl.png"
 import loginnregistr from "../../../shared/assets/loginnregistr.png"
 
 export default function Login() {
-  const navigate = useNavigate();
-
   return (
     <div className="login-page">
 

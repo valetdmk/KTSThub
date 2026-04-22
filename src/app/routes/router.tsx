@@ -1,4 +1,5 @@
 import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
+import type { ReactNode } from "react";
 import { HomePage } from "../../pages/home/ui";
 import { ParticipantsPage } from "../../pages/participants/ui";
 import { AdminPage } from "../../pages/admin/ui";
@@ -78,14 +79,14 @@ export const router = createBrowserRouter([
     },
 ]);
 
-export function ProtectedRoute({ children }: any) {
+export function ProtectedRoute({ children }: { children: ReactNode }) {
   const token = localStorage.getItem("token");
 
   if (!token) {
     return <Navigate to="/login" />;
   }
 
-  return children;
+  return <>{children}</>;
 }
 
 export const AppRouter = () => {

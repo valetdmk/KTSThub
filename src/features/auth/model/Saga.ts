@@ -32,7 +32,7 @@ function* handleRegister(action: PayloadAction<LoginPayload>) {
     }
 }
 
-export function* authSaga(api: AxiosInstance) {
+export function* authSaga(_api: AxiosInstance) {
     yield takeLatest(loginRequest.type, handleLogin);
     yield takeLatest(registerRequest.type, handleRegister);
 }

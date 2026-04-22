@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
-import {Auth} from "../../features/auth";
-import {Register} from "../../features/register";
+import { authReducer } from "../../features/auth";
+import { registerReducer } from "../../features/register";
 import { rootSaga } from "./rootSaga";
 import { eventsReducer } from "../../features/events/Slice"
 import { heroReducer } from "../../features/hero/Slice";
@@ -10,8 +10,8 @@ const sagaMiddleware = createSagaMiddleware();
 
 export const store = configureStore({
     reducer: {
-        ...Auth.reducer,
-        ...Register.reducer,
+        auth: authReducer,
+        register: registerReducer,
         events: eventsReducer,
         hero: heroReducer,
     },

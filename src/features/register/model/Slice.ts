@@ -37,7 +37,7 @@ export const {name, reducer, actions} = createSlice({
             state.loading = false;
             state.error = action.payload;
         },
-        updateProfileRequest(state) {
+        updateProfileRequest(state, _action: PayloadAction<{ token: string; userId: number; data: Record<string, unknown> }>) {
             state.loading = true;
             state.error = null;
         },
@@ -59,3 +59,14 @@ export const {name, reducer, actions} = createSlice({
         },
     },
 });
+
+export const {
+    setStep,
+    registerRequest,
+    registerSuccess,
+    registerFailure,
+    updateProfileRequest,
+    updateProfileSuccess,
+    updateProfileFailure,
+    resetRegister,
+} = actions;

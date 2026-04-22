@@ -15,7 +15,7 @@ const {
 
 function* handleRegister(action: PayloadAction<RegisterPayload>) {
     try {
-        const response: { token: string } = yield call(
+        yield call(
             api.post,
             "/auth/signup",
             action.payload
@@ -39,10 +39,9 @@ function* handleRegister(action: PayloadAction<RegisterPayload>) {
 function* handleUpdateProfile(action: PayloadAction<{ token: string; userId: number; data: Record<string, unknown> }>) {
     try {
         yield call(
-            api.post,
+            [api, 'put'],
             `/user/${action.payload.userId}`,
-            action.payload.data,
-            { headers: { Authorization: `Bearer ${action.payload.token}` } }
+            action.payload.data
         );
         yield put(updateProfileSuccess());
     } catch (error) {

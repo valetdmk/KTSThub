@@ -1,11 +1,11 @@
 import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../../app/store/hooks";
+import { registerRequest, updateProfileRequest } from "../../../features/register";
 import "./index.scss";
 import Backregister from "../../../shared/assets/Backregister.png"
 import boyregistration from "../../../shared/assets/boyregistration.png"
 import loginnregistr from "../../../shared/assets/loginnregistr.png"
 import logo from "../../../shared/assets/logo.png"
-
-const API_BASE_URL = "http://10.3.25.106:8080/api";
 
 const roles = [
   { id: "student", number: "01", label: "STUDENT" },
@@ -28,20 +28,14 @@ const levelOptions = [
   { id: "ADVANCED", label: "Продвинутый" },
 ];
 
-interface ApiError {
-  message?: string;
-  error?: string;
-}
-
 export default function Register() {
+  const dispatch = useAppDispatch();
+  const { token, userId, loading, error } = useAppSelector(state => state.register);
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
-  const [error, setError] = useState<string | null>(null);
-  const [authToken, setAuthToken] = useState<string | null>(null);
-  const [userId, setUserId] = useState<number | null>(null);
+  const [localError, setLocalError] = useState<string | null>(null);
 
   const calculateAge = (birthday: string) => {
     if (!birthday) return "";
@@ -145,109 +139,56 @@ export default function Register() {
     e.preventDefault();
     if (!isFormValid()) return;
 
-    setIsLoading(true);
-    setError(null);
+    setLocalError(null);
 
-    try {
-      const response = await fetch(`${API_BASE_URL}/auth/signup`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          lastname: formData.lastname,
-          username: formData.username,
-          birthday: formData.birthday,
-          email: formData.email,
-          password: formData.password
-        }),
-      });
+    dispatch(registerRequest({
+      name: formData.name,
+      lastname: formData.lastname,
+      username: formData.username,
+      birthday: formData.birthday,
+      email: formData.email,
+      password: formData.password
+    }));
 
-      if (response.ok) {
-        const signinResponse = await fetch(`${API_BASE_URL}/auth/signin`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            username: formData.username,
-            password: formData.password
-          }),
-        });
-
-        if (signinResponse.ok) {
-          const signinData = await signinResponse.json();
-          setAuthToken(signinData.token);
-        }
-
-        setIsSuccess(true);
-        setCurrentStep(2);
-      } else {
-        const errorData = await response.json();
-        setError(errorData.message || errorData.error || "Ошибка регистрации");
-      }
-    } catch (err) {
-      setError("Ошибка подключения к серверу");
-    } finally {
-      setIsLoading(false);
-    }
+    setIsSuccess(true);
+    setCurrentStep(2);
   };
 
-  const handleStep2Submit = async () => {
-    if (!isStep2Valid() || !authToken) return;
+  const handleStep2Submit = () => {
+    if (!isStep2Valid() || !token) return;
     
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const skillsArray: { skillId: number; level: number }[] = [];
-      
-      if (step2Data.hardSkillsList) {
-        const hardSkillsItems = step2Data.hardSkillsList.split(",").map(s => s.trim()).filter(Boolean);
-        hardSkillsItems.forEach((_, index) => {
-          skillsArray.push({ skillId: index + 1, level: 5 });
-        });
-      }
-
-      const updateResponse = await fetch(`${API_BASE_URL}/user/${userId || 1}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${authToken}`
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          lastName: formData.lastname,
-          username: formData.username,
-          birthday: formData.birthday,
-          email: formData.email,
-          phone: formData.phone || null,
-          telegram: step2Data.telegram || null,
-          job: step2Data.job,
-          level: step2Data.level,
-          skills: skillsArray
-        }),
+    const skillsArray: { skillId: number; level: number }[] = [];
+    
+    if (step2Data.hardSkillsList) {
+      const hardSkillsItems = step2Data.hardSkillsList.split(",").map(s => s.trim()).filter(Boolean);
+      hardSkillsItems.forEach((_, index) => {
+        skillsArray.push({ skillId: index + 1, level: 5 });
       });
-
-      if (updateResponse.ok || updateResponse.status === 404) {
-        setCurrentStep(3);
-      } else {
-        const errorData = await updateResponse.json();
-        setError(errorData.message || "Ошибка обновления профиля");
-        setCurrentStep(3);
-      }
-    } catch (err) {
-      setError("Ошибка подключения к серверу");
-      setCurrentStep(3);
-    } finally {
-      setIsLoading(false);
     }
+
+    dispatch(updateProfileRequest({
+      token,
+      userId: userId || 1,
+      data: {
+        name: formData.name,
+        lastName: formData.lastname,
+        username: formData.username,
+        birthday: formData.birthday,
+        email: formData.email,
+        phone: formData.phone || null,
+        telegram: step2Data.telegram || null,
+        job: step2Data.job,
+        level: step2Data.level,
+        skills: skillsArray
+      }
+    }));
+
+    setCurrentStep(3);
   };
 
   const renderForm = () => (
     <form onSubmit={handleSignup}>
-      {error && <div className="error-message">{error}</div>}
+      {(error || localError) && <div className="error-message">{error || localError}</div>}
       <div className="input-group">
         <input 
           type="text" 
@@ -337,9 +278,9 @@ export default function Register() {
       <button 
         type="submit" 
         className={`signup-btn ${!isFormValid() ? 'disabled' : ''}`}
-        disabled={!isFormValid() || isLoading}
+        disabled={!isFormValid() || loading}
       >
-        {isLoading ? (
+        {loading ? (
           <span className="loading-text">Загрузка...</span>
         ) : (
           <>Продолжить <span>→</span></>
@@ -515,10 +456,10 @@ export default function Register() {
       <button 
         type="button" 
         className={`signup-btn ${!isStep2Valid() ? 'disabled' : ''}`}
-        disabled={!isStep2Valid() || isLoading}
+        disabled={!isStep2Valid() || loading}
         onClick={handleStep2Submit}
       >
-        {isLoading ? (
+        {loading ? (
           <span className="loading-text">Загрузка...</span>
         ) : (
           <>Продолжить <span>→</span></>

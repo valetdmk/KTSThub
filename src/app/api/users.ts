@@ -1,4 +1,4 @@
-import { api } from ".";
+import { api } from "../../entities/api";
 import type { User } from "../../entities/user/model";
 
 export const getUsers = async (): Promise<User[]> => {
