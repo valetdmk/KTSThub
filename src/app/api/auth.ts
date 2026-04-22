@@ -1,4 +1,4 @@
-import { api } from "."
+import { api } from "../../entities/api"
 
 export interface SignupPayload {
     username: string;

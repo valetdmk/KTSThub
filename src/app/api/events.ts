@@ -1,4 +1,4 @@
-import { api } from "."
+import { api } from "../../entities/api"
 import type { Event } from "../../entities/event/model"
 
 export const eventsApi = {

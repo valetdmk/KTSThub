@@ -49,4 +49,4 @@ export const {
     fetchEventByIdSuccess,
 } = eventsSlice.actions;
 
-export default eventsSlice.reducer;
+export const eventsReducer = eventsSlice.reducer;
