@@ -134,7 +134,7 @@
     width: 830px;
     height: 810px;
     border-radius: 50%;
-    z-index: 0;
+    z-index: 5;
     right: 23%;
     top: 50%;
     transform: translateY(-50%);
@@ -143,32 +143,42 @@
     overflow: hidden;
   }
 
+  .AuthNumbers {
+    position: absolute;
+    top: -220px;
+    left: 65%;
+    transform: translateX(-50%);
+    width: auto;
+    height: auto;
+  }
+
+
   .ellipse-overlay {
     position: absolute;
     z-index: 1;
 
     &.Authpurple1 {
-      width: 428px;
+      width: 628px;
       height: 726px;
-      top: 155.01px;
-      left: 890px;
-      z-index: 6;
+      top: 115.01px;
+      left: 820px;
+      z-index: 7;
     }
 
     &.Authpurple2 {
-      width: 428px;
+      width: 628px;
       height: 829px;
       top: 115.07px;
-      left: 990px;
-      z-index: 6;
+      left: 850px;
+      z-index: 8;
     }
 
     &.Authorange2 {
-      width: 743px;
+      width: 843px;
       height: 863px;
-      top: 49px;
-      left: 895px;
-      z-index: 5;
+      top: 39px;
+      left: 845px;
+      z-index: 6;
     }
   }
 }

@@ -7,8 +7,8 @@ import KCT from "../../../shared/assets/KCT.png"
 import card from "../../../shared/assets/card.png"
 import Authpurple1 from "../../../shared/assets/Authpurple1.png"
 import Authpurple2 from "../../../shared/assets/Authpurple2.png"
-import Authorange from "../../../shared/assets/Authorange.png"
 import Authorange2 from "../../../shared/assets/Authorange2.png"
+import AuthNumbers from "../../../shared/assets/AuthNumbers.png"
 
 export const AuthPage = () => {
   const navigate = useNavigate();
@@ -49,8 +49,8 @@ export const AuthPage = () => {
        <div className="ellipse-99"></div>
        <img className="ellipse-overlay Authpurple1" src={Authpurple1} alt="" />
        <img className="ellipse-overlay Authpurple2" src={Authpurple2} alt="" />
-       {/* <img className="ellipse-overlay Authorange" src={Authorange} alt="" /> */}
        <img className="ellipse-overlay Authorange2" src={Authorange2} alt="" />
+       <img className="AuthNumbers" src={AuthNumbers} alt="" />
       <div className="auth-buttons">
         <button 
           className="auth-button register-btn"
