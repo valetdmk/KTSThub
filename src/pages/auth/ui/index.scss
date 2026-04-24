@@ -145,43 +145,30 @@
 
   .ellipse-overlay {
     position: absolute;
-    // z-index: 1;
-    // object-fit: cover;
+    z-index: 1;
 
     &.Authpurple1 {
-      width: 839px;
-      height: 541px;
-      top: 85.01px;
-      right: 40px;
-      transform: rotate(-111.33deg);
-      opacity: 1;
-      border-width: 1px;
-      mix-blend-mode: soft-light;
+      width: 428px;
+      height: 726px;
+      top: 155.01px;
+      left: 890px;
+      z-index: 6;
     }
 
     &.Authpurple2 {
-      width: 839px;
-      height: 438px;
-      top: 149.07px;
-      left: 660px;
-      transform: rotate(-97.23deg);
-      // opacity: 1;
-      border-width: 1px;
-      mix-blend-mode: soft-light;
+      width: 428px;
+      height: 829px;
+      top: 115.07px;
+      left: 990px;
+      z-index: 6;
     }
 
-    &.Authorange {
-      width: 898px;
-      height: 678px;
+    &.Authorange2 {
+      width: 743px;
+      height: 863px;
       top: 49px;
-      left: 775px;
-      transform: rotate(-104.52deg);
-      opacity: 1;
-      border-width: 1px;
-      mix-blend-mode: soft-light;
-      border: 1px solid #000000;
-      backdrop-filter: blur(273px);
-      z-index: 4;
+      left: 895px;
+      z-index: 5;
     }
   }
 }
