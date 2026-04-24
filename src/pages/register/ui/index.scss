@@ -16,23 +16,23 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      border: 2px solid;
+      border-image-source: linear-gradient(133.71deg, #FF5100 25.57%, #9605CA 61.06%, #FF5100 82.61%);
+      border-image-slice: 1;
+      pointer-events: none;
+      z-index: 100;
+    }
   }
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 20px;
-    bottom: 20px;
-    left: 20px;
-    right: 20px;
-    border: 2px solid;
-    border-image-source: linear-gradient(133.71deg, #FF5100 25.57%, #9605CA 61.06%, #FF5100 82.61%);
-    border-image-slice: 1;
-    pointer-events: none;
-    z-index: 100;
-  }
-
-   .loginnregistr {
+  .loginnregistr {
      position: absolute;
      top: -50px;
      left: -75px;
