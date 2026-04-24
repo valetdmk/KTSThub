@@ -5,6 +5,9 @@ import boyregistration from "../../../shared/assets/boyregistration.png"
 import Hack from "../../../shared/assets/HacK.png"
 import KCT from "../../../shared/assets/KCT.png"
 import card from "../../../shared/assets/card.png"
+import Authpurple1 from "../../../shared/assets/Authpurple1.png"
+import Authpurple2 from "../../../shared/assets/Authpurple2.png"
+import Authorange from "../../../shared/assets/Authorange.png"
 
 export const AuthPage = () => {
   const navigate = useNavigate();
@@ -39,10 +42,13 @@ export const AuthPage = () => {
         <span></span>
         <span></span>
       </div>
-      <div className="auth-circle-small-1"></div>
-      <div className="auth-circle-small-2"></div>
-      <div className="auth-circle"></div>
-      <div className="ellipse-99"></div>
+       <div className="auth-circle-small-1"></div>
+       <div className="auth-circle-small-2"></div>
+       <div className="auth-circle"></div>
+       <div className="ellipse-99"></div>
+       <img className="ellipse-overlay Authpurple1" src={Authpurple1} alt="" />
+       <img className="ellipse-overlay Authpurple2" src={Authpurple2} alt="" />
+       <img className="ellipse-overlay Authorange" src={Authorange} alt="" />
       <div className="auth-buttons">
         <button 
           className="auth-button register-btn"

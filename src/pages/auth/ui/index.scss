@@ -140,7 +140,51 @@
     transform: translateY(-50%);
     background: radial-gradient(82.93% 82.93% at 4.43% 36.56%, #FFFFFF 0%, #ED9068 100%);
     clip-path: inset(0 0 0 50%);
+    overflow: hidden;
   }
+
+  .ellipse-overlay {
+    position: absolute;
+    // z-index: 1;
+    // object-fit: cover;
+
+    &.Authpurple1 {
+      width: 839px;
+      height: 541px;
+      top: 85.01px;
+      right: 40px;
+      transform: rotate(-111.33deg);
+      opacity: 1;
+      border-width: 1px;
+      mix-blend-mode: soft-light;
+    }
+
+    &.Authpurple2 {
+      width: 839px;
+      height: 438px;
+      top: 149.07px;
+      left: 660px;
+      transform: rotate(-97.23deg);
+      // opacity: 1;
+      border-width: 1px;
+      mix-blend-mode: soft-light;
+    }
+
+    &.Authorange {
+      width: 898px;
+      height: 678px;
+      top: 49px;
+      left: 775px;
+      transform: rotate(-104.52deg);
+      opacity: 1;
+      border-width: 1px;
+      mix-blend-mode: soft-light;
+      border: 1px solid #000000;
+      backdrop-filter: blur(273px);
+      z-index: 4;
+    }
+  }
+}
 
   .auth-button {
     padding: 15px 40px;
@@ -170,7 +214,7 @@
     gap: 20px;
     z-index: 1;
   }
-}
+
 
 .logo {
   position: absolute;
