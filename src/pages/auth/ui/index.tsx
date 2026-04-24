@@ -42,6 +42,7 @@ export const AuthPage = () => {
       <div className="auth-circle-small-1"></div>
       <div className="auth-circle-small-2"></div>
       <div className="auth-circle"></div>
+      <div className="ellipse-99"></div>
       <div className="auth-buttons">
         <button 
           className="auth-button register-btn"
