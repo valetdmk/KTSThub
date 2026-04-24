@@ -137,7 +137,9 @@
     z-index: 0;
     right: 23%;
     top: 50%;
+    transform: translateY(-50%);
     background: radial-gradient(82.93% 82.93% at 4.43% 36.56%, #FFFFFF 0%, #ED9068 100%);
+    clip-path: inset(0 0 0 50%);
   }
 
   .auth-button {
