@@ -40,7 +40,7 @@ export default function Register() {
    const [selectedRole, setSelectedRole] = useState<string | null>(null);
    const [showPassword, setShowPassword] = useState(false);
    const [localError, setLocalError] = useState<string | null>(null);
-   const [step3Page, setStep3Page] = useState(1);
+   const [step3Page, setStep3Page] = useState<1 | 2>(1);
 
   const calculateAge = (birthday: string) => {
     if (!birthday) return "";
@@ -92,6 +92,7 @@ export default function Register() {
 
   const handleSelect = (roleId: string) => {
     setSelectedRole(roleId);
+    setStep3Page(1);
   };
 
   const togglePasswordVisibility = () => {
@@ -161,6 +162,7 @@ export default function Register() {
    const handleStep2Submit = () => {
      if (!isStep2Valid()) return;
 
+     setStep3Page(1);
      dispatch(setStep(3));
 
      if (!token) return;
@@ -476,8 +478,21 @@ export default function Register() {
 
   const renderStep3 = () => (
     <div className="step3-form">
+      <img className="step3-union step3-union-top" src={UnionTop} alt="" />
+      <img className="step3-union step3-union-bottom" src={UnionBottom} alt="" />
+      <img className="step3-decor step3-decor-axolotl" src={Axolotl} alt="" />
+      <img className="step3-decor step3-decor-cat" src={BlackCat} alt="" />
+      <img className="step3-decor step3-decor-rainbow" src={RainbowPic} alt="" />
       <div className="user-info-section">
-        <div className="step3-left-column">
+        <button
+          type="button"
+          className="step3-page-arrow"
+          onClick={() => setStep3Page(prev => (prev === 1 ? 2 : 1))}
+          aria-label={step3Page === 1 ? "Показать вторую страницу" : "Вернуться на первую страницу"}
+        >
+          <span>{step3Page === 1 ? ">" : "<"}</span>
+        </button>
+        <div className={`step3-left-column ${step3Page === 1 ? "" : "step3-hidden"}`}>
           <div className="avatar-section">
             <div className="avatar-placeholder">
               <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -506,7 +521,7 @@ export default function Register() {
             <span className="telegram-value">{step2Data.telegram || "Не указан"}</span>
           </div>
 
-          <div className="skills-preview">
+          <div className="skills-preview step3-hidden">
             {step2Data.hardSkillsList && (
               <div className="skills-list">
                 <span className="skills-label">Hard-skills:</span>
@@ -522,19 +537,47 @@ export default function Register() {
           </div>
         </div>
 
-        <div className="step3-right-column">
+        <div className={`step3-right-column ${step3Page === 1 ? "" : "step3-hidden"}`}>
           <img className="renderstep3-girl" src={renderstep3Girl} alt="" />
 
           <div className="role-section">
             <span className="role-display">{jobOptions.find(r => r.id === step2Data.job)?.label}</span>
           </div>
 
-          <div className="status-section">
+          <div className="status-section step3-hidden">
             <span className="status-display">{levelOptions.find(s => s.id === step2Data.level)?.label}</span>
           </div>
 
           <div className="description-section">
             <p className="description-display">{step2Data.description || "Описание не добавлено"}</p>
+          </div>
+        </div>
+
+        <div className={`step3-secondary-page ${step3Page === 2 ? "" : "step3-hidden"}`}>
+          <div className="step3-secondary-content">
+            <div className="status-section">
+              <span className="status-display">
+                Уровень: {levelOptions.find(s => s.id === step2Data.level)?.label || "Не указан"}
+              </span>
+            </div>
+
+            <div className="skills-preview">
+              {step2Data.hardSkillsList && (
+                <div className="skills-list">
+                  <span className="skills-value">Hard-skills: {step2Data.hardSkillsList}</span>
+                </div>
+              )}
+              {step2Data.softSkillsList && (
+                <div className="skills-list">
+                  <span className="skills-value">Soft-skills: {step2Data.softSkillsList}</span>
+                </div>
+              )}
+              {!step2Data.hardSkillsList && !step2Data.softSkillsList && (
+                <div className="skills-list">
+                  <span className="skills-value">Навыки не указаны</span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -556,7 +599,6 @@ export default function Register() {
           <img className="loginnregistr" src={loginnregistr} alt="" />
           <img className="boyforma" src={boyregistration} alt="" />
           <div className="register-form-container">
-            <img className="unionTop" src={UnionTop} alt="" />
             <div className="logo-block"></div>
             {step === 3 ? renderStep3() : step === 2 ? renderStep2() : (
               <>
@@ -565,7 +607,6 @@ export default function Register() {
                 {renderForm()}
               </>
             )}
-            <img className="unionBottom" src={UnionBottom} alt="" />
           </div>
         </>
       ) : (
