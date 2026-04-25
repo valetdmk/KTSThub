@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/store/hooks";
 import { registerRequest, updateProfileRequest, setStep } from "../../../features/register";
 import "./index.scss";
@@ -41,6 +41,7 @@ export default function Register() {
    const [showPassword, setShowPassword] = useState(false);
    const [localError, setLocalError] = useState<string | null>(null);
    const [step3Page, setStep3Page] = useState<1 | 2>(1);
+   const [pendingProgressStep, setPendingProgressStep] = useState<number | null>(null);
 
   const calculateAge = (birthday: string) => {
     if (!birthday) return "";
@@ -93,6 +94,7 @@ export default function Register() {
   const handleSelect = (roleId: string) => {
     setSelectedRole(roleId);
     setStep3Page(1);
+    setPendingProgressStep(null);
   };
 
   const togglePasswordVisibility = () => {
@@ -141,11 +143,21 @@ export default function Register() {
     );
   };
 
+  const hasStep1Progress = Object.values(formData).some((value) => value.trim() !== "");
+  const hasStep2Progress = Object.values(step2Data).some((value) => {
+    if (typeof value === "boolean") {
+      return value;
+    }
+
+    return value.trim() !== "";
+  });
+
    const handleSignup = async (e: React.FormEvent) => {
      e.preventDefault();
      if (!isFormValid()) return;
 
      setLocalError(null);
+     setPendingProgressStep(1);
 
      dispatch(registerRequest({
        name: formData.name,
@@ -162,6 +174,7 @@ export default function Register() {
    const handleStep2Submit = () => {
      if (!isStep2Valid()) return;
 
+     setPendingProgressStep(2);
      setStep3Page(1);
      dispatch(setStep(3));
 
@@ -193,6 +206,46 @@ export default function Register() {
        }
      }));
    };
+
+  useEffect(() => {
+    if (pendingProgressStep !== null && step > pendingProgressStep) {
+      setPendingProgressStep(null);
+    }
+  }, [pendingProgressStep, step]);
+
+  const renderProgressIndicator = () => (
+    <div className="register-progress" aria-label="Прогресс регистрации">
+      {[1, 2, 3].map((progressStep) => {
+        const isCompleted = step > progressStep;
+        const isLoading = loading && pendingProgressStep === progressStep;
+        const isPartial =
+          !isCompleted &&
+          !isLoading &&
+          ((progressStep === 1 && hasStep1Progress) ||
+            (progressStep === 2 && hasStep2Progress));
+
+        return (
+          <div
+            key={progressStep}
+            className={`register-progress-block${isCompleted ? " completed" : ""}${isLoading ? " loading" : ""}${isPartial ? " partial" : ""}`}
+            aria-current={step === progressStep ? "step" : undefined}
+          >
+            {isCompleted ? (
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path
+                  d="M20 6L9 17L4 12"
+                  stroke="#000"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            ) : null}
+          </div>
+        );
+      })}
+    </div>
+  );
 
   const renderForm = () => (
     <form onSubmit={handleSignup}>
@@ -598,6 +651,7 @@ export default function Register() {
         <>
           <img className="loginnregistr" src={loginnregistr} alt="" />
           <img className="boyforma" src={boyregistration} alt="" />
+          {renderProgressIndicator()}
           <div className="register-form-container">
             <div className="logo-block"></div>
             {step === 3 ? renderStep3() : step === 2 ? renderStep2() : (
