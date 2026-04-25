@@ -284,10 +284,33 @@
      border: 2px solid rgba(255, 255, 255, 0.3);
      z-index: 5;
      box-sizing: border-box;
-     display: flex;
-     flex-direction: column;
-     align-items: center;
-     gap: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      overflow: hidden;
+
+      .unionTop {
+        position: absolute;
+        top: 0;
+        left: 53%;
+        transform: translateX(-50%);
+        width: 536px;
+        height: auto;
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      .unionBottom {
+        position: absolute;
+        bottom: -3px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 586px;
+        height: auto;
+        z-index: 0;
+        pointer-events: none;
+      }
 
 .logo-block {
         width: 150px;
@@ -1146,36 +1169,78 @@
       .step3-form {
         display: flex;
         flex-direction: column;
-        gap: 20px;
+        gap: 18px;
         width: 100%;
+        flex: 1;
         z-index: 10;
+        min-height: 0;
 
         .user-info-section {
-          display: flex;
-          flex-direction: column;
-          gap: 15px;
-          align-items: center;
+          display: grid;
+          grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+          gap: 18px;
+          align-items: start;
+          width: 100%;
+          min-height: 0;
+
+          .step3-left-column,
+          .step3-right-column {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+          }
+
+          .step3-left-column {
+            align-items: flex-start;
+            gap: 14px;
+          }
+
+          .step3-right-column {
+            align-items: stretch;
+            gap: 12px;
+            padding-top: 4px;
+          }
+
+          .renderstep3-girl {
+            align-self: center;
+            width: min(100%, 220px);
+            height: 190px;
+            object-fit: contain;
+            filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.35));
+            pointer-events: none;
+          }
 
           .user-name-display {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 5px;
+            align-items: flex-start;
+            gap: 2px;
+            width: 100%;
 
             .surname-display,
             .name-display {
               color: #fff;
-              font-size: 24px;
+              font-size: 26px;
               font-weight: 600;
               margin: 0;
-              text-align: center;
+              text-align: left;
+              line-height: 1.08;
+              overflow-wrap: anywhere;
             }
           }
 
           .birthday-section {
+            width: 100%;
+
             .age-display {
-              color: rgba(255, 255, 255, 0.8);
+              display: block;
+              width: 100%;
+              padding: 12px 16px;
+              border-radius: 18px;
+              background: rgba(255, 255, 255, 0.12);
+              color: rgba(255, 255, 255, 0.9);
               font-size: 16px;
+              box-sizing: border-box;
             }
           }
 
@@ -1189,36 +1254,49 @@
 
           .avatar-section {
             display: flex;
-            justify-content: center;
-            margin: 10px 0;
+            justify-content: flex-start;
+            margin: 0;
 
             .avatar-placeholder {
-              width: 120px;
-              height: 120px;
+              width: 132px;
+              height: 132px;
               border-radius: 50%;
-              border: 3px solid rgba(255, 255, 255, 0.3);
-              background: rgba(255, 255, 255, 0.1);
+              border: 3px solid rgba(255, 255, 255, 0.42);
+              background: radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.08));
               display: flex;
               align-items: center;
               justify-content: center;
               color: rgba(255, 255, 255, 0.7);
+              box-shadow: 0 18px 32px rgba(0, 0, 0, 0.22);
             }
           }
 
           .role-section {
+            width: 100%;
+
             .role-display {
+              display: block;
               color: #fff;
-              font-size: 16px;
-              padding: 8px 20px;
-              border-radius: 20px;
+              font-size: 15px;
+              font-weight: 700;
+              padding: 12px 16px;
+              border-radius: 18px;
               background: linear-gradient(90deg, rgba(247, 90, 40, 0.6) 0%, rgba(150, 5, 202, 0.6) 100%);
+              overflow-wrap: anywhere;
             }
           }
 
           .status-section {
+            width: 100%;
+
             .status-display {
-              color: rgba(255, 255, 255, 0.8);
-              font-size: 14px;
+              display: block;
+              padding: 12px 16px;
+              border-radius: 18px;
+              background: rgba(255, 255, 255, 0.12);
+              color: rgba(255, 255, 255, 0.9);
+              font-size: 15px;
+              font-weight: 600;
             }
           }
 
@@ -1252,9 +1330,11 @@
             display: flex;
             flex-direction: column;
             gap: 5px;
-            padding: 10px 15px;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.1);
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.12);
+            box-sizing: border-box;
 
             .telegram-label {
               color: rgba(255, 255, 255, 0.7);
@@ -1264,21 +1344,52 @@
             .telegram-value {
               color: #fff;
               font-size: 14px;
+              overflow-wrap: anywhere;
+            }
+          }
+
+          .phone-preview {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.12);
+            box-sizing: border-box;
+
+            .phone-label {
+              color: rgba(255, 255, 255, 0.7);
+              font-size: 12px;
+            }
+
+            .phone-value {
+              color: #fff;
+              font-size: 14px;
+              overflow-wrap: anywhere;
             }
           }
 
           .description-section {
             width: 100%;
-            padding: 15px;
+            min-height: 102px;
+            padding: 15px 16px;
             border-radius: 15px;
             background: rgba(255, 255, 255, 0.1);
+            box-sizing: border-box;
 
             .description-display {
               color: #fff;
               font-size: 14px;
               margin: 0;
+              line-height: 1.35;
+              overflow-wrap: anywhere;
             }
           }
+        }
+
+        .signup-btn {
+          margin-top: auto;
         }
       }
     }

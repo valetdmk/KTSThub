@@ -6,6 +6,12 @@ import Backregister from "../../../shared/assets/Backregister.png"
 import boyregistration from "../../../shared/assets/boyregistration.png"
 import loginnregistr from "../../../shared/assets/loginnregistr.png"
 import logo from "../../../shared/assets/logo.png"
+import renderstep3Girl from "../../../shared/assets/renderstep3Girl.png"
+import UnionTop from "../../../shared/assets/UnionTop.png"
+import UnionBottom from "../../../shared/assets/UnionBottom.png"
+import Axolotl from "../../../shared/assets/Axolotl.png"
+import BlackCat from "../../../shared/assets/BlackCat.png"
+import RainbowPic from "../../../shared/assets/RainbowPic.png"
 
 const roles = [
   { id: "student", number: "01", label: "STUDENT" },
@@ -34,6 +40,7 @@ export default function Register() {
    const [selectedRole, setSelectedRole] = useState<string | null>(null);
    const [showPassword, setShowPassword] = useState(false);
    const [localError, setLocalError] = useState<string | null>(null);
+   const [step3Page, setStep3Page] = useState(1);
 
   const calculateAge = (birthday: string) => {
     if (!birthday) return "";
@@ -470,58 +477,65 @@ export default function Register() {
   const renderStep3 = () => (
     <div className="step3-form">
       <div className="user-info-section">
-        <div className="avatar-section">
-          <div className="avatar-placeholder">
-            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle>
-            </svg>
+        <div className="step3-left-column">
+          <div className="avatar-section">
+            <div className="avatar-placeholder">
+              <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </div>
+          </div>
+
+          <div className="user-name-display">
+            {formData.lastname && <p className="surname-display">{formData.lastname}</p>}
+            {formData.name && <p className="name-display">{formData.name}</p>}
+          </div>
+
+          <div className="birthday-section">
+            {formData.birthday && <span className="age-display">{calculateAge(formData.birthday)} лет</span>}
+          </div>
+
+          <div className="phone-preview">
+            <span className="phone-label">Телефон:</span>
+            <span className="phone-value">{formData.phone || "Не указан"}</span>
+          </div>
+
+          <div className="telegram-preview">
+            <span className="telegram-label">Telegram:</span>
+            <span className="telegram-value">{step2Data.telegram || "Не указан"}</span>
+          </div>
+
+          <div className="skills-preview">
+            {step2Data.hardSkillsList && (
+              <div className="skills-list">
+                <span className="skills-label">Hard-skills:</span>
+                <span className="skills-value">{step2Data.hardSkillsList}</span>
+              </div>
+            )}
+            {step2Data.softSkillsList && (
+              <div className="skills-list">
+                <span className="skills-label">Soft-skills:</span>
+                <span className="skills-value">{step2Data.softSkillsList}</span>
+              </div>
+            )}
           </div>
         </div>
 
-        <div className="user-name-display">
-          {formData.lastname && <p className="surname-display">{formData.lastname}</p>}
-          {formData.name && <p className="name-display">{formData.name}</p>}
-        </div>
+        <div className="step3-right-column">
+          <img className="renderstep3-girl" src={renderstep3Girl} alt="" />
 
-        <div className="birthday-section">
-          {formData.birthday && <span className="age-display">{calculateAge(formData.birthday)} лет</span>}
-        </div>
+          <div className="role-section">
+            <span className="role-display">{jobOptions.find(r => r.id === step2Data.job)?.label}</span>
+          </div>
 
-        <div className="role-section">
-          <span className="role-display">{jobOptions.find(r => r.id === step2Data.job)?.label}</span>
-        </div>
+          <div className="status-section">
+            <span className="status-display">{levelOptions.find(s => s.id === step2Data.level)?.label}</span>
+          </div>
 
-        <div className="status-section">
-          <span className="status-display">{levelOptions.find(s => s.id === step2Data.level)?.label}</span>
-        </div>
-
-        <div className="skills-preview">
-          {step2Data.hardSkillsList && (
-            <div className="skills-list">
-              <span className="skills-label">Hard-skills:</span>
-              <span className="skills-value">{step2Data.hardSkillsList}</span>
-            </div>
-          )}
-          {step2Data.softSkillsList && (
-            <div className="skills-list">
-              <span className="skills-label">Soft-skills:</span>
-              <span className="skills-value">{step2Data.softSkillsList}</span>
-            </div>
-          )}
-        </div>
-
-        <div className="telegram-preview">
-          {step2Data.telegram && (
-            <>
-              <span className="telegram-label">Telegram:</span>
-              <span className="telegram-value">{step2Data.telegram}</span>
-            </>
-          )}
-        </div>
-
-        <div className="description-section">
-          {step2Data.description && <p className="description-display">{step2Data.description}</p>}
+          <div className="description-section">
+            <p className="description-display">{step2Data.description || "Описание не добавлено"}</p>
+          </div>
         </div>
       </div>
 
@@ -542,6 +556,7 @@ export default function Register() {
           <img className="loginnregistr" src={loginnregistr} alt="" />
           <img className="boyforma" src={boyregistration} alt="" />
           <div className="register-form-container">
+            <img className="unionTop" src={UnionTop} alt="" />
             <div className="logo-block"></div>
             {step === 3 ? renderStep3() : step === 2 ? renderStep2() : (
               <>
@@ -550,6 +565,7 @@ export default function Register() {
                 {renderForm()}
               </>
             )}
+            <img className="unionBottom" src={UnionBottom} alt="" />
           </div>
         </>
       ) : (
