@@ -41,10 +41,10 @@ export const {name, reducer, actions} = createSlice({
             state.loading = true;
             state.error = null;
         },
-        updateProfileSuccess(state) {
-            state.loading = false;
-            state.step = 3;
-        },
+         updateProfileSuccess(state) {
+             state.loading = false;
+             state.step = 3;
+         },
         updateProfileFailure(state, action: PayloadAction<string>) {
             state.loading = false;
             state.error = action.payload;

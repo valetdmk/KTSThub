@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/store/hooks";
-import { registerRequest, updateProfileRequest } from "../../../features/register";
+import { registerRequest, updateProfileRequest, setStep } from "../../../features/register";
 import "./index.scss";
 import Backregister from "../../../shared/assets/Backregister.png"
 import boyregistration from "../../../shared/assets/boyregistration.png"
@@ -30,12 +30,10 @@ const levelOptions = [
 
 export default function Register() {
   const dispatch = useAppDispatch();
-  const { token, userId, loading, error } = useAppSelector(state => state.register);
-  const [selectedRole, setSelectedRole] = useState<string | null>(null);
-  const [showPassword, setShowPassword] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [currentStep, setCurrentStep] = useState(1);
-  const [localError, setLocalError] = useState<string | null>(null);
+   const { token, userId, loading, error, step } = useAppSelector(state => state.register);
+   const [selectedRole, setSelectedRole] = useState<string | null>(null);
+   const [showPassword, setShowPassword] = useState(false);
+   const [localError, setLocalError] = useState<string | null>(null);
 
   const calculateAge = (birthday: string) => {
     if (!birthday) return "";
@@ -135,56 +133,57 @@ export default function Register() {
     );
   };
 
-  const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!isFormValid()) return;
+   const handleSignup = async (e: React.FormEvent) => {
+     e.preventDefault();
+     if (!isFormValid()) return;
 
-    setLocalError(null);
+     setLocalError(null);
 
-    dispatch(registerRequest({
-      name: formData.name,
-      lastname: formData.lastname,
-      username: formData.username,
-      birthday: formData.birthday,
-      email: formData.email,
-      password: formData.password
-    }));
+     dispatch(registerRequest({
+       name: formData.name,
+       lastname: formData.lastname,
+       username: formData.username,
+       birthday: formData.birthday,
+       email: formData.email,
+       password: formData.password
+     }));
 
-    setIsSuccess(true);
-    setCurrentStep(2);
-  };
+     dispatch(setStep(2));
+   };
 
-  const handleStep2Submit = () => {
-    if (!isStep2Valid() || !token) return;
-    
-    const skillsArray: { skillId: number; level: number }[] = [];
-    
-    if (step2Data.hardSkillsList) {
-      const hardSkillsItems = step2Data.hardSkillsList.split(",").map(s => s.trim()).filter(Boolean);
-      hardSkillsItems.forEach((_, index) => {
-        skillsArray.push({ skillId: index + 1, level: 5 });
-      });
-    }
+   const handleStep2Submit = () => {
+     if (!isStep2Valid()) return;
 
-    dispatch(updateProfileRequest({
-      token,
-      userId: userId || 1,
-      data: {
-        name: formData.name,
-        lastName: formData.lastname,
-        username: formData.username,
-        birthday: formData.birthday,
-        email: formData.email,
-        phone: formData.phone || null,
-        telegram: step2Data.telegram || null,
-        job: step2Data.job,
-        level: step2Data.level,
-        skills: skillsArray
-      }
-    }));
+     dispatch(setStep(3));
 
-    setCurrentStep(3);
-  };
+     if (!token) return;
+     
+     const skillsArray: { skillId: number; level: number }[] = [];
+     
+     if (step2Data.hardSkillsList) {
+       const hardSkillsItems = step2Data.hardSkillsList.split(",").map(s => s.trim()).filter(Boolean);
+       hardSkillsItems.forEach((_, index) => {
+         skillsArray.push({ skillId: index + 1, level: 5 });
+       });
+     }
+
+     dispatch(updateProfileRequest({
+       token,
+       userId: userId || 1,
+       data: {
+         name: formData.name,
+         lastName: formData.lastname,
+         username: formData.username,
+         birthday: formData.birthday,
+         email: formData.email,
+         phone: formData.phone || null,
+         telegram: step2Data.telegram || null,
+         job: step2Data.job,
+         level: step2Data.level,
+         skills: skillsArray
+       }
+     }));
+   };
 
   const renderForm = () => (
     <form onSubmit={handleSignup}>
@@ -471,17 +470,6 @@ export default function Register() {
   const renderStep3 = () => (
     <div className="step3-form">
       <div className="user-info-section">
-        <div className="user-name-display">
-          {formData.lastname && <p className="surname-display">{formData.lastname}</p>}
-          {formData.name && <p className="name-display">{formData.name}</p>}
-        </div>
-
-        {formData.birthday && (
-          <div className="birthday-section">
-            <span className="age-display">{calculateAge(formData.birthday)} лет</span>
-          </div>
-        )}
-
         <div className="avatar-section">
           <div className="avatar-placeholder">
             <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -491,47 +479,50 @@ export default function Register() {
           </div>
         </div>
 
-        {step2Data.job && (
-          <div className="role-section">
-            <span className="role-display">{jobOptions.find(r => r.id === step2Data.job)?.label}</span>
-          </div>
-        )}
+        <div className="user-name-display">
+          {formData.lastname && <p className="surname-display">{formData.lastname}</p>}
+          {formData.name && <p className="name-display">{formData.name}</p>}
+        </div>
 
-        {step2Data.level && (
-          <div className="status-section">
-            <span className="status-display">{levelOptions.find(s => s.id === step2Data.level)?.label}</span>
-          </div>
-        )}
+        <div className="birthday-section">
+          {formData.birthday && <span className="age-display">{calculateAge(formData.birthday)} лет</span>}
+        </div>
 
-        {(step2Data.hardSkillsList || step2Data.softSkillsList) && (
-          <div className="skills-preview">
-            {step2Data.hardSkillsList && (
-              <div className="skills-list">
-                <span className="skills-label">Hard-skills:</span>
-                <span className="skills-value">{step2Data.hardSkillsList}</span>
-              </div>
-            )}
-            {step2Data.softSkillsList && (
-              <div className="skills-list">
-                <span className="skills-label">Soft-skills:</span>
-                <span className="skills-value">{step2Data.softSkillsList}</span>
-              </div>
-            )}
-          </div>
-        )}
+        <div className="role-section">
+          <span className="role-display">{jobOptions.find(r => r.id === step2Data.job)?.label}</span>
+        </div>
 
-        {step2Data.telegram && (
-          <div className="telegram-preview">
-            <span className="telegram-label">Telegram:</span>
-            <span className="telegram-value">{step2Data.telegram}</span>
-          </div>
-        )}
+        <div className="status-section">
+          <span className="status-display">{levelOptions.find(s => s.id === step2Data.level)?.label}</span>
+        </div>
 
-        {step2Data.description && (
-          <div className="description-section">
-            <p className="description-display">{step2Data.description}</p>
-          </div>
-        )}
+        <div className="skills-preview">
+          {step2Data.hardSkillsList && (
+            <div className="skills-list">
+              <span className="skills-label">Hard-skills:</span>
+              <span className="skills-value">{step2Data.hardSkillsList}</span>
+            </div>
+          )}
+          {step2Data.softSkillsList && (
+            <div className="skills-list">
+              <span className="skills-label">Soft-skills:</span>
+              <span className="skills-value">{step2Data.softSkillsList}</span>
+            </div>
+          )}
+        </div>
+
+        <div className="telegram-preview">
+          {step2Data.telegram && (
+            <>
+              <span className="telegram-label">Telegram:</span>
+              <span className="telegram-value">{step2Data.telegram}</span>
+            </>
+          )}
+        </div>
+
+        <div className="description-section">
+          {step2Data.description && <p className="description-display">{step2Data.description}</p>}
+        </div>
       </div>
 
       <button 
@@ -552,7 +543,7 @@ export default function Register() {
           <img className="boyforma" src={boyregistration} alt="" />
           <div className="register-form-container">
             <div className="logo-block"></div>
-            {currentStep === 3 ? renderStep3() : isSuccess ? renderStep2() : (
+            {step === 3 ? renderStep3() : step === 2 ? renderStep2() : (
               <>
                 <img className="logoLogin" src={logo} alt="Логотип KTSThub" />
                 <h2>Welcome to platform</h2>
