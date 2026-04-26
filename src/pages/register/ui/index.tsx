@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/store/hooks";
 import { registerRequest, updateProfileRequest, setStep } from "../../../features/register";
 import "./index.scss";
@@ -12,6 +12,13 @@ import UnionBottom from "../../../shared/assets/UnionBottom.png"
 import Axolotl from "../../../shared/assets/Axolotl.png"
 import BlackCat from "../../../shared/assets/BlackCat.png"
 import RainbowPic from "../../../shared/assets/RainbowPic.png"
+import Boy from "../../../shared/assets/Boy.png"
+import Girl from "../../../shared/assets/Girl.png"
+import panda from "../../../shared/assets/panda.png"
+import unicorn from "../../../shared/assets/unicorn.png"
+import brain from "../../../shared/assets/brain.png"
+import joystick from "../../../shared/assets/joystick.png"
+import game from "../../../shared/assets/game.png"
 
 const roles = [
   { id: "student", number: "01", label: "STUDENT" },
@@ -32,6 +39,19 @@ const levelOptions = [
   { id: "BEGINNER", label: "Начинающий" },
   { id: "INTERMEDIATE", label: "Средний" },
   { id: "ADVANCED", label: "Продвинутый" },
+];
+
+const avatarOptions = [
+  { id: "axolotl", label: "Axolotl", src: Axolotl },
+  { id: "cat", label: "Black Cat", src: BlackCat },
+  { id: "rainbow", label: "Rainbow", src: RainbowPic },
+  { id: "boy", label: "Boy", src: Boy },
+  { id: "girl", label: "Girl", src: Girl },
+  { id: "panda", label: "Panda", src: panda },
+  { id: "unicorn", label: "Unicorn", src: unicorn },
+  { id: "brain", label: "Brain", src: brain },
+  { id: "joystick", label: "Joystick", src: joystick },
+  { id: "game", label: "Game", src: game },
 ];
 
 export default function Register() {
@@ -78,8 +98,13 @@ export default function Register() {
 
   const [isJobDropdownOpen, setIsJobDropdownOpen] = useState(false);
   const [isLevelDropdownOpen, setIsLevelDropdownOpen] = useState(false);
+  const [isAvatarPickerOpen, setIsAvatarPickerOpen] = useState(false);
   const [skillsModal, setSkillsModal] = useState<"hardSkills" | "softSkills" | null>(null);
   const [enteredSkills, setEnteredSkills] = useState("");
+  const [selectedAvatarId, setSelectedAvatarId] = useState<string | null>(null);
+  const jobDropdownRef = useRef<HTMLDivElement | null>(null);
+  const levelDropdownRef = useRef<HTMLDivElement | null>(null);
+  const avatarPickerRef = useRef<HTMLDivElement | null>(null);
 
   const recommendedHardSkills = [
     "JavaScript", "TypeScript", "React", "Node.js", "Python", "Java", "C++", 
@@ -111,18 +136,106 @@ export default function Register() {
     setStep2Data(prev => ({ ...prev, [name]: value }));
   };
 
+  const normalizeSkillsList = (value: string) => {
+    const uniqueSkills = new Map<string, string>();
+
+    value
+      .split(",")
+      .map((skill) => skill.trim())
+      .filter(Boolean)
+      .forEach((skill) => {
+        const normalizedKey = skill.toLowerCase();
+
+        if (!uniqueSkills.has(normalizedKey)) {
+          uniqueSkills.set(normalizedKey, skill);
+        }
+      });
+
+    return Array.from(uniqueSkills.values()).join(", ");
+  };
+
+  const appendUniqueSkill = (currentValue: string, skill: string) => {
+    return normalizeSkillsList(currentValue ? `${currentValue}, ${skill}` : skill);
+  };
+
+  const toggleSkill = (currentValue: string, skill: string) => {
+    const normalizedSkill = skill.trim().toLowerCase();
+    const skills = normalizeSkillsList(currentValue)
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+
+    const filteredSkills = skills.filter((item) => item.toLowerCase() !== normalizedSkill);
+
+    if (filteredSkills.length !== skills.length) {
+      return filteredSkills.join(", ");
+    }
+
+    return appendUniqueSkill(currentValue, skill);
+  };
+
   const openSkillsModal = (type: "hardSkills" | "softSkills") => {
+    setEnteredSkills(
+      type === "hardSkills" ? step2Data.hardSkillsList : step2Data.softSkillsList
+    );
     setSkillsModal(type);
   };
 
   const closeSkillsModal = () => {
+    const normalizedSkills = normalizeSkillsList(enteredSkills);
+
     if (skillsModal === 'hardSkills') {
-      setStep2Data(prev => ({ ...prev, hardSkills: true, hardSkillsList: enteredSkills }));
+      setStep2Data(prev => ({
+        ...prev,
+        hardSkills: normalizedSkills !== "",
+        hardSkillsList: normalizedSkills
+      }));
     } else if (skillsModal === 'softSkills') {
-      setStep2Data(prev => ({ ...prev, softSkills: true, softSkillsList: enteredSkills }));
+      setStep2Data(prev => ({
+        ...prev,
+        softSkills: normalizedSkills !== "",
+        softSkillsList: normalizedSkills
+      }));
     }
+
     setSkillsModal(null);
     setEnteredSkills("");
+  };
+
+  const selectedAvatar = avatarOptions.find((avatar) => avatar.id === selectedAvatarId) ?? null;
+
+  const closeInteractivePanels = () => {
+    setIsJobDropdownOpen(false);
+    setIsLevelDropdownOpen(false);
+    setIsAvatarPickerOpen(false);
+  };
+
+  const handleDropdownToggle = (dropdown: "job" | "level") => {
+    if (dropdown === "job") {
+      if (isLevelDropdownOpen || isAvatarPickerOpen) {
+        closeInteractivePanels();
+        return;
+      }
+
+      setIsJobDropdownOpen((prev) => !prev);
+      return;
+    }
+
+    if (isJobDropdownOpen || isAvatarPickerOpen) {
+      closeInteractivePanels();
+      return;
+    }
+
+    setIsLevelDropdownOpen((prev) => !prev);
+  };
+
+  const handleAvatarPickerToggle = () => {
+    if (isJobDropdownOpen || isLevelDropdownOpen) {
+      closeInteractivePanels();
+      return;
+    }
+
+    setIsAvatarPickerOpen((prev) => !prev);
   };
 
   const isFormValid = () => {
@@ -139,7 +252,11 @@ export default function Register() {
   const isStep2Valid = () => {
     return (
       step2Data.job !== "" &&
-      step2Data.level !== ""
+      step2Data.level !== "" &&
+      step2Data.hardSkillsList.trim() !== "" &&
+      step2Data.softSkillsList.trim() !== "" &&
+      step2Data.telegram.trim() !== "" &&
+      step2Data.description.trim() !== ""
     );
   };
 
@@ -212,6 +329,27 @@ export default function Register() {
       setPendingProgressStep(null);
     }
   }, [pendingProgressStep, step]);
+
+  useEffect(() => {
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target as Node;
+      const clickedInsideJobDropdown = jobDropdownRef.current?.contains(target);
+      const clickedInsideLevelDropdown = levelDropdownRef.current?.contains(target);
+      const clickedInsideAvatarPicker = avatarPickerRef.current?.contains(target);
+
+      if (!clickedInsideJobDropdown && !clickedInsideLevelDropdown && !clickedInsideAvatarPicker) {
+        setIsJobDropdownOpen(false);
+        setIsLevelDropdownOpen(false);
+        setIsAvatarPickerOpen(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, []);
 
   const renderProgressIndicator = () => (
     <div className="register-progress" aria-label="Прогресс регистрации">
@@ -353,18 +491,53 @@ export default function Register() {
   const renderStep2 = () => (
     <div className="step2-form">
       <div className="avatar-section">
-        <div className="avatar-placeholder">
-          <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
-          </svg>
+        <div
+          ref={avatarPickerRef}
+          className={`avatar-picker ${isAvatarPickerOpen ? "open" : ""}`}
+        >
+          <button
+            type="button"
+            className="avatar-placeholder"
+            onClick={handleAvatarPickerToggle}
+            aria-label="Выбрать аватар"
+          >
+            {selectedAvatar ? (
+              <img src={selectedAvatar.src} alt={selectedAvatar.label} className="avatar-image" />
+            ) : (
+              <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            )}
+          </button>
+          {isAvatarPickerOpen && (
+            <div className="avatar-picker-dropdown">
+              <div className="avatar-picker-track">
+                {avatarOptions.map((avatar) => (
+                  <button
+                    key={avatar.id}
+                    type="button"
+                    className={`avatar-option ${selectedAvatarId === avatar.id ? "selected" : ""}`}
+                    onClick={() => {
+                      setSelectedAvatarId(avatar.id);
+                      setIsAvatarPickerOpen(false);
+                    }}
+                    aria-label={`Выбрать аватар ${avatar.label}`}
+                  >
+                    <img src={avatar.src} alt={avatar.label} className="avatar-option-image" />
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
       <div className="role-section">
         <div 
+          ref={jobDropdownRef}
           className={`custom-dropdown ${isJobDropdownOpen ? 'open' : ''}`}
-          onClick={() => setIsJobDropdownOpen(!isJobDropdownOpen)}
+          onClick={() => handleDropdownToggle("job")}
         >
           <div className="dropdown-selected">
             {step2Data.job 
@@ -385,7 +558,7 @@ export default function Register() {
                   onClick={(e) => {
                     e.stopPropagation();
                     setStep2Data(prev => ({ ...prev, job: option.id }));
-                    setIsJobDropdownOpen(false);
+                    closeInteractivePanels();
                   }}
                 >
                   {option.label}
@@ -399,8 +572,9 @@ export default function Register() {
       <div className="status-section">
         <label>Уровень: </label>
         <div 
+          ref={levelDropdownRef}
           className={`custom-dropdown status-dropdown ${isLevelDropdownOpen ? 'open' : ''}`}
-          onClick={() => setIsLevelDropdownOpen(!isLevelDropdownOpen)}
+          onClick={() => handleDropdownToggle("level")}
         >
           <div className="dropdown-selected">
             {step2Data.level 
@@ -421,7 +595,7 @@ export default function Register() {
                   onClick={(e) => {
                     e.stopPropagation();
                     setStep2Data(prev => ({ ...prev, level: option.id }));
-                    setIsLevelDropdownOpen(false);
+                    closeInteractivePanels();
                   }}
                 >
                   {option.label}
@@ -462,7 +636,7 @@ export default function Register() {
             </h3>
             <textarea
               value={enteredSkills}
-              onChange={(e) => setEnteredSkills(e.target.value)}
+              onChange={(e) => setEnteredSkills(normalizeSkillsList(e.target.value))}
               placeholder={skillsModal === 'hardSkills' 
                 ? 'Введите ваши Hard-skills...' 
                 : 'Введите ваши Soft-skills...'}
@@ -475,7 +649,7 @@ export default function Register() {
                   <button 
                     key={skill}
                     className="recommended-skill-btn"
-                    onClick={() => setEnteredSkills(prev => prev ? `${prev}, ${skill}` : skill)}
+                    onClick={() => setEnteredSkills(prev => toggleSkill(prev, skill))}
                   >
                     {skill}
                   </button>
@@ -548,10 +722,14 @@ export default function Register() {
         <div className={`step3-left-column ${step3Page === 1 ? "" : "step3-hidden"}`}>
           <div className="avatar-section">
             <div className="avatar-placeholder">
-              <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </svg>
+              {selectedAvatar ? (
+                <img src={selectedAvatar.src} alt={selectedAvatar.label} className="avatar-image" />
+              ) : (
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              )}
             </div>
           </div>
 
