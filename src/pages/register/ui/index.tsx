@@ -54,6 +54,18 @@ const avatarOptions = [
   { id: "game", label: "Game", src: game },
 ];
 
+const skillRatingOptions = [
+  { id: "excellent", label: "отлично", color: "#93F890" },
+  { id: "good", label: "хорошо", color: "#ABFF92" },
+  { id: "average", label: "средне", color: "#FFE47A" },
+  { id: "poor", label: "плохо", color: "#FFC073" },
+  { id: "unknown", label: "не знаю", color: "#FF5353" },
+];
+
+type SkillModalType = "hardSkills" | "softSkills";
+type SkillRatingId = (typeof skillRatingOptions)[number]["id"];
+type SkillRatingsState = Record<SkillModalType, Record<string, SkillRatingId>>;
+
 export default function Register() {
   const dispatch = useAppDispatch();
    const { token, userId, loading, error, step } = useAppSelector(state => state.register);
@@ -99,8 +111,13 @@ export default function Register() {
   const [isJobDropdownOpen, setIsJobDropdownOpen] = useState(false);
   const [isLevelDropdownOpen, setIsLevelDropdownOpen] = useState(false);
   const [isAvatarPickerOpen, setIsAvatarPickerOpen] = useState(false);
-  const [skillsModal, setSkillsModal] = useState<"hardSkills" | "softSkills" | null>(null);
+  const [skillsModal, setSkillsModal] = useState<SkillModalType | null>(null);
   const [enteredSkills, setEnteredSkills] = useState("");
+  const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId>("excellent");
+  const [skillRatings, setSkillRatings] = useState<SkillRatingsState>({
+    hardSkills: {},
+    softSkills: {}
+  });
   const [selectedAvatarId, setSelectedAvatarId] = useState<string | null>(null);
   const jobDropdownRef = useRef<HTMLDivElement | null>(null);
   const levelDropdownRef = useRef<HTMLDivElement | null>(null);
@@ -154,27 +171,18 @@ export default function Register() {
     return Array.from(uniqueSkills.values()).join(", ");
   };
 
+  const getSkillsArray = (value: string) => (
+    normalizeSkillsList(value)
+      .split(",")
+      .map((skill) => skill.trim())
+      .filter(Boolean)
+  );
+
   const appendUniqueSkill = (currentValue: string, skill: string) => {
     return normalizeSkillsList(currentValue ? `${currentValue}, ${skill}` : skill);
   };
 
-  const toggleSkill = (currentValue: string, skill: string) => {
-    const normalizedSkill = skill.trim().toLowerCase();
-    const skills = normalizeSkillsList(currentValue)
-      .split(",")
-      .map((item) => item.trim())
-      .filter(Boolean);
-
-    const filteredSkills = skills.filter((item) => item.toLowerCase() !== normalizedSkill);
-
-    if (filteredSkills.length !== skills.length) {
-      return filteredSkills.join(", ");
-    }
-
-    return appendUniqueSkill(currentValue, skill);
-  };
-
-  const openSkillsModal = (type: "hardSkills" | "softSkills") => {
+  const openSkillsModal = (type: SkillModalType) => {
     setEnteredSkills(
       type === "hardSkills" ? step2Data.hardSkillsList : step2Data.softSkillsList
     );
@@ -200,6 +208,54 @@ export default function Register() {
 
     setSkillsModal(null);
     setEnteredSkills("");
+  };
+
+  const syncSkillField = (type: SkillModalType, value: string) => {
+    const normalizedSkills = normalizeSkillsList(value);
+
+    setEnteredSkills(normalizedSkills);
+    setStep2Data((prev) => ({
+      ...prev,
+      [type]: normalizedSkills !== "",
+      [`${type}List`]: normalizedSkills
+    }));
+  };
+
+  const toggleRatedSkill = (skill: string) => {
+    if (!skillsModal) return;
+
+    const normalizedSkill = skill.trim().toLowerCase();
+    const currentSkills = getSkillsArray(enteredSkills);
+    const existingSkill = currentSkills.find((item) => item.toLowerCase() === normalizedSkill);
+
+    if (existingSkill) {
+      const updatedSkills = currentSkills.filter((item) => item.toLowerCase() !== normalizedSkill).join(", ");
+
+      setSkillRatings((prev) => {
+        const nextRatings = { ...prev[skillsModal] };
+        delete nextRatings[normalizedSkill];
+
+        return {
+          ...prev,
+          [skillsModal]: nextRatings
+        };
+      });
+
+      syncSkillField(skillsModal, updatedSkills);
+      return;
+    }
+
+    const updatedSkills = appendUniqueSkill(enteredSkills, skill);
+
+    setSkillRatings((prev) => ({
+      ...prev,
+      [skillsModal]: {
+        ...prev[skillsModal],
+        [normalizedSkill]: selectedSkillRatingId
+      }
+    }));
+
+    syncSkillField(skillsModal, updatedSkills);
   };
 
   const selectedAvatar = avatarOptions.find((avatar) => avatar.id === selectedAvatarId) ?? null;
@@ -642,14 +698,36 @@ export default function Register() {
                 : 'Введите ваши Soft-skills...'}
               className="skills-textarea"
             />
+            <div className="skills-selected-box">
+              {getSkillsArray(enteredSkills).length > 0 ? (
+                getSkillsArray(enteredSkills).map((skill) => {
+                  const ratingId = skillRatings[skillsModal][skill.toLowerCase()] ?? "excellent";
+                  const rating = skillRatingOptions.find((option) => option.id === ratingId);
+
+                  return (
+                    <span
+                      key={skill}
+                      className="selected-skill-chip"
+                      style={{ background: rating?.color ?? "#93F890" }}
+                    >
+                      {skill}
+                    </span>
+                  );
+                })
+              ) : (
+                <span className="skills-selected-placeholder">
+                  Выберите навык, и он появится здесь
+                </span>
+              )}
+            </div>
             <div className="recommended-skills">
               <p>Рекомендованные навыки</p>
               <div className="recommended-skills-list">
                 {(skillsModal === 'hardSkills' ? recommendedHardSkills : recommendedSoftSkills).map(skill => (
                   <button 
                     key={skill}
-                    className="recommended-skill-btn"
-                    onClick={() => setEnteredSkills(prev => toggleSkill(prev, skill))}
+                    className={`recommended-skill-btn ${getSkillsArray(enteredSkills).some((item) => item.toLowerCase() === skill.toLowerCase()) ? "selected" : ""}`}
+                    onClick={() => toggleRatedSkill(skill)}
                   >
                     {skill}
                   </button>
@@ -830,6 +908,7 @@ export default function Register() {
           <img className="loginnregistr" src={loginnregistr} alt="" />
           <img className="boyforma" src={boyregistration} alt="" />
           {renderProgressIndicator()}
+          <div className={`register-form-shell ${skillsModal ? 'skills-open' : ''}`}>
           <div className="register-form-container">
             <div className="logo-block"></div>
             {step === 3 ? renderStep3() : step === 2 ? renderStep2() : (
@@ -839,6 +918,28 @@ export default function Register() {
                 {renderForm()}
               </>
             )}
+          </div>
+          {skillsModal ? (
+            <div className="skills-rating-sidebar">
+              <h3>Оценка навыков</h3>
+              <div className="skills-rating-list">
+                {skillRatingOptions.map((option) => (
+                  <button
+                    key={option.id}
+                    type="button"
+                    className={`skills-rating-item ${selectedSkillRatingId === option.id ? 'active' : ''}`}
+                    onClick={() => setSelectedSkillRatingId(option.id)}
+                  >
+                    <span
+                      className="skills-rating-dot"
+                      style={{ background: option.color }}
+                    />
+                    <span className="skills-rating-label">{option.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : null}
           </div>
         </>
       ) : (
