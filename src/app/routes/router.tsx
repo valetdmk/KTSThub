@@ -15,6 +15,7 @@ import { FAQ } from "../../pages/faq/ui";
 import Login from "../../pages/login/ui";
 import Register from "../../pages/register/ui";
 import { AuthPage } from "../../pages/auth/ui";
+import { PlatformPage } from "../../pages/platform/ui";
 
 export const router = createBrowserRouter([
     {
@@ -76,6 +77,10 @@ export const router = createBrowserRouter([
     {
         path: '/auth',
         element: <AuthPage />,
+    },
+    {
+        path: '/platform',
+        element: <PlatformPage />,
     },
 ]);
 

@@ -141,12 +141,35 @@
       z-index: 10;
       justify-content: center;
 
-      input {
-        width: 100px !important;
-        height: 60px !important;
-        padding: 10px;
-        font-size: 14px;
+      .social-login-btn {
+        width: 112px;
+        height: 60px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
         border-radius: 90px;
+        background: rgba(255, 255, 255, 0.16);
+        color: #fff;
+        font-size: 18px;
+        font-weight: 800;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.2s;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.26);
+          transform: translateY(-2px);
+        }
+      }
+
+      .google-login {
+        background: rgba(255, 255, 255, 0.94);
+        color: #1f1f1f;
+      }
+
+      .vk-login {
+        background: #0077ff;
+      }
+
+      .yandex-login {
+        background: #fc3f1d;
       }
     }
 
