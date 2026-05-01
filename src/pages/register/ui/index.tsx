@@ -2,9 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/store/hooks";
 import { registerRequest, updateProfileRequest, setStep } from "../../../features/register";
 import "./index.scss";
-import Backregister from "../../../shared/assets/Backregister.png"
+import registerBack from "../../../shared/assets/registerBack.png"
 import boyregistration from "../../../shared/assets/boyregistration.png"
 import loginnregistr from "../../../shared/assets/loginnregistr.png"
+import BackLogin from "../../../shared/assets/BackLogin.png"
 import logo from "../../../shared/assets/logo.png"
 import renderstep3Girl from "../../../shared/assets/renderstep3Girl.png"
 import UnionTop from "../../../shared/assets/UnionTop.png"
@@ -925,6 +926,7 @@ export default function Register() {
     <div className={`register-role-page ${selectedRole ? 'role-selected' : ''}`}>
       {selectedRole ? (
         <>
+          <img className="BackLogin" src={BackLogin} alt="" />
           <img className="loginnregistr" src={loginnregistr} alt="" />
           <img className="boyforma" src={boyregistration} alt="" />
           {renderProgressIndicator()}
@@ -1005,7 +1007,7 @@ export default function Register() {
               </div>
             ))}
           </div>
-          <img className="backregister" src={Backregister} alt="" />
+          <img className="backregister" src={registerBack} alt="" />
         </>
       )}
     </div>

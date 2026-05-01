@@ -7,6 +7,7 @@ import UnionBottom from "../../../shared/assets/UnionBottom.png";
 import Boy from "../../../shared/assets/Boy.png";
 import Girl from "../../../shared/assets/Girl.png";
 import loginnregistr from "../../../shared/assets/loginnregistr.png";
+import BackLogin from "../../../shared/assets/BackLogin.png"
 
 export type PlatformUserData = {
   lastName: string;
@@ -71,6 +72,7 @@ export default function Login() {
 
   return (
     <div className="login-page">
+      <img className="BackLogin" src={BackLogin} alt="" />
       <img className="loginnregistr" src={loginnregistr} alt="" />
       <img className="boy" src={Boy} alt="" />
       <img className="girl" src={Girl} alt="" />
