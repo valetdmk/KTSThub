@@ -87,6 +87,25 @@ export default function Register() {
     return age;
   };
 
+  const persistPlatformUser = () => {
+    const platformUser = {
+      lastName: formData.lastname,
+      firstName: formData.name,
+      avatar: selectedAvatar?.src ?? "",
+      username: formData.username,
+      email: formData.email,
+      code: "",
+      birthday: formData.birthday,
+      age: formData.birthday ? String(calculateAge(formData.birthday)) : "",
+      gender: "",
+      phone: formData.phone,
+      social: step2Data.telegram,
+      description: step2Data.description,
+    };
+
+    localStorage.setItem("platformUser", JSON.stringify(platformUser));
+  };
+
   const [formData, setFormData] = useState({
     name: "",
     lastname: "",
@@ -347,6 +366,7 @@ export default function Register() {
    const handleStep2Submit = () => {
      if (!isStep2Valid()) return;
 
+     persistPlatformUser();
      setPendingProgressStep(2);
      setStep3Page(1);
      dispatch(setStep(3));

@@ -15,6 +15,12 @@ export type PlatformUserData = {
   username: string;
   email: string;
   code: string;
+  birthday?: string;
+  age?: string;
+  gender?: string;
+  phone?: string;
+  social?: string;
+  description?: string;
 };
 
 export default function Login() {
@@ -40,9 +46,23 @@ export default function Login() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    const savedPlatformUser = localStorage.getItem("platformUser");
+    let parsedPlatformUser: Partial<PlatformUserData> = {};
+
+    if (savedPlatformUser) {
+      try {
+        parsedPlatformUser = JSON.parse(savedPlatformUser) as Partial<PlatformUserData>;
+      } catch {
+        parsedPlatformUser = {};
+      }
+    }
+
     const platformUser = {
+      ...parsedPlatformUser,
       ...formData,
-      firstName: formData.username,
+      firstName: parsedPlatformUser.firstName || formData.username,
+      lastName: parsedPlatformUser.lastName || formData.lastName,
+      avatar: parsedPlatformUser.avatar || formData.avatar,
     };
 
     localStorage.setItem("platformUser", JSON.stringify(platformUser));

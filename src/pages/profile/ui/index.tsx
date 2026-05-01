@@ -11,6 +11,12 @@ type PlatformUserData = {
   username: string;
   email: string;
   code: string;
+  birthday?: string;
+  age?: string;
+  gender?: string;
+  phone?: string;
+  social?: string;
+  description?: string;
 };
 
 type IconName =
@@ -32,6 +38,11 @@ type MenuItem = {
   label: string;
   icon: IconName;
   path?: string;
+};
+
+type InfoItem = {
+  label: string;
+  value: string;
 };
 
 const topMenuItems: MenuItem[] = [
@@ -56,7 +67,15 @@ const fallbackUser: PlatformUserData = {
   username: "",
   email: "email@example.com",
   code: "",
+  birthday: "",
+  age: "",
+  gender: "",
+  phone: "",
+  social: "",
+  description: "",
 };
+
+const projectTags = ["Hackathon", "Frontend", "Design System", "MVP", "Команда", "Портфолио"];
 
 const iconPaths: Record<IconName, ReactNode> = {
   user: <><path d="M20 21a8 8 0 0 0-16 0" /><circle cx="12" cy="7" r="4" /></>,
@@ -92,6 +111,7 @@ function Icon({ name }: { name: IconName }) {
 function readSavedUser() {
   const savedUser = localStorage.getItem("platformUser");
   if (!savedUser) return fallbackUser;
+
   try {
     return { ...fallbackUser, ...JSON.parse(savedUser) } as PlatformUserData;
   } catch {
@@ -99,14 +119,52 @@ function readSavedUser() {
   }
 }
 
+function formatDate(date: string) {
+  if (!date) return "Не указана";
+
+  const parsedDate = new Date(date);
+  if (Number.isNaN(parsedDate.getTime())) return date;
+
+  return new Intl.DateTimeFormat("ru-RU").format(parsedDate);
+}
+
+function calculateAge(birthday?: string) {
+  if (!birthday) return "";
+
+  const today = new Date();
+  const birthDate = new Date(birthday);
+
+  if (Number.isNaN(birthDate.getTime())) return "";
+
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    age -= 1;
+  }
+
+  return String(age);
+}
+
 export const ProfilePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const user = useMemo(() => ({ ...readSavedUser(), ...(location.state as Partial<PlatformUserData> | null) }), [location.state]);
+  const user = useMemo(
+    () => ({ ...readSavedUser(), ...(location.state as Partial<PlatformUserData> | null) }),
+    [location.state],
+  );
   const [activeBottomItemId, setActiveBottomItemId] = useState(bottomMenuItems[0].id);
   const [isAvatarBroken, setIsAvatarBroken] = useState(false);
   const activeTopItem = topMenuItems.find((item) => item.path === location.pathname) ?? topMenuItems[0];
   const avatarSrc = !isAvatarBroken && user.avatar ? user.avatar : logo;
+  const age = user.age || calculateAge(user.birthday);
+  const infoItems: InfoItem[] = [
+    { label: "Возраст", value: age ? `${age}` : "Не указан" },
+    { label: "Дата рождения", value: formatDate(user.birthday ?? "") },
+    { label: "Пол", value: user.gender?.trim() || "Не указан" },
+    { label: "Телефон", value: user.phone?.trim() || "Не указан" },
+    { label: "Соц. сети", value: user.social?.trim() || "Не указаны" },
+  ];
 
   const renderMenuButton = (item: MenuItem) => {
     const isActive = item.path ? item.path === location.pathname : activeBottomItemId === item.id;
@@ -161,9 +219,49 @@ export const ProfilePage = () => {
           </div>
         </header>
 
-        <section className="page-placeholder-card">
-          <h1>Личный кабинет</h1>
-          <p>Здесь будет отображаться профиль пользователя, его данные, статистика и персональные настройки платформы.</p>
+        <section className="profile-dashboard">
+          <div className="profile-info-grid">
+            <article className="profile-panel profile-panel-user">
+              <img
+                className="profile-panel-avatar"
+                src={avatarSrc}
+                alt={`${user.lastName} ${user.firstName}`}
+                onError={() => setIsAvatarBroken(true)}
+              />
+              <div className="profile-panel-user-text">
+                <h2>{user.lastName} {user.firstName}</h2>
+                <p>{user.email}</p>
+              </div>
+            </article>
+
+            <article className="profile-panel profile-panel-details">
+              <h2>Данные</h2>
+              <div className="profile-details-list">
+                {infoItems.map((item) => (
+                  <div key={item.label} className="profile-detail-row">
+                    <span>{item.label}:</span>
+                    <strong>{item.value}</strong>
+                  </div>
+                ))}
+              </div>
+            </article>
+
+            <article className="profile-panel profile-panel-about">
+              <h2>О себе...</h2>
+              <div className="profile-about-content">
+                {user.description?.trim() || "Пользователь пока не добавил описание."}
+              </div>
+            </article>
+          </div>
+
+          <article className="profile-panel profile-panel-projects">
+            <h2>Проекты</h2>
+            <div className="profile-project-tags">
+              {projectTags.map((tag) => (
+                <span key={tag} className="profile-project-tag">{tag}</span>
+              ))}
+            </div>
+          </article>
         </section>
       </section>
     </main>

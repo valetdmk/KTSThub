@@ -273,51 +273,55 @@ export const ParticipantsPage = () => {
             ))}
           </div>
 
-          <div className="participants-list" aria-label="Рейтинг участников">
-            {topParticipants.map((participant) => (
-              <article key={participant.id} className={`participant-row participant-row-top top-rank-${participant.rank}`}>
-                <div className={`${participantRankClassName(participant.rank)} participant-rank-top`}>
-                  № {participant.rank}
-                </div>
-                <div className="participant-top-stack">
-                  <div className="participant-top-art">
-                    <img src={usersBack} alt="Users" />
-                  </div>
-                  <div className={participantCardClassName(participant.rank)}>
-                    <div className="participant-main-info">
-                      <strong>{participant.lastName} {participant.firstName}, {participant.gender}, {participant.age} лет</strong>
-                      <span>{participant.title}</span>
+          <div className="participants-frame">
+            <div className="participants-scroll-area">
+              <div className="participants-list" aria-label="Рейтинг участников">
+                {topParticipants.map((participant) => (
+                  <article key={participant.id} className={`participant-row participant-row-top top-rank-${participant.rank}`}>
+                    <div className={`${participantRankClassName(participant.rank)} participant-rank-top`}>
+                      № {participant.rank}
                     </div>
-                    <div className="participant-meta">
-                      <span>{participant.role}</span>
-                      <span>{participant.projectsCount} проектов</span>
+                    <div className="participant-top-stack">
+                      <div className="participant-top-art">
+                        <img src={usersBack} alt="Users" />
+                      </div>
+                      <div className={participantCardClassName(participant.rank)}>
+                        <div className="participant-main-info">
+                          <strong>{participant.lastName} {participant.firstName}, {participant.gender}, {participant.age} лет</strong>
+                          <span>{participant.title}</span>
+                        </div>
+                        <div className="participant-meta">
+                          <span>{participant.role}</span>
+                          <span>{participant.projectsCount} проектов</span>
+                        </div>
+                        <button type="button" className="participant-invite-button">Пригласить</button>
+                      </div>
                     </div>
-                    <button type="button" className="participant-invite-button">Пригласить</button>
-                  </div>
-                </div>
-              </article>
-            ))}
+                  </article>
+                ))}
 
-            <div className="participants-divider" />
+                <div className="participants-divider" />
 
-            {otherParticipants.map((participant) => (
-              <article key={participant.id} className="participant-row">
-                <div className={participantRankClassName(participant.rank)}>
-                  № {participant.rank}
-                </div>
-                <div className={participantCardClassName(participant.rank)}>
-                  <div className="participant-main-info">
-                    <strong>{participant.lastName} {participant.firstName}, {participant.gender}, {participant.age} лет</strong>
-                    <span>{participant.title}</span>
-                  </div>
-                  <div className="participant-meta">
-                    <span>{participant.role}</span>
-                    <span>{participant.projectsCount} проектов</span>
-                  </div>
-                  <button type="button" className="participant-invite-button">Пригласить</button>
-                </div>
-              </article>
-            ))}
+                {otherParticipants.map((participant) => (
+                  <article key={participant.id} className="participant-row">
+                    <div className={participantRankClassName(participant.rank)}>
+                      № {participant.rank}
+                    </div>
+                    <div className={participantCardClassName(participant.rank)}>
+                      <div className="participant-main-info">
+                        <strong>{participant.lastName} {participant.firstName}, {participant.gender}, {participant.age} лет</strong>
+                        <span>{participant.title}</span>
+                      </div>
+                      <div className="participant-meta">
+                        <span>{participant.role}</span>
+                        <span>{participant.projectsCount} проектов</span>
+                      </div>
+                      <button type="button" className="participant-invite-button">Пригласить</button>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
           </div>
         </section>
       </section>
