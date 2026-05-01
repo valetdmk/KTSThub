@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import type { ReactNode } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import logo from "../../../shared/assets/logo.png";
 import "./index.scss";
 
@@ -31,15 +31,16 @@ type MenuItem = {
   id: string;
   label: string;
   icon: IconName;
+  path?: string;
 };
 
 const topMenuItems: MenuItem[] = [
-  { id: "cabinet", label: "Личный кабинет", icon: "user" },
-  { id: "home", label: "Главная", icon: "home" },
-  { id: "schedule", label: "Расписание", icon: "calendar" },
-  { id: "projects", label: "Проекты", icon: "projects" },
-  { id: "participants", label: "Участники", icon: "users" },
-  { id: "achievements", label: "Ачивки", icon: "award" },
+  { id: "cabinet", label: "Личный кабинет", icon: "user", path: "/profile" },
+  { id: "home", label: "Главная", icon: "home", path: "/platform" },
+  { id: "schedule", label: "Расписание", icon: "calendar", path: "/schedule" },
+  { id: "projects", label: "Проекты", icon: "projects", path: "/projects" },
+  { id: "participants", label: "Участники", icon: "users", path: "/participants" },
+  { id: "achievements", label: "Ачивки", icon: "award", path: "/achievements" },
 ];
 
 const bottomMenuItems: MenuItem[] = [
@@ -170,28 +171,47 @@ function readSavedUser() {
 
 export function PlatformPage() {
   const location = useLocation();
+  const navigate = useNavigate();
   const user = useMemo(() => {
     return { ...readSavedUser(), ...(location.state as Partial<PlatformUserData> | null) };
   }, [location.state]);
-  const [activeItemId, setActiveItemId] = useState(topMenuItems[0].id);
+  const [activeBottomItemId, setActiveBottomItemId] = useState(bottomMenuItems[0].id);
   const [isAvatarBroken, setIsAvatarBroken] = useState(false);
-  const allItems = [...topMenuItems, ...bottomMenuItems];
-  const activeItem = allItems.find((item) => item.id === activeItemId) ?? topMenuItems[0];
+  const activeTopItem = topMenuItems.find((item) => item.path === location.pathname) ?? topMenuItems[1];
+  const activeBottomItem =
+    bottomMenuItems.find((item) => item.id === activeBottomItemId) ?? bottomMenuItems[0];
+  const activeItem = activeTopItem ?? activeBottomItem;
   const avatarSrc = !isAvatarBroken && user.avatar ? user.avatar : logo;
 
-  const renderMenuButton = (item: MenuItem) => (
-    <button
-      key={item.id}
-      type="button"
-      className={`platform-menu-button ${activeItemId === item.id ? "active" : ""}`}
-      onClick={() => setActiveItemId(item.id)}
-    >
-      <span className="platform-button-inner">
-        <Icon name={item.icon} />
-        <span>{item.label}</span>
-      </span>
-    </button>
-  );
+  const renderMenuButton = (item: MenuItem) => {
+    const isActive = item.path ? item.path === location.pathname : activeBottomItemId === item.id;
+
+    return (
+      <button
+        key={item.id}
+        type="button"
+        className={`platform-menu-button ${isActive ? "active" : ""}`}
+        onClick={() => {
+          if (item.path) {
+            navigate(item.path);
+            return;
+          }
+
+          if (item.id === "logout") {
+            navigate("/login");
+            return;
+          }
+
+          setActiveBottomItemId(item.id);
+        }}
+      >
+        <span className="platform-button-inner">
+          <Icon name={item.icon} />
+          <span>{item.label}</span>
+        </span>
+      </button>
+    );
+  };
 
   return (
     <main className="platform-page">

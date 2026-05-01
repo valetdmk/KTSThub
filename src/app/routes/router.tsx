@@ -16,6 +16,7 @@ import Login from "../../pages/login/ui";
 import Register from "../../pages/register/ui";
 import { AuthPage } from "../../pages/auth/ui";
 import { PlatformPage } from "../../pages/platform/ui";
+import { ProjectsPage } from "../../pages/projects/ui";
 
 export const router = createBrowserRouter([
     {
@@ -53,6 +54,10 @@ export const router = createBrowserRouter([
     {
         path: '/achievements',
         element: <Achievements />,
+    },
+    {
+        path: '/projects',
+        element: <ProjectsPage />,
     },
     {
         path: '/developers',
