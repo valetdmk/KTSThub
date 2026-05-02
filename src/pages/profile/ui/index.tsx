@@ -1,23 +1,11 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../app/store/hooks";
+import { actions as authActions } from "../../../features/auth";
+import { mapBackendUserToPlatformUser } from "../../../shared/lib/userProfile";
 import logo from "../../../shared/assets/logo.png";
 import "./index.scss";
-
-type PlatformUserData = {
-  lastName: string;
-  firstName: string;
-  avatar: string;
-  username: string;
-  email: string;
-  code: string;
-  birthday?: string;
-  age?: string;
-  gender?: string;
-  phone?: string;
-  social?: string;
-  description?: string;
-};
 
 type IconName =
   | "user"
@@ -60,21 +48,6 @@ const bottomMenuItems: MenuItem[] = [
   { id: "logout", label: "Выйти", icon: "logout" },
 ];
 
-const fallbackUser: PlatformUserData = {
-  lastName: "Фамилия",
-  firstName: "Имя",
-  avatar: logo,
-  username: "",
-  email: "email@example.com",
-  code: "",
-  birthday: "",
-  age: "",
-  gender: "",
-  phone: "",
-  social: "",
-  description: "",
-};
-
 const projectTags = ["Hackathon", "Frontend", "Design System", "MVP", "Команда", "Портфолио"];
 
 const iconPaths: Record<IconName, ReactNode> = {
@@ -108,17 +81,6 @@ function Icon({ name }: { name: IconName }) {
   );
 }
 
-function readSavedUser() {
-  const savedUser = localStorage.getItem("platformUser");
-  if (!savedUser) return fallbackUser;
-
-  try {
-    return { ...fallbackUser, ...JSON.parse(savedUser) } as PlatformUserData;
-  } catch {
-    return fallbackUser;
-  }
-}
-
 function formatDate(date: string) {
   if (!date) return "Не указана";
 
@@ -128,43 +90,32 @@ function formatDate(date: string) {
   return new Intl.DateTimeFormat("ru-RU").format(parsedDate);
 }
 
-function calculateAge(birthday?: string) {
-  if (!birthday) return "";
-
-  const today = new Date();
-  const birthDate = new Date(birthday);
-
-  if (Number.isNaN(birthDate.getTime())) return "";
-
-  let age = today.getFullYear() - birthDate.getFullYear();
-  const monthDiff = today.getMonth() - birthDate.getMonth();
-
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-    age -= 1;
-  }
-
-  return String(age);
-}
-
 export const ProfilePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const user = useMemo(
-    () => ({ ...readSavedUser(), ...(location.state as Partial<PlatformUserData> | null) }),
-    [location.state],
-  );
+  const dispatch = useAppDispatch();
+  const { token, user: backendUser, loading } = useAppSelector((state) => state.auth);
+  const user = useMemo(() => mapBackendUserToPlatformUser(backendUser), [backendUser]);
   const [activeBottomItemId, setActiveBottomItemId] = useState(bottomMenuItems[0].id);
   const [isAvatarBroken, setIsAvatarBroken] = useState(false);
   const activeTopItem = topMenuItems.find((item) => item.path === location.pathname) ?? topMenuItems[0];
   const avatarSrc = !isAvatarBroken && user.avatar ? user.avatar : logo;
-  const age = user.age || calculateAge(user.birthday);
   const infoItems: InfoItem[] = [
-    { label: "Возраст", value: age ? `${age}` : "Не указан" },
+    { label: "Возраст", value: user.age?.trim() || "Не указан" },
     { label: "Дата рождения", value: formatDate(user.birthday ?? "") },
-    { label: "Пол", value: user.gender?.trim() || "Не указан" },
     { label: "Телефон", value: user.phone?.trim() || "Не указан" },
-    { label: "Соц. сети", value: user.social?.trim() || "Не указаны" },
+    { label: "Telegram", value: user.social?.trim() || "Не указан" },
+    { label: "Роль", value: user.role?.trim() || "Не указана" },
+    { label: "Статус", value: user.status?.trim() || "Не указан" },
+    { label: "Направление", value: user.job?.trim() || "Не указано" },
+    { label: "Уровень", value: user.level?.trim() || "Не указан" },
   ];
+
+  useEffect(() => {
+    if (token && !backendUser && !loading) {
+      dispatch(authActions.fetchProfileRequest());
+    }
+  }, [backendUser, dispatch, loading, token]);
 
   const renderMenuButton = (item: MenuItem) => {
     const isActive = item.path ? item.path === location.pathname : activeBottomItemId === item.id;
@@ -175,7 +126,10 @@ export const ProfilePage = () => {
         className={`platform-menu-button ${isActive ? "active" : ""}`}
         onClick={() => {
           if (item.path) return void navigate(item.path);
-          if (item.id === "logout") return void navigate("/login");
+          if (item.id === "logout") {
+            dispatch(authActions.logout());
+            return void navigate("/login");
+          }
           setActiveBottomItemId(item.id);
         }}
       >
@@ -232,6 +186,13 @@ export const ProfilePage = () => {
                 <h2>{user.lastName} {user.firstName}</h2>
                 <p>{user.email}</p>
               </div>
+              <button
+                type="button"
+                className="profile-action-button"
+                onClick={() => navigate("/profile/edit")}
+              >
+                Редактировать профиль
+              </button>
             </article>
 
             <article className="profile-panel profile-panel-details">
@@ -249,7 +210,7 @@ export const ProfilePage = () => {
             <article className="profile-panel profile-panel-about">
               <h2>О себе...</h2>
               <div className="profile-about-content">
-                {user.description?.trim() || "Пользователь пока не добавил описание."}
+                {user.description?.trim() || "В backend пока нет поля описания, поэтому здесь показываются только реальные данные профиля."}
               </div>
             </article>
           </div>

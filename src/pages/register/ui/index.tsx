@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/store/hooks";
-import { registerRequest, updateProfileRequest, setStep } from "../../../features/register";
+import { registerRequest, updateProfileRequest } from "../../../features/register";
 import "./index.scss";
 import registerBack from "../../../shared/assets/registerBack.png"
 import boyregistration from "../../../shared/assets/boyregistration.png"
@@ -20,6 +20,25 @@ import unicorn from "../../../shared/assets/unicorn.png"
 import brain from "../../../shared/assets/brain.png"
 import joystick from "../../../shared/assets/joystick.png"
 import game from "../../../shared/assets/game.png"
+
+const calendarWeekDays = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
+const calendarMonthNames = [
+  "Январь",
+  "Февраль",
+  "Март",
+  "Апрель",
+  "Май",
+  "Июнь",
+  "Июль",
+  "Август",
+  "Сентябрь",
+  "Октябрь",
+  "Ноябрь",
+  "Декабрь",
+];
+
+const currentYear = new Date().getFullYear();
+const calendarYearOptions = Array.from({ length: currentYear - 1899 }, (_, index) => currentYear - index);
 
 const roles = [
   { id: "student", number: "01", label: "STUDENT" },
@@ -131,6 +150,8 @@ export default function Register() {
   const [isJobDropdownOpen, setIsJobDropdownOpen] = useState(false);
   const [isLevelDropdownOpen, setIsLevelDropdownOpen] = useState(false);
   const [isAvatarPickerOpen, setIsAvatarPickerOpen] = useState(false);
+  const [isBirthdayCalendarOpen, setIsBirthdayCalendarOpen] = useState(false);
+  const [birthdayInputValue, setBirthdayInputValue] = useState("");
   const [skillsModal, setSkillsModal] = useState<SkillModalType | null>(null);
   const [enteredSkills, setEnteredSkills] = useState("");
   const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId>("excellent");
@@ -139,9 +160,11 @@ export default function Register() {
     softSkills: {}
   });
   const [selectedAvatarId, setSelectedAvatarId] = useState<string | null>(null);
+  const [birthdayViewDate, setBirthdayViewDate] = useState(() => new Date());
   const jobDropdownRef = useRef<HTMLDivElement | null>(null);
   const levelDropdownRef = useRef<HTMLDivElement | null>(null);
   const avatarPickerRef = useRef<HTMLDivElement | null>(null);
+  const birthdayCalendarRef = useRef<HTMLDivElement | null>(null);
 
   const recommendedHardSkills = [
     "JavaScript", "TypeScript", "React", "Node.js", "Python", "Java", "C++", 
@@ -166,6 +189,77 @@ export default function Register() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const formatBirthdayDisplay = (value: string) => {
+    if (!value) {
+      return "Дата рождения";
+    }
+
+    const [year, month, day] = value.split("-");
+
+    if (!year || !month || !day) {
+      return value;
+    }
+
+    return `${day}.${month}.${year}`;
+  };
+
+  const parseBirthdayInput = (value: string) => {
+    const match = value.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+
+    if (!match) {
+      return null;
+    }
+
+    const [, day, month, year] = match;
+    const parsedDate = new Date(Number(year), Number(month) - 1, Number(day));
+
+    if (
+      Number.isNaN(parsedDate.getTime()) ||
+      parsedDate.getFullYear() !== Number(year) ||
+      parsedDate.getMonth() !== Number(month) - 1 ||
+      parsedDate.getDate() !== Number(day)
+    ) {
+      return null;
+    }
+
+    return `${year}-${month}-${day}`;
+  };
+
+  const normalizeBirthdayInput = (value: string) => {
+    const digits = value.replace(/\D/g, "").slice(0, 8);
+    const parts = [];
+
+    if (digits.length > 0) {
+      parts.push(digits.slice(0, 2));
+    }
+
+    if (digits.length > 2) {
+      parts.push(digits.slice(2, 4));
+    }
+
+    if (digits.length > 4) {
+      parts.push(digits.slice(4, 8));
+    }
+
+    return parts.join(".");
+  };
+
+  const getCalendarDays = (viewDate: Date) => {
+    const year = viewDate.getFullYear();
+    const month = viewDate.getMonth();
+    const firstDayOfMonth = new Date(year, month, 1);
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const firstWeekDay = (firstDayOfMonth.getDay() + 6) % 7;
+
+    return Array.from({ length: firstWeekDay + daysInMonth }, (_, index) => {
+      if (index < firstWeekDay) {
+        return null;
+      }
+
+      return new Date(year, month, index - firstWeekDay + 1);
+    });
   };
 
   const handleStep2InputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -284,6 +378,7 @@ export default function Register() {
     setIsJobDropdownOpen(false);
     setIsLevelDropdownOpen(false);
     setIsAvatarPickerOpen(false);
+    setIsBirthdayCalendarOpen(false);
   };
 
   const handleDropdownToggle = (dropdown: "job" | "level") => {
@@ -312,6 +407,94 @@ export default function Register() {
     }
 
     setIsAvatarPickerOpen((prev) => !prev);
+  };
+
+  const handleBirthdayCalendarToggle = () => {
+    const selectedDate = formData.birthday ? new Date(formData.birthday) : new Date();
+    setBirthdayViewDate(selectedDate);
+
+    if (isJobDropdownOpen || isLevelDropdownOpen || isAvatarPickerOpen) {
+      closeInteractivePanels();
+      setIsBirthdayCalendarOpen(true);
+      return;
+    }
+
+    setIsBirthdayCalendarOpen((prev) => !prev);
+  };
+
+  const handleBirthdaySelect = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const isoBirthday = `${year}-${month}-${day}`;
+
+    setFormData((prev) => ({
+      ...prev,
+      birthday: isoBirthday
+    }));
+    setBirthdayInputValue(formatBirthdayDisplay(isoBirthday));
+    setIsBirthdayCalendarOpen(false);
+  };
+
+  const handleBirthdayMonthChange = (direction: number) => {
+    setBirthdayViewDate((prev) => new Date(prev.getFullYear(), prev.getMonth() + direction, 1));
+  };
+
+  const handleBirthdayInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const normalizedValue = normalizeBirthdayInput(e.target.value);
+    setBirthdayInputValue(normalizedValue);
+
+    const parsedBirthday = parseBirthdayInput(normalizedValue);
+
+    if (!parsedBirthday) {
+      setFormData((prev) => ({
+        ...prev,
+        birthday: ""
+      }));
+      return;
+    }
+
+    const parsedDate = new Date(parsedBirthday);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    parsedDate.setHours(0, 0, 0, 0);
+
+    if (parsedDate > today) {
+      setFormData((prev) => ({
+        ...prev,
+        birthday: ""
+      }));
+      return;
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      birthday: parsedBirthday
+    }));
+    setBirthdayViewDate(new Date(parsedBirthday));
+  };
+
+  const handleBirthdayInputBlur = () => {
+    if (!birthdayInputValue) {
+      return;
+    }
+
+    if (!formData.birthday) {
+      setBirthdayInputValue("");
+      return;
+    }
+
+    setBirthdayInputValue(formatBirthdayDisplay(formData.birthday));
+  };
+
+  const handleBirthdayMonthSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const nextMonth = Number(e.target.value);
+    setBirthdayViewDate((prev) => new Date(prev.getFullYear(), nextMonth, 1));
+  };
+
+  const handleBirthdayYearSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const nextYear = Number(e.target.value);
+    setBirthdayViewDate((prev) => new Date(nextYear, prev.getMonth(), 1));
   };
 
   const isFormValid = () => {
@@ -360,8 +543,6 @@ export default function Register() {
        email: formData.email,
        password: formData.password
      }));
-
-     dispatch(setStep(2));
    };
 
    const handleStep2Submit = () => {
@@ -370,18 +551,8 @@ export default function Register() {
      persistPlatformUser();
      setPendingProgressStep(2);
      setStep3Page(1);
-     dispatch(setStep(3));
 
      if (!token) return;
-     
-     const skillsArray: { skillId: number; level: number }[] = [];
-     
-     if (step2Data.hardSkillsList) {
-       const hardSkillsItems = step2Data.hardSkillsList.split(",").map(s => s.trim()).filter(Boolean);
-       hardSkillsItems.forEach((_, index) => {
-         skillsArray.push({ skillId: index + 1, level: 5 });
-       });
-     }
 
      dispatch(updateProfileRequest({
        token,
@@ -396,7 +567,7 @@ export default function Register() {
          telegram: step2Data.telegram || null,
          job: step2Data.job,
          level: step2Data.level,
-         skills: skillsArray
+         skills: []
        }
      }));
    };
@@ -408,16 +579,22 @@ export default function Register() {
   }, [pendingProgressStep, step]);
 
   useEffect(() => {
+    setBirthdayInputValue(formData.birthday ? formatBirthdayDisplay(formData.birthday) : "");
+  }, [formData.birthday]);
+
+  useEffect(() => {
     const handlePointerDown = (event: PointerEvent) => {
       const target = event.target as Node;
       const clickedInsideJobDropdown = jobDropdownRef.current?.contains(target);
       const clickedInsideLevelDropdown = levelDropdownRef.current?.contains(target);
       const clickedInsideAvatarPicker = avatarPickerRef.current?.contains(target);
+      const clickedInsideBirthdayCalendar = birthdayCalendarRef.current?.contains(target);
 
-      if (!clickedInsideJobDropdown && !clickedInsideLevelDropdown && !clickedInsideAvatarPicker) {
+      if (!clickedInsideJobDropdown && !clickedInsideLevelDropdown && !clickedInsideAvatarPicker && !clickedInsideBirthdayCalendar) {
         setIsJobDropdownOpen(false);
         setIsLevelDropdownOpen(false);
         setIsAvatarPickerOpen(false);
+        setIsBirthdayCalendarOpen(false);
       }
     };
 
@@ -492,15 +669,122 @@ export default function Register() {
         />
       </div>
 
-      <div className="birthday-section">
-        <input 
-          type="date" 
-          name="birthday" 
-          value={formData.birthday} 
-          onChange={handleInputChange} 
-          placeholder="Дата рождения" 
-          className="birthday-input" 
-        />
+      <div className="birthday-section" ref={birthdayCalendarRef}>
+        <div className={`birthday-input-shell${isBirthdayCalendarOpen ? " open" : ""}`}>
+          <input
+            type="text"
+            name="birthdayManual"
+            value={birthdayInputValue}
+            onChange={handleBirthdayInputChange}
+            onBlur={handleBirthdayInputBlur}
+            placeholder="ДД.ММ.ГГГГ"
+            className="birthday-input birthday-text-input"
+            inputMode="numeric"
+          />
+          <button
+            type="button"
+            className="birthday-trigger"
+            onClick={handleBirthdayCalendarToggle}
+            aria-haspopup="dialog"
+            aria-expanded={isBirthdayCalendarOpen}
+            aria-label="Open birthday calendar"
+          >
+            <svg className="calendar-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M7 2V5M17 2V5M3 9H21M5 5H19C20.1046 5 21 5.89543 21 7V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V7C3 5.89543 3.89543 5 5 5Z"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
+        </div>
+
+        {isBirthdayCalendarOpen && (
+          <div className="birthday-calendar" role="dialog" aria-label="Birthday calendar">
+            <div className="birthday-calendar-header">
+              <div className="calendar-period-controls">
+                <select
+                  className="calendar-select calendar-month-select"
+                  value={birthdayViewDate.getMonth()}
+                  onChange={handleBirthdayMonthSelect}
+                  aria-label="Select month"
+                >
+                  {calendarMonthNames.map((monthName, monthIndex) => (
+                    <option key={monthName} value={monthIndex}>
+                      {monthName}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  className="calendar-select calendar-year-select"
+                  value={birthdayViewDate.getFullYear()}
+                  onChange={handleBirthdayYearSelect}
+                  aria-label="Select year"
+                >
+                  {calendarYearOptions.map((year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="calendar-nav-group">
+                <button
+                  type="button"
+                  className="calendar-nav"
+                  onClick={() => handleBirthdayMonthChange(-1)}
+                  aria-label="Previous month"
+                >
+                  {"<"}
+                </button>
+                <button
+                  type="button"
+                  className="calendar-nav"
+                  onClick={() => handleBirthdayMonthChange(1)}
+                  aria-label="Next month"
+                >
+                  {">"}
+                </button>
+              </div>
+            </div>
+
+            <div className="calendar-weekdays">
+              {calendarWeekDays.map((weekDay) => (
+                <span key={weekDay} className="calendar-weekday">{weekDay}</span>
+              ))}
+            </div>
+
+            <div className="calendar-grid">
+              {getCalendarDays(birthdayViewDate).map((date, index) => {
+                if (!date) {
+                  return <span key={`empty-${index}`} className="calendar-day-empty" aria-hidden="true" />;
+                }
+
+                const isoDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+                const isSelected = formData.birthday === isoDate;
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const normalizedDate = new Date(date);
+                normalizedDate.setHours(0, 0, 0, 0);
+                const isFuture = normalizedDate > today;
+
+                return (
+                  <button
+                    key={isoDate}
+                    type="button"
+                    className={`calendar-day${isSelected ? " selected" : ""}${isFuture ? " disabled" : ""}`}
+                    onClick={() => handleBirthdaySelect(date)}
+                    disabled={isFuture}
+                  >
+                    {date.getDate()}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
       
       <div className="phone-gender-row">
@@ -567,6 +851,8 @@ export default function Register() {
 
   const renderStep2 = () => (
     <div className="step2-form">
+      {error ? <div className="error-message">{error}</div> : null}
+
       <div className="avatar-section">
         <div
           ref={avatarPickerRef}

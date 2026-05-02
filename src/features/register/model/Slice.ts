@@ -32,10 +32,12 @@ export const {name, reducer, actions} = createSlice({
             state.loading = false;
             state.token = action.payload.token;
             state.userId = action.payload.userId;
+            state.step = 2;
         },
         registerFailure(state, action: PayloadAction<string>) {
             state.loading = false;
             state.error = action.payload;
+            state.step = 1;
         },
         updateProfileRequest(state, _action: PayloadAction<{ token: string; userId: number; data: Record<string, unknown> }>) {
             state.loading = true;
@@ -48,7 +50,7 @@ export const {name, reducer, actions} = createSlice({
         updateProfileFailure(state, action: PayloadAction<string>) {
             state.loading = false;
             state.error = action.payload;
-            state.step = 3;
+            state.step = 2;
         },
         resetRegister(state) {
             state.step = 1;

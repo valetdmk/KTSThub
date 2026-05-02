@@ -1,10 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { LoginPayload } from "./Types";
-
-interface User {
-    id: number;
-    username: string;
-}
+import type { User } from "../../../entities/user/model";
 
 interface AuthState {
     token: string | null;
@@ -38,27 +34,25 @@ export const {name, reducer, actions} = createSlice({
         },
 
 
-        registerRequest(state, _action: PayloadAction<LoginPayload>) {
+        fetchProfileRequest(state) {
             state.loading = true;
             state.error = null;
         },
-        registerSuccess(state) {
+        fetchProfileSuccess(state, action: PayloadAction<User>) {
             state.loading = false;
+            state.user = action.payload;
         },
-        registerFailure(state, action: PayloadAction<string>) {
+        fetchProfileFailure(state, action: PayloadAction<string>) {
             state.loading = false;
             state.error = action.payload;
-        },
-
-
-        setUser(state, action: PayloadAction<User>) {
-            state.user = action.payload;
         },
 
         logout(state) {
             state.token = null;
             state.user = null;
+            state.error = null;
             localStorage.removeItem("token");
+            localStorage.removeItem("platformUser");
         },
     },
 });

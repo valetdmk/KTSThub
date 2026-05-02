@@ -5,6 +5,7 @@ import { ParticipantsPage } from "../../pages/participants/ui";
 import { AdminPage } from "../../pages/admin/ui";
 import { SchedulePage } from "../../pages/schedule/ui";
 import { ProfilePage } from "../../pages/profile/ui";
+import { EditProfilePage } from "../../pages/profile-edit/ui";
 import Events from "../../pages/events/ui";
 import EventPage from "../../pages/events/ui/eventpage";
 import { AboutUs } from "../../pages/aboutus/ui";
@@ -38,6 +39,10 @@ export const router = createBrowserRouter([
     {
         path: '/profile',
         element: <ProfilePage />,
+    },
+    {
+        path: '/profile/edit',
+        element: <EditProfilePage />,
     },
     {
         path: '/events',

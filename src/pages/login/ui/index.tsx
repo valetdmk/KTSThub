@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../app/store/hooks";
+import { actions as authActions } from "../../../features/auth";
 import "./index.scss";
 import logo from "../../../shared/assets/logo.png";
 import UnionTop from "../../../shared/assets/UnionTop.png";
@@ -7,7 +9,7 @@ import UnionBottom from "../../../shared/assets/UnionBottom.png";
 import Boy from "../../../shared/assets/Boy.png";
 import Girl from "../../../shared/assets/Girl.png";
 import loginnregistr from "../../../shared/assets/loginnregistr.png";
-import BackLogin from "../../../shared/assets/BackLogin.png"
+import BackLogin from "../../../shared/assets/BackLogin.png";
 
 export type PlatformUserData = {
   lastName: string;
@@ -15,7 +17,7 @@ export type PlatformUserData = {
   avatar: string;
   username: string;
   email: string;
-  code: string;
+  code?: string;
   birthday?: string;
   age?: string;
   gender?: string;
@@ -26,13 +28,11 @@ export type PlatformUserData = {
 
 export default function Login() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState<PlatformUserData>({
-    lastName: "",
-    firstName: "",
-    avatar: "",
+  const dispatch = useAppDispatch();
+  const { token, loading, error } = useAppSelector((state) => state.auth);
+  const [formData, setFormData] = useState({
     username: "",
-    email: "",
-    code: "",
+    password: "",
   });
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,8 +44,10 @@ export default function Login() {
     }));
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  useEffect(() => {
+    if (!token) {
+      return;
+    }
 
     const savedPlatformUser = localStorage.getItem("platformUser");
     let parsedPlatformUser: Partial<PlatformUserData> = {};
@@ -60,14 +62,20 @@ export default function Login() {
 
     const platformUser = {
       ...parsedPlatformUser,
-      ...formData,
-      firstName: parsedPlatformUser.firstName || formData.username,
-      lastName: parsedPlatformUser.lastName || formData.lastName,
-      avatar: parsedPlatformUser.avatar || formData.avatar,
+      username: formData.username || parsedPlatformUser.username || "",
+      email: parsedPlatformUser.email || "",
+      firstName: parsedPlatformUser.firstName || formData.username || "",
+      lastName: parsedPlatformUser.lastName || "",
+      avatar: parsedPlatformUser.avatar || "",
     };
 
     localStorage.setItem("platformUser", JSON.stringify(platformUser));
     navigate("/platform", { state: platformUser });
+  }, [formData.username, navigate, token]);
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    dispatch(authActions.loginRequest(formData));
   };
 
   return (
@@ -82,23 +90,7 @@ export default function Login() {
         <img className="logoLogin" src={logo} alt="KTSThub" />
         <h2>Welcome back<br />to platform</h2>
 
-        <div className="input-group">
-          <button type="button" className="social-login-btn google-login" aria-label="Войти через Google">
-            G
-          </button>
-          <button type="button" className="social-login-btn vk-login" aria-label="Войти через VK ID">
-            VK
-          </button>
-          <button type="button" className="social-login-btn yandex-login" aria-label="Войти через Яндекс ID">
-            Я
-          </button>
-        </div>
-
-        <div className="divider">
-          <span className="line"></span>
-          <span className="or-text">or</span>
-          <span className="line"></span>
-        </div>
+        {error ? <div className="error-message">{error}</div> : null}
 
         <div className="email-section">
           <input
@@ -109,31 +101,20 @@ export default function Login() {
             placeholder="Username"
             required
           />
-          <div className="email-row">
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              placeholder="Email address"
-              required
-            />
-            <button type="button" className="get-code-btn">Получить код</button>
-          </div>
         </div>
 
         <input
-          type="text"
-          name="code"
-          value={formData.code}
+          type="password"
+          name="password"
+          value={formData.password}
           onChange={handleInputChange}
-          placeholder="Код"
+          placeholder="Password"
           className="code-input"
           required
         />
 
-        <button type="submit" className="signup-btn">
-          Sign up <span>→</span>
+        <button type="submit" className="signup-btn" disabled={loading}>
+          {loading ? "Loading..." : <>Sign in <span>→</span></>}
         </button>
 
         <img className="unionBottom" src={UnionBottom} alt="" />
