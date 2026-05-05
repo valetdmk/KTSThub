@@ -2,10 +2,10 @@ import { call, put, takeLatest } from "redux-saga/effects";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { actions } from "./Slice";
 import type { RegisterPayload } from "./Types";
-import { authApi, type JwtResponse } from "../../../app/api/auth";
-import { updateUserProfile, type UpdateUserPayload } from "../../../app/api/users";
-import { getUserIdFromToken } from "../../../shared/lib/auth";
+import { authApi, type JwtResponse } from "../../../shared/api/auth";
+import { updateUserProfile, type UpdateUserPayload } from "../../../shared/api/users";
 import { USE_MOCK_REGISTER_FLOW } from "../../../shared/config/devFlags";
+import type { User } from "../../../entities/user/model";
 
 const {
     registerRequest,
@@ -35,15 +35,17 @@ function* handleRegister(action: PayloadAction<RegisterPayload>) {
         );
 
         const token = signinResponse.token;
-        const userId = getUserIdFromToken(token);
+        localStorage.setItem("token", token);
+        const user: User = yield call(authApi.getProfile, token);
+        const userId = user.id;
 
-        if (userId === null) {
-            throw new Error("Unable to read user id from token");
+        if (typeof userId !== "number" || !Number.isFinite(userId)) {
+            throw new Error("Unable to read user id from server profile");
         }
 
-        localStorage.setItem("token", token);
         yield put(registerSuccess({ token, userId }));
     } catch (error) {
+        localStorage.removeItem("token");
         yield put(registerFailure("РћС€РёР±РєР° СЂРµРіРёСЃС‚СЂР°С†РёРё"));
     }
 }

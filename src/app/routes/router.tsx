@@ -26,23 +26,23 @@ export const router = createBrowserRouter([
     },
     {
         path: '/participants',
-        element: <ParticipantsPage />,
+        element: <ProtectedRoute><ParticipantsPage /></ProtectedRoute>,
     },
     {
         path: '/admin',
-        element: <AdminPage />,
+        element: <ProtectedRoute><AdminPage /></ProtectedRoute>,
     },
     {
         path: '/schedule',
-        element: <SchedulePage />,
+        element: <ProtectedRoute><SchedulePage /></ProtectedRoute>,
     },
     {
         path: '/profile',
-        element: <ProfilePage />,
+        element: <ProtectedRoute><ProfilePage /></ProtectedRoute>,
     },
     {
         path: '/profile/edit',
-        element: <EditProfilePage />,
+        element: <ProtectedRoute><EditProfilePage /></ProtectedRoute>,
     },
     {
         path: '/events',
@@ -58,11 +58,11 @@ export const router = createBrowserRouter([
     },
     {
         path: '/achievements',
-        element: <Achievements />,
+        element: <ProtectedRoute><Achievements /></ProtectedRoute>,
     },
     {
         path: '/projects',
-        element: <ProjectsPage />,
+        element: <ProtectedRoute><ProjectsPage /></ProtectedRoute>,
     },
     {
         path: '/developers',
@@ -90,7 +90,7 @@ export const router = createBrowserRouter([
     },
     {
         path: '/platform',
-        element: <PlatformPage />,
+        element: <ProtectedRoute><PlatformPage /></ProtectedRoute>,
     },
 ]);
 

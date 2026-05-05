@@ -12,7 +12,7 @@ import {
     setImages,
     selectSixthsliceData,
     selectFeaturesContent,
-} from "../../../features/hero/Slice";
+} from "../../../features/hero";
 
 import logo from "../../assets/logo.png"
 import numbers from "../../assets/numbers.png"

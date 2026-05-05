@@ -1,6 +1,6 @@
 import axios from "axios";
-import { api } from "../../entities/api";
 import type { User } from "../../entities/user/model";
+import { api } from "./base";
 
 export const getUsers = async (): Promise<User[]> => {
     const response = await api.get<User[]>("/users");

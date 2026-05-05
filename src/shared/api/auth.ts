@@ -1,5 +1,6 @@
-import { api } from "../../entities/api";
 import type { User } from "../../entities/user/model";
+import { getUserIdFromToken } from "../lib/auth";
+import { api } from "./base";
 
 export interface SignupPayload {
     name: string;
@@ -34,8 +35,19 @@ export const authApi = {
         return response.data;
     },
 
-    getProfile: async (id: number): Promise<User> => {
-        const response = await api.get<User>(`/user/${id}`);
-        return response.data;
+    getProfile: async (token?: string): Promise<User> => {
+        try {
+            const response = await api.get<User>("/user/me");
+            return response.data;
+        } catch (error) {
+            const userId = token ? getUserIdFromToken(token) : null;
+
+            if (userId === null) {
+                throw error;
+            }
+
+            const response = await api.get<User>(`/user/${userId}`);
+            return response.data;
+        }
     },
 };

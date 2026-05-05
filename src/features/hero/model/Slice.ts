@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction, createSelector } from "@reduxjs/toolkit";
-import type { RootState } from "../../app/store/store";
+import type { RootState } from "../../../app/store/store";
 
 interface FeatureItem {
     img: string;

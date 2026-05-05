@@ -155,6 +155,7 @@ export default function Register() {
   const [skillsModal, setSkillsModal] = useState<SkillModalType | null>(null);
   const [enteredSkills, setEnteredSkills] = useState("");
   const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId>("excellent");
+  const [activeRatedSkill, setActiveRatedSkill] = useState<string | null>(null);
   const [skillRatings, setSkillRatings] = useState<SkillRatingsState>({
     hardSkills: {},
     softSkills: {}
@@ -297,8 +298,16 @@ export default function Register() {
   };
 
   const openSkillsModal = (type: SkillModalType) => {
-    setEnteredSkills(
+    const currentSkills = getSkillsArray(
       type === "hardSkills" ? step2Data.hardSkillsList : step2Data.softSkillsList
+    );
+
+    setEnteredSkills(currentSkills.join(", "));
+    setActiveRatedSkill(currentSkills[0]?.toLowerCase() ?? null);
+    setSelectedSkillRatingId(
+      currentSkills[0]
+        ? skillRatings[type][currentSkills[0].toLowerCase()] ?? "excellent"
+        : "excellent"
     );
     setSkillsModal(type);
   };
@@ -322,6 +331,7 @@ export default function Register() {
 
     setSkillsModal(null);
     setEnteredSkills("");
+    setActiveRatedSkill(null);
   };
 
   const syncSkillField = (type: SkillModalType, value: string) => {
@@ -355,6 +365,10 @@ export default function Register() {
         };
       });
 
+      if (activeRatedSkill === normalizedSkill) {
+        setActiveRatedSkill(null);
+      }
+
       syncSkillField(skillsModal, updatedSkills);
       return;
     }
@@ -369,7 +383,32 @@ export default function Register() {
       }
     }));
 
+    setActiveRatedSkill(normalizedSkill);
     syncSkillField(skillsModal, updatedSkills);
+  };
+
+  const handleSkillRatingSelect = (ratingId: SkillRatingId) => {
+    setSelectedSkillRatingId(ratingId);
+
+    if (!skillsModal || !activeRatedSkill) {
+      return;
+    }
+
+    setSkillRatings((prev) => ({
+      ...prev,
+      [skillsModal]: {
+        ...prev[skillsModal],
+        [activeRatedSkill]: ratingId
+      }
+    }));
+  };
+
+  const handleActiveSkillSelect = (skill: string) => {
+    if (!skillsModal) return;
+
+    const normalizedSkill = skill.trim().toLowerCase();
+    setActiveRatedSkill(normalizedSkill);
+    setSelectedSkillRatingId(skillRatings[skillsModal][normalizedSkill] ?? "excellent");
   };
 
   const selectedAvatar = avatarOptions.find((avatar) => avatar.id === selectedAvatarId) ?? null;
@@ -552,11 +591,11 @@ export default function Register() {
      setPendingProgressStep(2);
      setStep3Page(1);
 
-     if (!token) return;
+     if (!token || !userId) return;
 
      dispatch(updateProfileRequest({
        token,
-       userId: userId || 1,
+       userId,
        data: {
          name: formData.name,
          lastName: formData.lastname,
@@ -1005,6 +1044,8 @@ export default function Register() {
                 : 'Введите ваши Soft-skills...'}
               className="skills-textarea"
             />
+            <div className="skills-modal-layout">
+              <div className="skills-modal-main">
             <div className="skills-selected-box">
               {getSkillsArray(enteredSkills).length > 0 ? (
                 getSkillsArray(enteredSkills).map((skill) => {
@@ -1012,13 +1053,15 @@ export default function Register() {
                   const rating = skillRatingOptions.find((option) => option.id === ratingId);
 
                   return (
-                    <span
+                    <button
                       key={skill}
-                      className="selected-skill-chip"
+                      type="button"
+                      className={`selected-skill-chip ${activeRatedSkill === skill.toLowerCase() ? "active" : ""}`}
+                      onClick={() => handleActiveSkillSelect(skill)}
                       style={{ background: rating?.color ?? "#93F890" }}
                     >
                       {skill}
-                    </span>
+                    </button>
                   );
                 })
               ) : (
@@ -1027,19 +1070,58 @@ export default function Register() {
                 </span>
               )}
             </div>
-            <div className="recommended-skills">
+<div className="recommended-skills">
               <p>Рекомендованные навыки</p>
               <div className="recommended-skills-list">
                 {(skillsModal === 'hardSkills' ? recommendedHardSkills : recommendedSoftSkills).map(skill => (
                   <button 
                     key={skill}
-                    className={`recommended-skill-btn ${getSkillsArray(enteredSkills).some((item) => item.toLowerCase() === skill.toLowerCase()) ? "selected" : ""}`}
-                    onClick={() => toggleRatedSkill(skill)}
+                    type="button"
+                    className={`recommended-skill-btn ${getSkillsArray(enteredSkills).some((item) => item.toLowerCase() === skill.toLowerCase()) ? "selected" : ""} ${activeRatedSkill === skill.toLowerCase() ? "active" : ""}`}
+                    onClick={() => {
+                      if (activeRatedSkill === skill.toLowerCase()) {
+                        toggleRatedSkill(skill);
+                        return;
+                      }
+
+                      if (getSkillsArray(enteredSkills).some((item) => item.toLowerCase() === skill.toLowerCase())) {
+                        handleActiveSkillSelect(skill);
+                        return;
+                      }
+
+                      toggleRatedSkill(skill);
+                    }}
                   >
                     {skill}
                   </button>
                 ))}
               </div>
+            </div>
+              </div>
+            <aside className="skills-rating-sidebar">
+              <h3>Оценка навыков</h3>
+              <div className="skills-rating-list">
+                {skillRatingOptions.map((option) => (
+                  <div
+                    key={option.id}
+                    className={`skills-rating-item ${selectedSkillRatingId === option.id ? "active" : ""}`}
+                  >
+                    <button
+                      type="button"
+                      className="skills-rating-dot-btn"
+                      onClick={() => setSelectedSkillRatingId(option.id)}
+                      aria-label={option.label}
+                    >
+                      <span
+                        className="skills-rating-dot"
+                        style={{ background: option.color }}
+                      />
+                    </button>
+                    <span className="skills-rating-label">{option.label}</span>
+                  </div>
+                ))}
+              </div>
+            </aside>
             </div>
             <button className="modal-save-btn" onClick={closeSkillsModal}>
               Сохранить
@@ -1236,7 +1318,8 @@ export default function Register() {
                     key={option.id}
                     type="button"
                     className={`skills-rating-item ${selectedSkillRatingId === option.id ? 'active' : ''}`}
-                    onClick={() => setSelectedSkillRatingId(option.id)}
+                    onClick={() => handleSkillRatingSelect(option.id)}
+                    aria-label={option.label}
                   >
                     <span
                       className="skills-rating-dot"

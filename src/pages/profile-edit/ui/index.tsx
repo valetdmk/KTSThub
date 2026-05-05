@@ -4,9 +4,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../../app/store/hooks";
 import { actions as authActions } from "../../../features/auth";
-import { updateUserProfile, type UpdateUserPayload } from "../../../app/api/users";
+import { updateUserProfile, type UpdateUserPayload } from "../../../shared/api/users";
 import { mapBackendUserToPlatformUser } from "../../../shared/lib/userProfile";
-import { getUserIdFromToken } from "../../../shared/lib/auth";
 import logo from "../../../shared/assets/logo.png";
 import "../../profile/ui/index.scss";
 
@@ -168,17 +167,7 @@ export function EditProfilePage() {
   const dispatch = useAppDispatch();
   const { token, user: backendUser, loading } = useAppSelector((state) => state.auth);
   const currentUser = useMemo(() => mapBackendUserToPlatformUser(backendUser), [backendUser]);
-  const editableUserId = useMemo(() => {
-    if (backendUser?.id) {
-      return backendUser.id;
-    }
-
-    if (!token) {
-      return null;
-    }
-
-    return getUserIdFromToken(token);
-  }, [backendUser?.id, token]);
+  const editableUserId = backendUser?.id ?? null;
   const [activeBottomItemId, setActiveBottomItemId] = useState(bottomMenuItems[0].id);
   const [isAvatarBroken, setIsAvatarBroken] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -204,6 +193,10 @@ export function EditProfilePage() {
 
   useEffect(() => {
     if (formHydrated) {
+      return;
+    }
+
+    if (token && !backendUser) {
       return;
     }
 

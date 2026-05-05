@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../app/store/hooks";
 import { actions as authActions } from "../../../features/auth";
+import { mapBackendUserToPlatformUser } from "../../../shared/lib/userProfile";
 import "./index.scss";
 import logo from "../../../shared/assets/logo.png";
 import UnionTop from "../../../shared/assets/UnionTop.png";
@@ -29,7 +30,7 @@ export type PlatformUserData = {
 export default function Login() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { token, loading, error } = useAppSelector((state) => state.auth);
+  const { token, user, loading, error } = useAppSelector((state) => state.auth);
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -45,33 +46,15 @@ export default function Login() {
   };
 
   useEffect(() => {
-    if (!token) {
+    if (!token || !user) {
       return;
     }
 
-    const savedPlatformUser = localStorage.getItem("platformUser");
-    let parsedPlatformUser: Partial<PlatformUserData> = {};
-
-    if (savedPlatformUser) {
-      try {
-        parsedPlatformUser = JSON.parse(savedPlatformUser) as Partial<PlatformUserData>;
-      } catch {
-        parsedPlatformUser = {};
-      }
-    }
-
-    const platformUser = {
-      ...parsedPlatformUser,
-      username: formData.username || parsedPlatformUser.username || "",
-      email: parsedPlatformUser.email || "",
-      firstName: parsedPlatformUser.firstName || formData.username || "",
-      lastName: parsedPlatformUser.lastName || "",
-      avatar: parsedPlatformUser.avatar || "",
-    };
+    const platformUser = mapBackendUserToPlatformUser(user) as PlatformUserData;
 
     localStorage.setItem("platformUser", JSON.stringify(platformUser));
     navigate("/platform", { state: platformUser });
-  }, [formData.username, navigate, token]);
+  }, [navigate, token, user]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

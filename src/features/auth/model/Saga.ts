@@ -1,22 +1,22 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { AxiosInstance } from "axios";
 import { actions } from "./Slice";
 import type { LoginPayload } from "./Types";
-import { authApi, type JwtResponse } from "../../../app/api/auth";
-import { getUserIdFromToken } from "../../../shared/lib/auth";
+import { authApi, type JwtResponse } from "../../../shared/api/auth";
+import { getApiErrorMessage } from "../../../shared/lib/apiError";
 import type { User } from "../../../entities/user/model";
 
-const { loginRequest, loginSuccess, loginFailure, fetchProfileRequest, fetchProfileSuccess, fetchProfileFailure } = actions;
+const {
+    loginRequest,
+    loginSuccess,
+    loginFailure,
+    fetchProfileRequest,
+    fetchProfileSuccess,
+    fetchProfileFailure,
+} = actions;
 
-function* loadProfileFromToken(token: string) {
-    const userId = getUserIdFromToken(token);
-
-    if (userId === null) {
-        throw new Error("Unable to read user id from token");
-    }
-
-    const user: User = yield call(authApi.getProfile, userId);
+function* loadProfile(token?: string) {
+    const user: User = yield call(authApi.getProfile, token);
     yield put(fetchProfileSuccess(user));
 }
 
@@ -26,10 +26,11 @@ function* handleLogin(action: PayloadAction<LoginPayload>) {
         const token = response.token;
 
         localStorage.setItem("token", token);
+        yield* loadProfile(token);
         yield put(loginSuccess(token));
-        yield* loadProfileFromToken(token);
     } catch (error) {
-        yield put(loginFailure("РћС€РёР±РєР° РІС…РѕРґР°"));
+        localStorage.removeItem("token");
+        yield put(loginFailure(getApiErrorMessage(error, "Ошибка входа.")));
     }
 }
 
@@ -41,13 +42,13 @@ function* handleFetchProfile() {
             throw new Error("Missing token");
         }
 
-        yield* loadProfileFromToken(token);
+        yield* loadProfile(token);
     } catch (error) {
-        yield put(fetchProfileFailure("РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё РїСЂРѕС„РёР»СЏ"));
+        yield put(fetchProfileFailure(getApiErrorMessage(error, "Ошибка загрузки профиля.")));
     }
 }
 
-export function* authSaga(_api: AxiosInstance) {
+export function* authSaga() {
     yield takeLatest(loginRequest.type, handleLogin);
     yield takeLatest(fetchProfileRequest.type, handleFetchProfile);
 }
