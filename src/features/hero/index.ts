@@ -7,10 +7,12 @@ import {
     resetHeroCarousel,
     setBlocks,
     setImages,
+} from "./model/Slice";
+import {
     selectHero,
     selectSixthsliceData,
     selectFeaturesContent,
-} from "./model/Slice";
+} from "./model/selectors";
 
 export {
     heroReducer,

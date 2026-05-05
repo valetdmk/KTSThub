@@ -1,9 +1,10 @@
 import axios from "axios";
 import type { User } from "../../entities/user/model";
 import { api } from "./base";
+import { apiPaths, legacyApiPaths } from "./endpoints";
 
 export const getUsers = async (): Promise<User[]> => {
-    const response = await api.get<User[]>("/users");
+    const response = await api.get<User[]>(apiPaths.users.collection);
     return response.data;
 };
 
@@ -39,11 +40,11 @@ function shouldTryNextEndpoint(error: unknown) {
 }
 
 export const updateUserProfile = async (id: number, data: UpdateUserPayload): Promise<User> => {
-    const candidates: Array<{ method: "post" | "put"; url: string }> = [
-        { method: "post", url: `/user/${id}` },
-        { method: "put", url: `/user/${id}` },
-        { method: "post", url: `/users/${id}` },
-        { method: "put", url: `/users/${id}` },
+    const candidates: Array<{ method: "put" | "post"; url: string }> = [
+        { method: "put", url: apiPaths.users.byId(id) },
+        { method: "put", url: legacyApiPaths.users.updateById(id) },
+        { method: "post", url: apiPaths.users.byId(id) },
+        { method: "post", url: legacyApiPaths.users.updateById(id) },
     ];
 
     let lastError: unknown = null;

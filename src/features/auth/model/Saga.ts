@@ -35,13 +35,14 @@ function* handleLogin(action: PayloadAction<LoginPayload>) {
 }
 
 function* handleFetchProfile() {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        yield put(fetchProfileFailure("Сессия не найдена. Войдите заново."));
+        return;
+    }
+
     try {
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-            throw new Error("Missing token");
-        }
-
         yield* loadProfile(token);
     } catch (error) {
         yield put(fetchProfileFailure(getApiErrorMessage(error, "Ошибка загрузки профиля.")));

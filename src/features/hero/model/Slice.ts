@@ -1,5 +1,4 @@
-import { createSlice, type PayloadAction, createSelector } from "@reduxjs/toolkit";
-import type { RootState } from "../../../app/store/store";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 interface FeatureItem {
     img: string;
@@ -163,9 +162,5 @@ export const {
     setBlocks,
     setImages,
 } = heroSlice.actions;
-
-export const selectHero = (state: RootState) => state.hero;
-export const selectSixthsliceData = createSelector(selectHero, (hero) => hero.sixthsliceData);
-export const selectFeaturesContent = createSelector(selectHero, (hero) => hero.featuresContent);
 
 export const heroReducer = heroSlice.reducer;

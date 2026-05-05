@@ -10,25 +10,6 @@ export default function Events() {
     (state: RootState) => state.events
   );
 
-    // const [events, setEvents] = useState<Event[]>([]);
-    // const [loading, setLoading] = useState(true);
-    // const [error, setError] = useState<string | null>(null);
-
-    // useEffect(() => {
-    //     const fetchEvents = async () => {
-    //       try {
-    //         const data = await getEvents();
-    //         setEvents(data);
-    //       } catch (err) {
-    //         setError("Не удалось загрузить события");
-    //       } finally {
-    //         setLoading(false);
-    //       }
-    //     };
-
-    //     fetchEvents();
-    // }, []);
-
     useEffect(() => {
         dispatch(fetchEventsRequest());
     }, [dispatch]);

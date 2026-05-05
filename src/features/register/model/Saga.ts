@@ -6,6 +6,7 @@ import { authApi, type JwtResponse } from "../../../shared/api/auth";
 import { updateUserProfile, type UpdateUserPayload } from "../../../shared/api/users";
 import { USE_MOCK_REGISTER_FLOW } from "../../../shared/config/devFlags";
 import type { User } from "../../../entities/user/model";
+import { getApiErrorMessage } from "../../../shared/lib/apiError";
 
 const {
     registerRequest,
@@ -40,13 +41,15 @@ function* handleRegister(action: PayloadAction<RegisterPayload>) {
         const userId = user.id;
 
         if (typeof userId !== "number" || !Number.isFinite(userId)) {
-            throw new Error("Unable to read user id from server profile");
+            localStorage.removeItem("token");
+            yield put(registerFailure("Не удалось завершить вход после регистрации. Повтори попытку."));
+            return;
         }
 
         yield put(registerSuccess({ token, userId }));
     } catch (error) {
         localStorage.removeItem("token");
-        yield put(registerFailure("РћС€РёР±РєР° СЂРµРіРёСЃС‚СЂР°С†РёРё"));
+        yield put(registerFailure(getApiErrorMessage(error, "Ошибка регистрации.")));
     }
 }
 
@@ -60,7 +63,7 @@ function* handleUpdateProfile(action: PayloadAction<{ token: string; userId: num
         yield call(updateUserProfile, action.payload.userId, action.payload.data as UpdateUserPayload);
         yield put(updateProfileSuccess());
     } catch (error) {
-        yield put(updateProfileFailure("РћС€РёР±РєР° РѕР±РЅРѕРІР»РµРЅРёСЏ РїСЂРѕС„РёР»СЏ"));
+        yield put(updateProfileFailure(getApiErrorMessage(error, "Ошибка обновления профиля.")));
     }
 }
 

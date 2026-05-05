@@ -1,7 +1,8 @@
 import axios from "axios";
+import { apiBaseUrl } from "./endpoints";
 
 export const api = axios.create({
-    baseURL: "http://10.3.25.106:8080/api",
+    baseURL: apiBaseUrl,
     headers: {
         "Content-Type": "application/json",
     }

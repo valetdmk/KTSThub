@@ -33,6 +33,7 @@ export function getUserIdFromToken(token: string): number | null {
 
         return null;
     } catch {
+        localStorage.removeItem("token");
         return null;
     }
 }

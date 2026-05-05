@@ -1,8 +1,8 @@
 import { useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import "./Hero.scss"
-import { HeroCard } from "../HeroCard"
+import "../../../shared/ui/Hero/Hero.scss";
+import { HeroCard } from "../../../shared/ui/HeroCard";
 import type { RootState } from "../../../app/store/store";
 import {
     setActiveCard,
@@ -14,11 +14,11 @@ import {
     selectFeaturesContent,
 } from "../../../features/hero";
 
-import logo from "../../assets/logo.png"
-import numbers from "../../assets/numbers.png"
+import logo from "../../../shared/assets/logo.png";
+import numbers from "../../../shared/assets/numbers.png";
 
-import Hack from "../../assets/HacK.png"
-import KCT from "../../assets/KCT.png"
+import Hack from "../../../shared/assets/HacK.png";
+import KCT from "../../../shared/assets/KCT.png";
 
 import {
     Block1Left,
@@ -32,42 +32,42 @@ import {
     Block4Right,
     Block5Right,
     BlockCentral,
-} from "./HeroImages";
+} from "../../../shared/ui/Hero/HeroImages";
 
-import card from "../../assets/card.png"
-import down from "../../assets/down.png"
+import card from "../../../shared/assets/card.png";
+import down from "../../../shared/assets/down.png";
 
-import Boy from "../../assets/Boy.png"
-import Girl from "../../assets/Girl.png"
+import Boy from "../../../shared/assets/Boy.png";
+import Girl from "../../../shared/assets/Girl.png";
 
-import secondtop from "../../assets/secondtop.png"
-import secondbottom from "../../assets/secondbottom.png"
-import forstudent1 from "../../assets/forstudent1.png"
-import forstudent2 from "../../assets/forstudent2.png"
-import forstudent3 from "../../assets/forstudent3.png"
-import forstudent4 from "../../assets/forstudent4.png"
-import forstudentcircle from "../../assets/forstudentcircle.png"
+import secondtop from "../../../shared/assets/secondtop.png";
+import secondbottom from "../../../shared/assets/secondbottom.png";
+import forstudent1 from "../../../shared/assets/forstudent1.png";
+import forstudent2 from "../../../shared/assets/forstudent2.png";
+import forstudent3 from "../../../shared/assets/forstudent3.png";
+import forstudent4 from "../../../shared/assets/forstudent4.png";
+import forstudentcircle from "../../../shared/assets/forstudentcircle.png";
 
-import ikon from "../../assets/ikon.png"
-import LOGOTIP from "../../assets/LOGOTIP.png"
+import ikon from "../../../shared/assets/ikon.png";
+import LOGOTIP from "../../../shared/assets/LOGOTIP.png";
 
-import pazl from "../../assets/pazl.png"
-import brain from "../../assets/brain.png"
-import game from "../../assets/game.png"
-import unicorn from "../../assets/unicorn.png"
+import pazl from "../../../shared/assets/pazl.png";
+import brain from "../../../shared/assets/brain.png";
+import game from "../../../shared/assets/game.png";
+import unicorn from "../../../shared/assets/unicorn.png";
 
-import joystick from "../../assets/joystick.png"
-import molniya from "../../assets/molniya.png"
-import kybok from "../../assets/kybok.png"
-import raceta from "../../assets/raceta.png"
-import lamp from "../../assets/lamp.png"
+import joystick from "../../../shared/assets/joystick.png";
+import molniya from "../../../shared/assets/molniya.png";
+import kybok from "../../../shared/assets/kybok.png";
+import raceta from "../../../shared/assets/raceta.png";
+import lamp from "../../../shared/assets/lamp.png";
 
-import back5left from "../../assets/back5left.png"
-import back5right from "../../assets/back5right.png"
+import back5left from "../../../shared/assets/back5left.png";
+import back5right from "../../../shared/assets/back5right.png";
 
 
 
-export const Hero = () => {
+export const HeroSection = () => {
     const dispatch = useDispatch();
     const activeCard = useSelector((state: RootState) => state.hero.activeCard);
     const activeTopBlock = useSelector((state: RootState) => state.hero.activeTopBlock);

@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
 import { authReducer } from "../../features/auth";
 import { eventsReducer } from "../../features/events";
-import { heroReducer } from "../../features/hero";
+import { heroReducer } from "../../features/hero/model/Slice";
 import { registerReducer } from "../../features/register";
 import { rootSaga } from "./rootSaga";
 

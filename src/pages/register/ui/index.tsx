@@ -587,11 +587,15 @@ export default function Register() {
    const handleStep2Submit = () => {
      if (!isStep2Valid()) return;
 
-     persistPlatformUser();
+     setLocalError(null);
      setPendingProgressStep(2);
      setStep3Page(1);
 
-     if (!token || !userId) return;
+     if (!token || !userId) {
+       setPendingProgressStep(null);
+       setLocalError("Сначала заверши шаг регистрации и повтори сохранение.");
+       return;
+     }
 
      dispatch(updateProfileRequest({
        token,
@@ -616,6 +620,12 @@ export default function Register() {
       setPendingProgressStep(null);
     }
   }, [pendingProgressStep, step]);
+
+  useEffect(() => {
+    if (step === 3) {
+      persistPlatformUser();
+    }
+  }, [step]);
 
   useEffect(() => {
     setBirthdayInputValue(formData.birthday ? formatBirthdayDisplay(formData.birthday) : "");

@@ -69,6 +69,7 @@ export function readSavedUser() {
     try {
         return { ...fallbackUser, ...JSON.parse(savedUser) } as PlatformUserData;
     } catch {
+        localStorage.removeItem("platformUser");
         return fallbackUser;
     }
 }

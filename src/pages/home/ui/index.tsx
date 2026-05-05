@@ -1,13 +1,13 @@
 import { Navigation } from "../../../widgets/navigation/ui/navigation"
 import { Background } from "../../../shared/ui/Background/Background";
-import { Hero } from "../../../shared/ui/Hero/Hero";
+import { HeroSection } from "../../../widgets/hero/ui/HeroSection";
 
 export const HomePage = () => {
   return (
     <div className="home">
       <Navigation />
       <Background />
-      <Hero />
+      <HeroSection />
     </div>
   );
 };
