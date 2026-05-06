@@ -1,39 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-
-interface FeatureItem {
-    img: string;
-    title: string;
-    desc: string;
-}
-
-interface FeaturesContent {
-    left: FeatureItem[];
-    right: FeatureItem[];
-}
-
-interface TopBlockContent {
-    text: string;
-    title: string;
-    desc: string;
-}
-
-interface SixthSliceItem {
-    text: string;
-    title: string;
-    desc: string;
-}
-
-interface HeroState {
-    activeCard: number | null;
-    activeTopBlock: number | null;
-    carouselOffset: number;
-    currentSection: number;
-    leftBlocks: string[];
-    rightBlocks: string[];
-    sixthsliceData: Record<number, SixthSliceItem[]>;
-    topBlockContent: Record<number, TopBlockContent>;
-    featuresContent: Record<number, FeaturesContent>;
-};
+import type { HeroState } from "./Types";
 
 const initialState: HeroState = {
     activeCard: null,

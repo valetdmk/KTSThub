@@ -1,7 +1,15 @@
 import { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "../../../app/store/hooks";
+import {
+  actions as navigationActions,
+  bottomMenuItems,
+  selectors as navigationSelectors,
+  topMenuItems,
+  type NavigationMenuItem,
+} from "../../../features/navigation";
 import logo from "../../../shared/assets/logo.png";
-import { PlatformIcon, type PlatformIconName } from "../../../shared/ui/PlatformIcon";
+import { PlatformIcon } from "../../../shared/ui/PlatformIcon";
 import "./index.scss";
 
 type PlatformUserData = {
@@ -13,10 +21,9 @@ type PlatformUserData = {
   code: string;
 };
 
-type MenuItem = { id: string; label: string; icon: PlatformIconName; path?: string };
-type EventLevel = "Начинающий" | "Средний" | "Продвинутый";
-type EventProfile = "Frontend" | "Backend" | "Design" | "Project" | "Gamedev";
-type EventType = "Хакатон" | "Проект" | "Воркшоп" | "Митап" | "Интенсив";
+type EventLevel = string;
+type EventProfile = string;
+type EventType = string;
 type ScheduleEvent = {
   id: number;
   title: string;
@@ -27,21 +34,6 @@ type ScheduleEvent = {
   endDate: string;
   description: string;
 };
-
-const topMenuItems: MenuItem[] = [
-  { id: "cabinet", label: "Личный кабинет", icon: "user", path: "/profile" },
-  { id: "home", label: "Главная", icon: "home", path: "/platform" },
-  { id: "schedule", label: "Расписание", icon: "calendar", path: "/schedule" },
-  { id: "projects", label: "Проекты", icon: "projects", path: "/projects" },
-  { id: "participants", label: "Участники", icon: "users", path: "/participants" },
-  { id: "achievements", label: "Ачивки", icon: "award", path: "/achievements" },
-];
-
-const bottomMenuItems: MenuItem[] = [
-  { id: "support", label: "Поддержка", icon: "support" },
-  { id: "settings", label: "Настройки", icon: "settings" },
-  { id: "logout", label: "Выйти", icon: "logout" },
-];
 
 const fallbackUser: PlatformUserData = {
   lastName: "Фамилия",
@@ -189,8 +181,9 @@ function toIsoDate(date: Date) {
 export const SchedulePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const user = useMemo(() => ({ ...readSavedUser(), ...(location.state as Partial<PlatformUserData> | null) }), [location.state]);
-  const [activeBottomItemId, setActiveBottomItemId] = useState(bottomMenuItems[0].id);
+  const activeBottomItemId = useSelector(navigationSelectors.selectActiveBottomItemId);
   const [isAvatarBroken, setIsAvatarBroken] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedSeason, setSelectedSeason] = useState("");
@@ -278,9 +271,9 @@ export const SchedulePage = () => {
     setRangeEnd(isoDate);
   };
 
-  const renderMenuButton = (item: MenuItem) => {
+  const renderMenuButton = (item: NavigationMenuItem) => {
     const isActive = item.path ? item.path === location.pathname : activeBottomItemId === item.id;
-    return <button key={item.id} type="button" className={`platform-menu-button ${isActive ? "active" : ""}`} onClick={() => { if (item.path) return void navigate(item.path); if (item.id === "logout") return void navigate("/login"); setActiveBottomItemId(item.id); }}><span className="platform-button-inner"><PlatformIcon name={item.icon} /><span>{item.label}</span></span></button>;
+    return <button key={item.id} type="button" className={`platform-menu-button ${isActive ? "active" : ""}`} onClick={() => { if (item.path) return void navigate(item.path); if (item.id === "logout") return void navigate("/login"); dispatch(navigationActions.setActiveBottomItemId(item.id)); }}><span className="platform-button-inner"><PlatformIcon name={item.icon} /><span>{item.label}</span></span></button>;
   };
 
   return (
@@ -473,4 +466,5 @@ export const SchedulePage = () => {
     </main>
   );
 };
+
 

@@ -4,46 +4,20 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "../../../app/store/hooks";
 import { actions as authActions, AuthFeature } from "../../../features/auth";
+import {
+  actions as navigationActions,
+  bottomMenuItems,
+  selectors as navigationSelectors,
+  topMenuItems,
+  type NavigationMenuItem,
+} from "../../../features/navigation";
 import { updateUserProfile, type UpdateUserPayload } from "../../../shared/api/users";
 import { mapBackendUserToPlatformUser } from "../../../shared/lib/userProfile";
 import logo from "../../../shared/assets/logo.png";
+import type { PlatformIconName } from "../../../shared/ui/PlatformIcon";
 import "../../profile/ui/index.scss";
 
-type IconName =
-  | "user"
-  | "home"
-  | "calendar"
-  | "projects"
-  | "users"
-  | "award"
-  | "support"
-  | "settings"
-  | "logout"
-  | "search"
-  | "favorite"
-  | "bell";
-
-type MenuItem = {
-  id: string;
-  label: string;
-  icon: IconName;
-  path?: string;
-};
-
-const topMenuItems: MenuItem[] = [
-  { id: "cabinet", label: "Личный кабинет", icon: "user", path: "/profile" },
-  { id: "home", label: "Главная", icon: "home", path: "/platform" },
-  { id: "schedule", label: "Расписание", icon: "calendar", path: "/schedule" },
-  { id: "projects", label: "Проекты", icon: "projects", path: "/projects" },
-  { id: "participants", label: "Участники", icon: "users", path: "/participants" },
-  { id: "achievements", label: "Ачивки", icon: "award", path: "/achievements" },
-];
-
-const bottomMenuItems: MenuItem[] = [
-  { id: "support", label: "Поддержка", icon: "support" },
-  { id: "settings", label: "Настройки", icon: "settings" },
-  { id: "logout", label: "Выйти", icon: "logout" },
-];
+type IconName = PlatformIconName;
 
 const jobOptions = ["FRONT", "BACK", "DESIGNER", "PROJECT", "GAME"];
 const levelOptions = ["BEGINNER", "INTERMEDIATE", "ADVANCED"];
@@ -168,7 +142,7 @@ export function EditProfilePage() {
   const { token, user: backendUser, loading } = useSelector(AuthFeature.selectors.root);
   const currentUser = useMemo(() => mapBackendUserToPlatformUser(backendUser), [backendUser]);
   const editableUserId = backendUser?.id ?? null;
-  const [activeBottomItemId, setActiveBottomItemId] = useState(bottomMenuItems[0].id);
+  const activeBottomItemId = useSelector(navigationSelectors.selectActiveBottomItemId);
   const [isAvatarBroken, setIsAvatarBroken] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -263,7 +237,7 @@ export function EditProfilePage() {
     }
   };
 
-  const renderMenuButton = (item: MenuItem) => {
+  const renderMenuButton = (item: NavigationMenuItem) => {
     const isActive = item.path ? item.path === "/profile/edit" : activeBottomItemId === item.id;
 
     return (
@@ -283,7 +257,7 @@ export function EditProfilePage() {
             return;
           }
 
-          setActiveBottomItemId(item.id);
+          dispatch(navigationActions.setActiveBottomItemId(item.id));
         }}
       >
         <span className="platform-button-inner">
@@ -402,3 +376,8 @@ export function EditProfilePage() {
     </main>
   );
 }
+
+
+
+
+

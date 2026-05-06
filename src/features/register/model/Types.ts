@@ -6,3 +6,11 @@ export interface RegisterPayload {
     email: string;
     password: string;
 }
+
+export interface RegisterState {
+    step: number;
+    loading: boolean;
+    error: string | null;
+    token: string | null;
+    userId: number | null;
+}

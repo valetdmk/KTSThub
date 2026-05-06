@@ -1,12 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { Event } from "../../../entities/event/model";
-
-interface EventsState {
-    events: Event[];
-    selectedEvent: Event | null;
-    loading: boolean;
-    error: string | null;
-}
+import type { EventsState } from "./Types";
 
 const initialState: EventsState = {
     events: [],

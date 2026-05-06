@@ -1,13 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { RegisterPayload } from "./Types";
-
-interface RegisterState {
-    step: number;
-    loading: boolean;
-    error: string | null;
-    token: string | null;
-    userId: number | null;
-};
+import type { RegisterPayload, RegisterState } from "./Types";
 
 const initialState: RegisterState = {
     step: 1,

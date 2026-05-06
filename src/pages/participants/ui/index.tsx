@@ -1,7 +1,15 @@
 import { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "../../../app/store/hooks";
+import {
+  actions as navigationActions,
+  bottomMenuItems,
+  selectors as navigationSelectors,
+  topMenuItems,
+  type NavigationMenuItem,
+} from "../../../features/navigation";
 import logo from "../../../shared/assets/logo.png";
-import { PlatformIcon, type PlatformIconName } from "../../../shared/ui/PlatformIcon";
+import { PlatformIcon } from "../../../shared/ui/PlatformIcon";
 import usersBack from "../../../shared/assets/UsersBack.png";
 import "./index.scss";
 
@@ -12,13 +20,6 @@ type PlatformUserData = {
   username: string;
   email: string;
   code: string;
-};
-
-type MenuItem = {
-  id: string;
-  label: string;
-  icon: PlatformIconName;
-  path?: string;
 };
 
 type ParticipantView = "all" | "level" | "role";
@@ -35,21 +36,6 @@ type Participant = {
   level: string;
   projectsCount: number;
 };
-
-const topMenuItems: MenuItem[] = [
-  { id: "cabinet", label: "Личный кабинет", icon: "user", path: "/profile" },
-  { id: "home", label: "Главная", icon: "home", path: "/platform" },
-  { id: "schedule", label: "Расписание", icon: "calendar", path: "/schedule" },
-  { id: "projects", label: "Проекты", icon: "projects", path: "/projects" },
-  { id: "participants", label: "Участники", icon: "users", path: "/participants" },
-  { id: "achievements", label: "Ачивки", icon: "award", path: "/achievements" },
-];
-
-const bottomMenuItems: MenuItem[] = [
-  { id: "support", label: "Поддержка", icon: "support" },
-  { id: "settings", label: "Настройки", icon: "settings" },
-  { id: "logout", label: "Выйти", icon: "logout" },
-];
 
 const fallbackUser: PlatformUserData = {
   lastName: "Фамилия",
@@ -129,11 +115,12 @@ const participantRankClassName = (rank: number) => {
 export const ParticipantsPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const user = useMemo(
     () => ({ ...readSavedUser(), ...(location.state as Partial<PlatformUserData> | null) }),
     [location.state],
   );
-  const [activeBottomItemId, setActiveBottomItemId] = useState(bottomMenuItems[0].id);
+  const activeBottomItemId = useSelector(navigationSelectors.selectActiveBottomItemId);
   const [activeTab, setActiveTab] = useState<ParticipantView>("all");
   const [isAvatarBroken, setIsAvatarBroken] = useState(false);
   const activeTopItem = topMenuItems.find((item) => item.path === location.pathname) ?? topMenuItems[4];
@@ -149,7 +136,7 @@ export const ParticipantsPage = () => {
   const topParticipants = visibleParticipants.slice(0, 3);
   const otherParticipants = visibleParticipants.slice(3);
 
-  const renderMenuButton = (item: MenuItem) => (
+  const renderMenuButton = (item: NavigationMenuItem) => (
     <button
       key={item.id}
       type="button"
@@ -157,7 +144,7 @@ export const ParticipantsPage = () => {
       onClick={() => {
         if (item.path) return void navigate(item.path);
         if (item.id === "logout") return void navigate("/login");
-        setActiveBottomItemId(item.id);
+        dispatch(navigationActions.setActiveBottomItemId(item.id));
       }}
     >
       <span className="platform-button-inner">
@@ -283,4 +270,5 @@ export const ParticipantsPage = () => {
     </main>
   );
 };
+
 
