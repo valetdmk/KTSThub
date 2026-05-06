@@ -1,4 +1,5 @@
 import { eventsSaga } from "./model/Saga";
+import { selectors } from "./model/selectors";
 import {
     eventsReducer,
     fetchEventsRequest,
@@ -9,7 +10,7 @@ import {
     fetchEventByIdFailure,
 } from "./model/Slice";
 
-export { eventsSaga, eventsReducer };
+export { eventsSaga, eventsReducer, selectors };
 export {
     fetchEventsRequest,
     fetchEventsSuccess,

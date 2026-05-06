@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../../app/store/hooks";
-import { registerRequest, updateProfileRequest } from "../../../features/register";
+import { useDispatch, useSelector } from "../../../app/store/hooks";
+import { registerRequest, selectors, updateProfileRequest } from "../../../features/register";
 import "./index.scss";
 import registerBack from "../../../shared/assets/registerBack.png"
 import boyregistration from "../../../shared/assets/boyregistration.png"
@@ -87,8 +87,8 @@ type SkillRatingId = (typeof skillRatingOptions)[number]["id"];
 type SkillRatingsState = Record<SkillModalType, Record<string, SkillRatingId>>;
 
 export default function Register() {
-  const dispatch = useAppDispatch();
-   const { token, userId, loading, error, step } = useAppSelector(state => state.register);
+  const dispatch = useDispatch();
+   const { token, userId, loading, error, step } = useSelector(selectors.root);
    const [selectedRole, setSelectedRole] = useState<string | null>(null);
    const [showPassword, setShowPassword] = useState(false);
    const [localError, setLocalError] = useState<string | null>(null);

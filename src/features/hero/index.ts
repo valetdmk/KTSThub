@@ -9,9 +9,7 @@ import {
     setImages,
 } from "./model/Slice";
 import {
-    selectHero,
-    selectSixthsliceData,
-    selectFeaturesContent,
+    selectors,
 } from "./model/selectors";
 
 export {
@@ -23,7 +21,5 @@ export {
     resetHeroCarousel,
     setBlocks,
     setImages,
-    selectHero,
-    selectSixthsliceData,
-    selectFeaturesContent,
+    selectors,
 };

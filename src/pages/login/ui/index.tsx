@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../../app/store/hooks";
-import { actions as authActions } from "../../../features/auth";
+import { useDispatch, useSelector } from "../../../app/store/hooks";
+import { actions as authActions, AuthFeature } from "../../../features/auth";
 import { mapBackendUserToPlatformUser } from "../../../shared/lib/userProfile";
 import "./index.scss";
 import logo from "../../../shared/assets/logo.png";
@@ -29,8 +29,8 @@ export type PlatformUserData = {
 
 export default function Login() {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const { token, user, loading, error } = useAppSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const { token, user, loading, error } = useSelector(AuthFeature.selectors.root);
   const [formData, setFormData] = useState({
     username: "",
     password: "",

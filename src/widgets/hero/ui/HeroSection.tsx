@@ -3,15 +3,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import "../../../shared/ui/Hero/Hero.scss";
 import { HeroCard } from "../../../shared/ui/HeroCard";
-import type { RootState } from "../../../app/store/store";
 import {
     setActiveCard,
     setActiveTopBlock,
     setCarouselOffset,
     setCurrentSection,
     setImages,
-    selectSixthsliceData,
-    selectFeaturesContent,
+    selectors,
 } from "../../../features/hero";
 
 import logo from "../../../shared/assets/logo.png";
@@ -69,13 +67,13 @@ import back5right from "../../../shared/assets/back5right.png";
 
 export const HeroSection = () => {
     const dispatch = useDispatch();
-    const activeCard = useSelector((state: RootState) => state.hero.activeCard);
-    const activeTopBlock = useSelector((state: RootState) => state.hero.activeTopBlock);
-    const carouselOffset = useSelector((state: RootState) => state.hero.carouselOffset);
-    const currentSection = useSelector((state: RootState) => state.hero.currentSection);
-    const stateData = useSelector((state: RootState) => state.hero);
-    const sixthsliceData = useSelector(selectSixthsliceData);
-    const featuresContent = useSelector(selectFeaturesContent);
+    const activeCard = useSelector(selectors.selectActiveCard);
+    const activeTopBlock = useSelector(selectors.selectActiveTopBlock);
+    const carouselOffset = useSelector(selectors.selectCarouselOffset);
+    const currentSection = useSelector(selectors.selectCurrentSection);
+    const stateData = useSelector(selectors.root);
+    const sixthsliceData = useSelector(selectors.selectSixthsliceData);
+    const featuresContent = useSelector(selectors.selectFeaturesContent);
 
     const scrollToSection = useCallback((sectionNum: number) => {
         const container = document.querySelector('.sections-container');

@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../../app/store/hooks";
-import { actions as authActions } from "../../../features/auth";
+import { useDispatch, useSelector } from "../../../app/store/hooks";
+import { actions as authActions, AuthFeature } from "../../../features/auth";
 import { mapBackendUserToPlatformUser } from "../../../shared/lib/userProfile";
 import logo from "../../../shared/assets/logo.png";
 import "./index.scss";
@@ -93,8 +93,8 @@ function formatDate(date: string) {
 export const ProfilePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const { token, user: backendUser, loading } = useAppSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const { token, user: backendUser, loading } = useSelector(AuthFeature.selectors.root);
   const user = useMemo(() => mapBackendUserToPlatformUser(backendUser), [backendUser]);
   const [activeBottomItemId, setActiveBottomItemId] = useState(bottomMenuItems[0].id);
   const [isAvatarBroken, setIsAvatarBroken] = useState(false);

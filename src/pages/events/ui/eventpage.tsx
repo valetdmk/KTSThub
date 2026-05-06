@@ -1,15 +1,12 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchEventByIdRequest } from "../../../features/events";
-import type { RootState } from "../../../app/store/store";
+import { fetchEventByIdRequest, selectors } from "../../../features/events";
 
 export default function EventPage() {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { selectedEvent, loading } = useSelector(
-    (state: RootState) => state.events
-  );
+  const { selectedEvent, loading } = useSelector(selectors.root);
 
   useEffect(() => {
     if (id) {

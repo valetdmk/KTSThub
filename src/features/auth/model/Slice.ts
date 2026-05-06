@@ -1,13 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { LoginPayload } from "./Types";
+import type { LoginPayload, AuthState } from "./Types";
 import type { User } from "../../../entities/user/model";
-
-interface AuthState {
-    token: string | null;
-    loading: boolean;
-    error: string | null;
-    user: User | null;
-};
 
 const initialState: AuthState = {
     token: localStorage.getItem("token"),

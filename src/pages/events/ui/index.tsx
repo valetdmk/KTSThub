@@ -1,14 +1,11 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchEventsRequest } from "../../../features/events";
+import { fetchEventsRequest, selectors } from "../../../features/events";
 import EventCard from "../../../entities/event/ui/EventCard";
-import type { RootState } from "../../../app/store/store";
 
 export default function Events() {
   const dispatch = useDispatch();
-  const { events, loading, error } = useSelector(
-    (state: RootState) => state.events
-  );
+  const { events, loading, error } = useSelector(selectors.root);
 
     useEffect(() => {
         dispatch(fetchEventsRequest());
