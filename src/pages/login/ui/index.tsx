@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "../../../app/store/hooks";
 import { actions as authActions, AuthFeature } from "../../../features/auth";
 import { mapBackendUserToPlatformUser } from "../../../shared/lib/userProfile";
 import "./index.scss";

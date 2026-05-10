@@ -5,6 +5,8 @@ import type { LoginPayload } from "./Types";
 import { authApi, type JwtResponse } from "../../../shared/api/auth";
 import { getApiErrorMessage } from "../../../shared/lib/apiError";
 import type { User } from "../../../entities/user/model";
+import { USE_MOCK_BACKEND } from "../../../shared/config/devFlags";
+import { readSavedUser } from "../../../shared/lib/userProfile";
 
 const {
     loginRequest,
@@ -15,13 +17,51 @@ const {
     fetchProfileFailure,
 } = actions;
 
+function getMockUser(): User {
+    const savedUser = readSavedUser();
+
+    return {
+        id: "1",
+        name: savedUser.firstName || "Frontend",
+        lastName: savedUser.lastName || "Developer",
+        username: savedUser.username || "local.dev",
+        email: savedUser.email || "frontend@local.dev",
+        birthday: savedUser.birthday || "2000-01-01",
+        phone: savedUser.phone || "+79000000000",
+        telegram: savedUser.social || "https://t.me/localdev",
+        avatar: savedUser.avatar || null,
+        bio: savedUser.description || null,
+        gender: savedUser.gender || "OTHER",
+        role: savedUser.role || "PARTICIPANT",
+        status: savedUser.status || "ACTIVE",
+        job: savedUser.job || "FRONT",
+        level: savedUser.level || "INTERMEDIATE",
+    };
+}
+
 function* loadProfile(token?: string) {
+    if (USE_MOCK_BACKEND) {
+        yield put(fetchProfileSuccess(getMockUser()));
+        return;
+    }
+
+    // const user: User = yield call(authApi.getProfile, token);
     const user: User = yield call(authApi.getProfile, token);
     yield put(fetchProfileSuccess(user));
 }
 
 function* handleLogin(action: PayloadAction<LoginPayload>) {
     try {
+        if (USE_MOCK_BACKEND) {
+            const mockToken = "mock-auth-token";
+
+            localStorage.setItem("token", mockToken);
+            yield* loadProfile(mockToken);
+            yield put(loginSuccess(mockToken));
+            return;
+        }
+
+        // const response: JwtResponse = yield call(authApi.signin, action.payload);
         const response: JwtResponse = yield call(authApi.signin, action.payload);
         const token = response.token;
 

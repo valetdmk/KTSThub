@@ -1,7 +1,11 @@
 import { createSelector } from "@reduxjs/toolkit";
-import type { RootState } from "../../../app/store/store";
+import type { EventsState } from "./Types";
 
-const root = (state: RootState) => state.events;
+type State = {
+  events: EventsState;
+};
+
+const root = (state: State) => state.events;
 
 const selectEvents = createSelector([root], (eventsState) => eventsState.events);
 const selectSelectedEvent = createSelector([root], (eventsState) => eventsState.selectedEvent);

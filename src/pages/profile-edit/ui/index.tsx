@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useDispatch, useSelector } from "../../../app/store/hooks";
 import { actions as authActions, AuthFeature } from "../../../features/auth";
 import {
   actions as navigationActions,
@@ -12,6 +12,7 @@ import {
   type NavigationMenuItem,
 } from "../../../features/navigation";
 import { updateUserProfile, type UpdateUserPayload } from "../../../shared/api/users";
+import { USE_MOCK_BACKEND } from "../../../shared/config/devFlags";
 import { mapBackendUserToPlatformUser } from "../../../shared/lib/userProfile";
 import logo from "../../../shared/assets/logo.png";
 import type { PlatformIconName } from "../../../shared/ui/PlatformIcon";
@@ -219,14 +220,58 @@ export function EditProfilePage() {
         lastName: formData.lastName,
         username: formData.username,
         birthday: formData.birthday,
+        avatar: currentUser.avatar || "",
         email: formData.email,
+        bio: currentUser.description || "",
+        gender: currentUser.gender === "MALE" || currentUser.gender === "FEMALE" || currentUser.gender === "OTHER"
+          ? currentUser.gender
+          : "OTHER",
         phone: formData.phone.trim() || null,
         telegram: formData.telegram.trim() || null,
-        job: formData.job || null,
-        level: formData.level || null,
+        github: null,
+        job: formData.job || "FRONT",
+        level: formData.level || "BEGINNER",
         skills: [],
       };
 
+      if (USE_MOCK_BACKEND) {
+        const savedUser = {
+          ...currentUser,
+          firstName: formData.name,
+          lastName: formData.lastName,
+          username: formData.username,
+          birthday: formData.birthday,
+          email: formData.email,
+          phone: formData.phone.trim(),
+          social: formData.telegram.trim(),
+          job: formData.job,
+          level: formData.level,
+        };
+
+        localStorage.setItem("platformUser", JSON.stringify(savedUser));
+        dispatch(authActions.fetchProfileSuccess({
+          id: editableUserId,
+          name: formData.name,
+          lastName: formData.lastName,
+          username: formData.username,
+          birthday: formData.birthday,
+          avatar: currentUser.avatar || "",
+          email: formData.email,
+          bio: currentUser.description || "",
+          gender: currentUser.gender || "OTHER",
+          phone: formData.phone.trim() || null,
+          telegram: formData.telegram.trim() || null,
+          github: null,
+          role: backendUser?.role,
+          status: backendUser?.status,
+          job: formData.job || "FRONT",
+          level: formData.level || "BEGINNER",
+        }));
+        navigate("/profile");
+        return;
+      }
+
+      // const updatedUser = await updateUserProfile(editableUserId, payload);
       const updatedUser = await updateUserProfile(editableUserId, payload);
       dispatch(authActions.fetchProfileSuccess(updatedUser));
       navigate("/profile");

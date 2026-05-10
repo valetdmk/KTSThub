@@ -10,18 +10,18 @@ export type NavigationMenuItem = {
 };
 
 export const topMenuItems: NavigationMenuItem[] = [
-  { id: "cabinet", label: "Р›РёС‡РЅС‹Р№ РєР°Р±РёРЅРµС‚", icon: "user", path: "/profile" },
-  { id: "home", label: "Р“Р»Р°РІРЅР°СЏ", icon: "home", path: "/platform" },
-  { id: "schedule", label: "Р Р°СЃРїРёСЃР°РЅРёРµ", icon: "calendar", path: "/schedule" },
-  { id: "projects", label: "РџСЂРѕРµРєС‚С‹", icon: "projects", path: "/projects" },
-  { id: "participants", label: "РЈС‡Р°СЃС‚РЅРёРєРё", icon: "users", path: "/participants" },
-  { id: "achievements", label: "РђС‡РёРІРєРё", icon: "award", path: "/achievements" },
+  { id: "cabinet", label: "Личный кабинет", icon: "user", path: "/profile" },
+  { id: "home", label: "Главная", icon: "home", path: "/platform" },
+  { id: "schedule", label: "Расписание", icon: "calendar", path: "/schedule" },
+  { id: "projects", label: "Проекты", icon: "projects", path: "/projects" },
+  { id: "participants", label: "Участники", icon: "users", path: "/participants" },
+  { id: "achievements", label: "Достижения", icon: "award", path: "/achievements" },
 ];
 
 export const bottomMenuItems: NavigationMenuItem[] = [
-  { id: "support", label: "РџРѕРґРґРµСЂР¶РєР°", icon: "support" },
-  { id: "settings", label: "РќР°СЃС‚СЂРѕР№РєРё", icon: "settings" },
-  { id: "logout", label: "Р’С‹Р№С‚Рё", icon: "logout" },
+  { id: "support", label: "Поддержка", icon: "support" },
+  { id: "settings", label: "астройки", icon: "settings" },
+  { id: "logout", label: "Выйти", icon: "logout" },
 ];
 
 export const NavigationFeature = {

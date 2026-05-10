@@ -1,7 +1,11 @@
 import { createSelector } from "@reduxjs/toolkit";
-import type { RootState } from "../../../app/store/store";
+import type { RegisterState } from "./Types";
 
-const root = (state: RootState) => state.register;
+type State = {
+  register: RegisterState;
+};
+
+const root = (state: State) => state.register;
 
 const selectStep = createSelector([root], (registerState) => registerState.step);
 const selectLoading = createSelector([root], (registerState) => registerState.loading);

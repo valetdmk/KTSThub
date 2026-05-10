@@ -1,7 +1,6 @@
-import axios from "axios";
 import type { User } from "../../entities/user/model";
 import { api } from "./base";
-import { apiPaths, legacyApiPaths } from "./endpoints";
+import { apiPaths } from "./endpoints";
 
 export const getUsers = async (): Promise<User[]> => {
     const response = await api.get<User[]>(apiPaths.users.collection);
@@ -13,58 +12,18 @@ export type UpdateUserPayload = {
     lastName: string;
     username: string;
     birthday: string;
+    avatar: string;
     email: string;
+    bio: string;
+    gender: "MALE" | "FEMALE" | "OTHER";
     phone: string | null;
     telegram: string | null;
-    job: string | null;
-    level: string | null;
+    github: string | null;
+    job: string;
+    level: string;
     skills: { skillId: number; level: number }[];
 };
-
-function shouldTryNextEndpoint(error: unknown) {
-    if (!axios.isAxiosError(error)) {
-        return false;
-    }
-
-    const responseData = error.response?.data;
-    const detailedMessage =
-        responseData && typeof responseData === "object" && "detailedMessage" in responseData
-            ? responseData.detailedMessage
-            : null;
-
-    if (typeof detailedMessage === "string" && detailedMessage.includes("No static resource")) {
-        return true;
-    }
-
-    return error.response?.status === 404;
-}
-
-export const updateUserProfile = async (id: number, data: UpdateUserPayload): Promise<User> => {
-    const candidates: Array<{ method: "put" | "post"; url: string }> = [
-        { method: "put", url: apiPaths.users.byId(id) },
-        { method: "put", url: legacyApiPaths.users.updateById(id) },
-        { method: "post", url: apiPaths.users.byId(id) },
-        { method: "post", url: legacyApiPaths.users.updateById(id) },
-    ];
-
-    let lastError: unknown = null;
-
-    for (const candidate of candidates) {
-        try {
-            const response =
-                candidate.method === "post"
-                    ? await api.post<User>(candidate.url, data)
-                    : await api.put<User>(candidate.url, data);
-
-            return response.data;
-        } catch (error) {
-            lastError = error;
-
-            if (!shouldTryNextEndpoint(error)) {
-                throw error;
-            }
-        }
-    }
-
-    throw lastError ?? new Error("Unable to update user profile");
+export const updateUserProfile = async (id: string, data: UpdateUserPayload): Promise<User> => {
+    const response = await api.post<User>(apiPaths.users.byId(id), data);
+    return response.data;
 };

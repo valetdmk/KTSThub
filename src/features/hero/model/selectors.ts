@@ -1,7 +1,11 @@
 import { createSelector } from "@reduxjs/toolkit";
-import type { RootState } from "../../../app/store/store";
+import type { HeroState } from "./Types";
 
-const root = (state: RootState) => state.hero;
+type State = {
+  hero: HeroState;
+};
+
+const root = (state: State) => state.hero;
 
 const selectActiveCard = createSelector([root], (hero) => hero.activeCard);
 const selectActiveTopBlock = createSelector([root], (hero) => hero.activeTopBlock);

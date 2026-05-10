@@ -1,8 +1,6 @@
-import axios from "axios";
 import type { User } from "../../entities/user/model";
-import { getUserIdFromToken } from "../lib/auth";
 import { api } from "./base";
-import { apiPaths, legacyApiPaths } from "./endpoints";
+import { apiPaths } from "./endpoints";
 
 export interface SignupPayload {
     name: string;
@@ -11,6 +9,7 @@ export interface SignupPayload {
     birthday: string;
     email: string;
     password: string;
+    gender?: "MALE" | "FEMALE" | "OTHER";
 }
 
 export interface SigninPayload {
@@ -28,7 +27,10 @@ export interface ResponseMessage {
 
 export const authApi = {
     signup: async (data: SignupPayload): Promise<ResponseMessage> => {
-        const response = await api.post<ResponseMessage>(apiPaths.auth.signup, data);
+        const response = await api.post<ResponseMessage>(apiPaths.auth.signup, {
+            ...data,
+            gender: data.gender ?? "OTHER",
+        });
         return response.data;
     },
 
@@ -37,45 +39,8 @@ export const authApi = {
         return response.data;
     },
 
-    getProfile: async (token?: string): Promise<User> => {
-        try {
-            const response = await api.get<User>(apiPaths.users.me);
-            return response.data;
-        } catch (error) {
-            if (!axios.isAxiosError(error)) {
-                throw error;
-            }
-
-            if (error.response?.status !== 404) {
-                throw error;
-            }
-
-            try {
-                const legacyResponse = await api.get<User>(legacyApiPaths.users.me);
-                return legacyResponse.data;
-            } catch (legacyError) {
-                if (!axios.isAxiosError(legacyError) || legacyError.response?.status !== 404) {
-                    throw legacyError;
-                }
-            }
-
-            const userId = token ? getUserIdFromToken(token) : null;
-
-            if (userId === null) {
-                throw error;
-            }
-
-            try {
-                const response = await api.get<User>(apiPaths.users.byId(userId));
-                return response.data;
-            } catch (profileError) {
-                if (!axios.isAxiosError(profileError) || profileError.response?.status !== 404) {
-                    throw profileError;
-                }
-
-                const legacyResponse = await api.get<User>(legacyApiPaths.users.byId(userId));
-                return legacyResponse.data;
-            }
-        }
+    getProfile: async (_token?: string): Promise<User> => {
+        const response = await api.get<User>(apiPaths.users.me);
+        return response.data;
     },
 };

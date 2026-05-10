@@ -21,7 +21,7 @@ function* handleRegister(action: PayloadAction<RegisterPayload>) {
     try {
         if (USE_MOCK_REGISTER_FLOW) {
             const mockToken = "mock-register-token";
-            const mockUserId = Date.now();
+            const mockUserId = String(Date.now());
 
             localStorage.setItem("token", mockToken);
             yield put(registerSuccess({ token: mockToken, userId: mockUserId }));
@@ -40,7 +40,7 @@ function* handleRegister(action: PayloadAction<RegisterPayload>) {
         const user: User = yield call(authApi.getProfile, token);
         const userId = user.id;
 
-        if (typeof userId !== "number" || !Number.isFinite(userId)) {
+        if (typeof userId !== "string" || userId.trim() === "") {
             localStorage.removeItem("token");
             yield put(registerFailure("Не удалось завершить вход после регистрации. Повтори попытку."));
             return;
@@ -53,7 +53,7 @@ function* handleRegister(action: PayloadAction<RegisterPayload>) {
     }
 }
 
-function* handleUpdateProfile(action: PayloadAction<{ token: string; userId: number; data: Record<string, unknown> }>) {
+function* handleUpdateProfile(action: PayloadAction<{ token: string; userId: string; data: Record<string, unknown> }>) {
     try {
         if (USE_MOCK_REGISTER_FLOW) {
             yield put(updateProfileSuccess());

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "../../../app/store/hooks";
 import {
   actions as navigationActions,
   bottomMenuItems,

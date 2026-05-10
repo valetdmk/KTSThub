@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "../../../app/store/hooks";
 import { AuthFeature, actions as authActions } from "../../../features/auth";
 import {
   actions as navigationActions,

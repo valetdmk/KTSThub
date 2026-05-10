@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "../../../app/store/hooks";
+import { useDispatch, useSelector } from "react-redux";
 import { registerRequest, selectors, updateProfileRequest } from "../../../features/register";
 import "./index.scss";
 import registerBack from "../../../shared/assets/registerBack.png"
@@ -580,7 +580,8 @@ export default function Register() {
        username: formData.username,
        birthday: formData.birthday,
        email: formData.email,
-       password: formData.password
+       password: formData.password,
+       gender: "OTHER"
      }));
    };
 
@@ -605,11 +606,15 @@ export default function Register() {
          lastName: formData.lastname,
          username: formData.username,
          birthday: formData.birthday,
+         avatar: selectedAvatar?.src ?? "",
          email: formData.email,
+         bio: step2Data.description,
+         gender: "OTHER",
          phone: formData.phone || null,
          telegram: step2Data.telegram || null,
-         job: step2Data.job,
-         level: step2Data.level,
+         github: null,
+         job: step2Data.job || "FRONT",
+         level: step2Data.level || "BEGINNER",
          skills: []
        }
      }));

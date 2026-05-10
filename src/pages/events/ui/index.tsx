@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "../../../app/store/hooks";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchEventsRequest, selectors } from "../../../features/events";
 import EventCard from "../../../entities/event/ui/EventCard";
 

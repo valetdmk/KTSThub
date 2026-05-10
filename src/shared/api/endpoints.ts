@@ -1,4 +1,4 @@
-const DEFAULT_API_ORIGIN = "http://10.3.25.106:8080";
+const DEFAULT_API_ORIGIN = "http://localhost:8080";
 const DEFAULT_API_BASE_PATH = "/api";
 
 function normalizePathSegment(value: string) {
@@ -28,21 +28,14 @@ export const apiPaths = {
         signin: "/auth/signin",
     },
     users: {
-        collection: "/users",
-        me: "/users/me",
-        byId: (id: number) => `/users/${id}`,
-        password: (id: number) => `/users/${id}/password`,
+        collection: "/admin/getall-users",
+        me: "/user",
+        byId: (id: string) => `/user/${id}`,
+        password: (id: string) => `/user/${id}/change-password`,
     },
     events: {
-        collection: "/events",
+        collection: "/schedule",
         byId: (id: number) => `/events/${id}`,
-    },
-} as const;
-
-export const legacyApiPaths = {
-    users: {
-        me: "/user/me",
-        byId: (id: number) => `/user/${id}`,
-        updateById: (id: number) => `/user/${id}`,
+        scheduleById: (id: number) => `/schedule/${id}`,
     },
 } as const;

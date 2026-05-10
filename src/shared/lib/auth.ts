@@ -11,7 +11,7 @@ function decodeBase64Url(value: string) {
     return atob(padded);
 }
 
-export function getUserIdFromToken(token: string): number | null {
+export function getUserIdFromToken(token: string): string | null {
     try {
         const [, payload] = token.split(".");
 
@@ -23,12 +23,11 @@ export function getUserIdFromToken(token: string): number | null {
         const rawUserId = parsedPayload.userId ?? parsedPayload.id ?? parsedPayload.sub;
 
         if (typeof rawUserId === "number") {
-            return Number.isFinite(rawUserId) ? rawUserId : null;
+            return Number.isFinite(rawUserId) ? String(rawUserId) : null;
         }
 
         if (typeof rawUserId === "string" && rawUserId.trim() !== "") {
-            const normalizedUserId = Number(rawUserId);
-            return Number.isFinite(normalizedUserId) ? normalizedUserId : null;
+            return rawUserId.trim();
         }
 
         return null;
