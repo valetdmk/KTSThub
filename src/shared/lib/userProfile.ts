@@ -17,6 +17,8 @@ export type PlatformUserData = {
     status?: string;
     job?: string;
     level?: string;
+    points?: number;
+    projectsCount?: number;
 };
 
 export const fallbackUser: PlatformUserData = {
@@ -35,6 +37,8 @@ export const fallbackUser: PlatformUserData = {
     status: "",
     job: "",
     level: "",
+    points: 0,
+    projectsCount: 0,
 };
 
 function calculateAge(birthday?: string) {
@@ -96,5 +100,7 @@ export function mapBackendUserToPlatformUser(user: User | null, savedUser = read
         status: user.status ?? savedUser.status,
         job: user.job ?? savedUser.job,
         level: user.level ?? savedUser.level,
+        points: user.points ?? savedUser.points,
+        projectsCount: user.projectsCount ?? savedUser.projectsCount,
     };
 }

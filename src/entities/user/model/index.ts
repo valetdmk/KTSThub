@@ -18,6 +18,7 @@ export interface User {
     job?: string | null;
     level?: string | null;
     points?: number;
+    projectsCount?: number;
     createdAt?: string;
     skills?: Array<{
         id: number;
