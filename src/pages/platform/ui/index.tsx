@@ -12,8 +12,25 @@ import {
 import { mapBackendUserToPlatformUser } from "../../../shared/lib/userProfile";
 import logo from "../../../shared/assets/logo.png";
 import platformBack from "../../../shared/assets/platformBack.png";
+import titleproject from "../../../shared/assets/titleproject.png";
 import { PlatformIcon } from "../../../shared/ui/PlatformIcon";
 import "./index.scss";
+
+const calendarWeekDays = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
+const calendarMonthNames = [
+  "Январь",
+  "Февраль",
+  "Март",
+  "Апрель",
+  "Май",
+  "Июнь",
+  "Июль",
+  "Август",
+  "Сентябрь",
+  "Октябрь",
+  "Ноябрь",
+  "Декабрь",
+];
 
 function getProjectLabel(count: number) {
   const mod10 = count % 10;
@@ -34,8 +51,46 @@ function getProjectLabel(count: number) {
   return "проектов";
 }
 
+function getCalendarDays(viewDate: Date) {
+  const year = viewDate.getFullYear();
+  const month = viewDate.getMonth();
+  const firstDayOfMonth = new Date(year, month, 1);
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const firstWeekDay = (firstDayOfMonth.getDay() + 6) % 7;
+
+  return Array.from({ length: firstWeekDay + daysInMonth }, (_, index) => {
+    if (index < firstWeekDay) {
+      return null;
+    }
+
+    return new Date(year, month, index - firstWeekDay + 1);
+  });
+}
+
 export function PlatformPage() {
   const totalProjects = 3;
+  const projectPlaceholders = [
+    {
+      company: "TechNova",
+      title: "Хакатон по продуктовой аналитике",
+      description: "Заглушка: здесь будет краткая информация о мероприятии и сроках участия.",
+    },
+    {
+      company: "FutureSoft",
+      title: "AI Product Sprint",
+      description: "Заглушка: здесь появится описание проекта, требований и формата участия.",
+    },
+  ];
+  const activeProjects = [
+    {
+      company: "TechNova",
+      title: "Хакатон по продуктовой аналитике",
+      description: "Заглушка: карточка текущего мероприятия пользователя.",
+      teamName: "Команда Alpha",
+      teammates: ["АБ", "МС", "ИК"],
+    },
+  ];
+
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -44,6 +99,11 @@ export function PlatformPage() {
   const activeBottomItemId = useSelector(navigationSelectors.selectActiveBottomItemId);
   const [isAvatarBroken, setIsAvatarBroken] = useState(false);
   const [isPointsDetailsOpen, setIsPointsDetailsOpen] = useState(false);
+  const [projectCalendarViewDate, setProjectCalendarViewDate] = useState(() => new Date());
+  const [selectedProjectDate, setSelectedProjectDate] = useState(() => {
+    const today = new Date();
+    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+  });
   const activeTopItem = topMenuItems.find((item) => item.path === location.pathname) ?? topMenuItems[1];
   const activeBottomItem = bottomMenuItems.find((item) => item.id === activeBottomItemId) ?? bottomMenuItems[0];
   const activeItem = activeTopItem ?? activeBottomItem;
@@ -145,62 +205,231 @@ export function PlatformPage() {
             </div>
           </header>
 
-          <section className="platform-hero">
-            <img className="platform-hero-image" src={platformBack} alt="Platform background" />
-          </section>
+          <section className="platform-top-content">
+            <section className="platform-hero">
+              <img className="platform-hero-image" src={platformBack} alt="Platform background" />
+            </section>
 
-          <section className="platform-stats-grid">
-            <article className="platform-stat-card">
-              <div className="platform-stat-copy">
-                <h2>Прогресс статуса</h2>
-                <p className="platform-stat-line">
-                  <strong>Было участие:</strong>
-                  <span className="platform-project-badge">
-                    {projectsCompleted} {getProjectLabel(projectsCompleted)}
-                  </span>
-                </p>
-                <p className="platform-stat-line">
-                  <strong>Осталось:</strong>
-                  <span className="platform-project-badge">
-                    {projectsRemaining} {getProjectLabel(projectsRemaining)}
-                  </span>
-                </p>
-              </div>
-              <div
-                className="platform-progress-ring"
-                style={{ "--progress": `${progressPercent}%` } as CSSProperties}
-                aria-label={`Прогресс участия ${progressPercent}%`}
-              >
-                <div className="platform-progress-ring-inner">
-                  <strong>{progressPercent}%</strong>
+            <div className="platform-side-column">
+              <aside className="platform-projects-panel" aria-label="Актуальные проекты">
+                <div className="platform-projects-title">
+                  <img src={titleproject} alt="" aria-hidden="true" />
+                  <h2>Проекты</h2>
                 </div>
-              </div>
-            </article>
+                <div className="platform-projects-list">
+                  {projectPlaceholders.map((project) => (
+                    <article key={`${project.company}-${project.title}`} className="platform-project-entry">
+                      <span className="platform-project-company">{project.company}</span>
+                      <button
+                        type="button"
+                        className="platform-project-card"
+                        onClick={() => navigate("/projects")}
+                      >
+                        <strong>{project.title}</strong>
+                        <span>{project.description}</span>
+                      </button>
+                    </article>
+                  ))}
+                </div>
+              </aside>
 
-            <article className="platform-stat-card platform-stat-card-points">
-              <div className="platform-stat-copy">
-                <h2>Ваши баллы</h2>
-                <p>Обновление баллов происходит благодаря участию в Хакатонах и оценки ваших проектов.</p>
-                <button
-                  type="button"
-                  className="platform-details-button"
-                  onClick={() => setIsPointsDetailsOpen((value) => !value)}
-                >
-                  подробнее
-                  <span aria-hidden="true">→</span>
-                </button>
-                <div className={`platform-points-placeholder-slot ${isPointsDetailsOpen ? "open" : ""}`}>
-                  <div className="platform-points-placeholder">
-                    Раздел с подробной аналитикой баллов появится в следующих обновлениях.
+              <section className="platform-project-calendar" aria-label="Календарь проектов">
+                <div className="platform-project-calendar-header">
+                  <div className="platform-calendar-period-controls">
+                    <span className="platform-calendar-period">
+                      {calendarMonthNames[projectCalendarViewDate.getMonth()]}
+                    </span>
+                    <span className="platform-calendar-period">
+                      {projectCalendarViewDate.getFullYear()}
+                    </span>
+                  </div>
+
+                  <div className="platform-calendar-nav-group">
+                    <button
+                      type="button"
+                      className="platform-calendar-nav"
+                      onClick={() => setProjectCalendarViewDate((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1))}
+                      aria-label="Предыдущий месяц"
+                    >
+                      ←
+                    </button>
+                    <button
+                      type="button"
+                      className="platform-calendar-nav"
+                      onClick={() => setProjectCalendarViewDate((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1))}
+                      aria-label="Следующий месяц"
+                    >
+                      →
+                    </button>
                   </div>
                 </div>
-              </div>
-              <div className="platform-points-ring" aria-label={`Баллы пользователя ${userPoints}`}>
-                <div className="platform-points-ring-inner">
-                  <strong>{userPoints}</strong>
+
+                <div className="platform-calendar-weekdays">
+                  {calendarWeekDays.map((weekDay) => (
+                    <span key={weekDay} className="platform-calendar-weekday">{weekDay}</span>
+                  ))}
                 </div>
+
+                <div className="platform-calendar-grid">
+                  {getCalendarDays(projectCalendarViewDate).map((date, index) => {
+                    if (!date) {
+                      return <span key={`empty-${index}`} className="platform-calendar-day-empty" aria-hidden="true" />;
+                    }
+
+                    const isoDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+                    const isSelected = selectedProjectDate === isoDate;
+
+                    return (
+                      <button
+                        key={isoDate}
+                        type="button"
+                        className={`platform-calendar-day${isSelected ? " selected" : ""}`}
+                        onClick={() => setSelectedProjectDate(isoDate)}
+                      >
+                        {date.getDate()}
+                      </button>
+                    );
+                  })}
+                </div>
+              </section>
+            </div>
+          </section>
+
+          <section className="platform-lower-content">
+            <section className="platform-stats-grid">
+              <article className="platform-stat-card">
+                <div className="platform-stat-copy">
+                  <h2>Прогресс<br />статуса</h2>
+                  <p className="platform-stat-line">
+                    <strong>Было участие:</strong>
+                    <span className="platform-project-badge">
+                      {projectsCompleted} {getProjectLabel(projectsCompleted)}
+                    </span>
+                  </p>
+                  <p className="platform-stat-line">
+                    <strong>Осталось:</strong>
+                    <span className="platform-project-badge">
+                      {projectsRemaining} {getProjectLabel(projectsRemaining)}
+                    </span>
+                  </p>
+                </div>
+                <div
+                  className="platform-progress-ring"
+                  style={{ "--progress": `${progressPercent}%` } as CSSProperties}
+                  aria-label={`Прогресс участия ${progressPercent}%`}
+                >
+                  <div className="platform-progress-ring-inner">
+                    <strong>{progressPercent}%</strong>
+                  </div>
+                </div>
+              </article>
+
+              <article className="platform-stat-card platform-stat-card-points">
+                <div className="platform-stat-copy">
+                  <h2>Ваши баллы</h2>
+                  {isPointsDetailsOpen ? (
+                    <>
+                      <button
+                        type="button"
+                        className="platform-details-button"
+                        onClick={() => setIsPointsDetailsOpen(false)}
+                      >
+                        <span aria-hidden="true">←</span>
+                        назад
+                      </button>
+                      <div className="platform-points-placeholder">
+                        Раздел с подробной аналитикой баллов появится в следующих обновлениях.
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <p>Обновление баллов происходит благодаря участию в Хакатонах и оценки ваших проектов.</p>
+                      <button
+                        type="button"
+                        className="platform-details-button"
+                        onClick={() => setIsPointsDetailsOpen(true)}
+                      >
+                        подробнее
+                        <span aria-hidden="true">→</span>
+                      </button>
+                    </>
+                  )}
+                </div>
+                <div className="platform-points-ring" aria-label={`Баллы пользователя ${userPoints}`}>
+                  <div className="platform-points-ring-inner">
+                    <strong>{userPoints}</strong>
+                  </div>
+                </div>
+              </article>
+            </section>
+
+            <section className="platform-active-projects" aria-label="Текущие проекты пользователя">
+              <div className="platform-active-projects-head">
+                <h2>Проекты</h2>
+                <p>
+                  Предупреждение: страницы формирования команд и выбора мероприятия пока не реализованы,
+                  поэтому ниже показана временная заглушка.
+                </p>
               </div>
-            </article>
+
+              <div className="platform-active-projects-list">
+                {activeProjects.map((project) => (
+                  <article
+                    key={`${project.company}-${project.title}-active`}
+                    className="platform-active-project-card"
+                  >
+                    <div className="platform-active-event">
+                      <span className="platform-active-company">{project.company}</span>
+                      <button
+                        type="button"
+                        className="platform-active-event-card"
+                        onClick={() => navigate("/projects")}
+                      >
+                        <strong>{project.title}</strong>
+                        <span>{project.description}</span>
+                      </button>
+                    </div>
+
+                    <div className="platform-active-stages" aria-label="Этапы проекта">
+                      <div className="platform-active-stage">
+                        <span className="platform-active-stage-number">1 этап</span>
+                        <strong>Старт Хакатона</strong>
+                      </div>
+                      <div className="platform-active-stage-divider" aria-hidden="true" />
+                      <div className="platform-active-stage">
+                        <span className="platform-active-stage-number">2 этап</span>
+                        <strong>Процесс Создания</strong>
+                      </div>
+                      <div className="platform-active-stage-divider" aria-hidden="true" />
+                      <div className="platform-active-stage">
+                        <span className="platform-active-stage-number">3 этап</span>
+                        <strong>Финиш Хакатона</strong>
+                      </div>
+                    </div>
+
+                    <div className="platform-active-team">
+                      <span className="platform-active-team-name">{project.teamName}</span>
+                      <div className="platform-active-team-row">
+                        <div className="platform-active-team-avatars" aria-label="Состав команды">
+                          {project.teammates.map((teammate) => (
+                            <span key={teammate} className="platform-active-team-avatar">
+                              {teammate}
+                            </span>
+                          ))}
+                        </div>
+                        <button
+                          type="button"
+                          className="platform-active-team-button"
+                          onClick={() => navigate("/projects")}
+                        >
+                          подробнее
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </section>
           </section>
         </section>
       </div>
