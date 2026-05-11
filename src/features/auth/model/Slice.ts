@@ -1,6 +1,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { LoginPayload, AuthState } from "./Types";
 import type { User } from "../../../entities/user/model";
+import { clearAuthStorage } from "../../../shared/lib/auth";
 
 const initialState: AuthState = {
     token: localStorage.getItem("token"),
@@ -23,7 +24,10 @@ export const {name, reducer, actions} = createSlice({
         },
         loginFailure(state, action: PayloadAction<string>) {
             state.loading = false;
+            state.token = null;
+            state.user = null;
             state.error = action.payload;
+            clearAuthStorage();
         },
 
 
@@ -37,6 +41,7 @@ export const {name, reducer, actions} = createSlice({
         },
         fetchProfileFailure(state, action: PayloadAction<string>) {
             state.loading = false;
+            state.user = null;
             state.error = action.payload;
         },
 
@@ -44,8 +49,7 @@ export const {name, reducer, actions} = createSlice({
             state.token = null;
             state.user = null;
             state.error = null;
-            localStorage.removeItem("token");
-            localStorage.removeItem("platformUser");
+            clearAuthStorage();
         },
     },
 });

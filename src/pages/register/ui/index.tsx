@@ -247,6 +247,57 @@ export default function Register() {
     return parts.join(".");
   };
 
+  const getPhoneValidationMessage = (value: string) => {
+    const trimmedValue = value.trim();
+
+    if (trimmedValue === "") {
+      return null;
+    }
+
+    const normalizedValue = trimmedValue.replace(/[\s()-]/g, "");
+    const isRussianPhone = /^(\+7|8)\d{10}$/.test(normalizedValue);
+    const isInternationalPhone = /^\+\d{10,15}$/.test(normalizedValue);
+
+    if (isRussianPhone || isInternationalPhone) {
+      return null;
+    }
+
+    return "Введите корректный номер телефона.";
+  };
+
+  const getEmailValidationMessage = (value: string) => {
+    const trimmedValue = value.trim();
+
+    if (trimmedValue === "") {
+      return null;
+    }
+
+    const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedValue);
+
+    if (isValidEmail) {
+      return null;
+    }
+
+    return "Введите корректный email.";
+  };
+
+  const getTelegramValidationMessage = (value: string) => {
+    const trimmedValue = value.trim();
+
+    if (trimmedValue === "") {
+      return null;
+    }
+
+    const isTelegramUsername = /^@[a-zA-Z0-9_]{5,32}$/.test(trimmedValue);
+    const isTelegramUrl = /^https?:\/\/(www\.)?t\.me\/[a-zA-Z0-9_]{5,32}\/?$/.test(trimmedValue);
+
+    if (isTelegramUsername || isTelegramUrl) {
+      return null;
+    }
+
+    return "Введите корректный Telegram: @username или https://t.me/username";
+  };
+
   const getCalendarDays = (viewDate: Date) => {
     const year = viewDate.getFullYear();
     const month = viewDate.getMonth();
@@ -537,25 +588,25 @@ export default function Register() {
   };
 
   const isFormValid = () => {
+    const phoneValidationMessage = getPhoneValidationMessage(formData.phone);
+    const emailValidationMessage = getEmailValidationMessage(formData.email);
+
     return (
       formData.name.trim().length >= 2 &&
       formData.lastname.trim().length >= 2 &&
       formData.username.trim() !== "" &&
       formData.birthday !== "" &&
       formData.email.trim() !== "" &&
-      formData.password.length >= 8
+      formData.password.length >= 8 &&
+      phoneValidationMessage === null &&
+      emailValidationMessage === null
     );
   };
 
   const isStep2Valid = () => {
-    return (
-      step2Data.job !== "" &&
-      step2Data.level !== "" &&
-      step2Data.hardSkillsList.trim() !== "" &&
-      step2Data.softSkillsList.trim() !== "" &&
-      step2Data.telegram.trim() !== "" &&
-      step2Data.description.trim() !== ""
-    );
+    const telegramValidationMessage = getTelegramValidationMessage(step2Data.telegram);
+
+    return telegramValidationMessage === null;
   };
 
   const hasStep1Progress = Object.values(formData).some((value) => value.trim() !== "");
@@ -694,7 +745,7 @@ export default function Register() {
   );
 
   const renderForm = () => (
-    <form onSubmit={handleSignup}>
+    <form onSubmit={handleSignup} noValidate>
       {(error || localError) && <div className="error-message">{error || localError}</div>}
       <div className="input-group">
         <input 
@@ -851,6 +902,9 @@ export default function Register() {
           className="phone-input" 
         />
       </div>
+      {getPhoneValidationMessage(formData.phone) ? (
+        <div className="error-message">{getPhoneValidationMessage(formData.phone)}</div>
+      ) : null}
 
       <input 
         type="email" 
@@ -859,6 +913,9 @@ export default function Register() {
         onChange={handleInputChange} 
         placeholder="Email address" 
       />
+      {getEmailValidationMessage(formData.email) ? (
+        <div className="error-message">{getEmailValidationMessage(formData.email)}</div>
+      ) : null}
 
       <div className="password-wrapper">
         <input 
@@ -1155,6 +1212,9 @@ export default function Register() {
           className="social-input"
         />
       </div>
+      {getTelegramValidationMessage(step2Data.telegram) ? (
+        <div className="error-message">{getTelegramValidationMessage(step2Data.telegram)}</div>
+      ) : null}
 
       <div className="description-section">
         <textarea
@@ -1189,9 +1249,6 @@ export default function Register() {
     <div className="step3-form">
       <img className="step3-union step3-union-top" src={UnionTop} alt="" />
       <img className="step3-union step3-union-bottom" src={UnionBottom} alt="" />
-      <img className="step3-decor step3-decor-axolotl" src={Axolotl} alt="" />
-      <img className="step3-decor step3-decor-cat" src={BlackCat} alt="" />
-      <img className="step3-decor step3-decor-rainbow" src={RainbowPic} alt="" />
       <div className="user-info-section">
         <button
           type="button"

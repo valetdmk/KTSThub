@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+import { actions as authActions } from "../../../features/auth";
 import {
   actions as navigationActions,
   bottomMenuItems,
@@ -9,18 +10,10 @@ import {
   type NavigationMenuItem,
 } from "../../../features/navigation";
 import logo from "../../../shared/assets/logo.png";
+import { readSavedUser, type PlatformUserData } from "../../../shared/lib/userProfile";
 import { PlatformIcon } from "../../../shared/ui/PlatformIcon";
 import usersBack from "../../../shared/assets/UsersBack.png";
 import "./index.scss";
-
-type PlatformUserData = {
-  lastName: string;
-  firstName: string;
-  avatar: string;
-  username: string;
-  email: string;
-  code: string;
-};
 
 type ParticipantView = "all" | "level" | "role";
 
@@ -35,15 +28,6 @@ type Participant = {
   role: string;
   level: string;
   projectsCount: number;
-};
-
-const fallbackUser: PlatformUserData = {
-  lastName: "Фамилия",
-  firstName: "Имя",
-  avatar: logo,
-  username: "",
-  email: "email@example.com",
-  code: "",
 };
 
 const tabs: Array<{ id: ParticipantView; label: string }> = [
@@ -87,16 +71,6 @@ const participants: Participant[] = Array.from({ length: 30 }, (_, index) => ({
   level: levels[index % levels.length],
   projectsCount: 1 + (index % 7),
 }));
-
-function readSavedUser() {
-  const savedUser = localStorage.getItem("platformUser");
-  if (!savedUser) return fallbackUser;
-  try {
-    return { ...fallbackUser, ...JSON.parse(savedUser) } as PlatformUserData;
-  } catch {
-    return fallbackUser;
-  }
-}
 
 const participantCardClassName = (rank: number) => {
   if (rank === 1) return "participant-card first-place";
@@ -143,7 +117,10 @@ export const ParticipantsPage = () => {
       className={`platform-menu-button ${(item.path ? item.path === location.pathname : activeBottomItemId === item.id) ? "active" : ""}`}
       onClick={() => {
         if (item.path) return void navigate(item.path);
-        if (item.id === "logout") return void navigate("/login");
+        if (item.id === "logout") {
+          dispatch(authActions.logout());
+          return void navigate("/login");
+        }
         dispatch(navigationActions.setActiveBottomItemId(item.id));
       }}
     >
@@ -270,5 +247,6 @@ export const ParticipantsPage = () => {
     </main>
   );
 };
+
 
 

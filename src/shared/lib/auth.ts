@@ -4,6 +4,11 @@ type JwtPayload = {
     sub?: number | string;
 };
 
+export function clearAuthStorage() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("platformUser");
+}
+
 function decodeBase64Url(value: string) {
     const normalized = value.replace(/-/g, "+").replace(/_/g, "/");
     const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=");
@@ -32,7 +37,7 @@ export function getUserIdFromToken(token: string): string | null {
 
         return null;
     } catch {
-        localStorage.removeItem("token");
+        clearAuthStorage();
         return null;
     }
 }

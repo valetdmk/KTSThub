@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { actions as authActions, AuthFeature } from "../../../features/auth";
 import { mapBackendUserToPlatformUser } from "../../../shared/lib/userProfile";
+import { clearAuthStorage } from "../../../shared/lib/auth";
 import "./index.scss";
 import logo from "../../../shared/assets/logo.png";
 import UnionTop from "../../../shared/assets/UnionTop.png";
@@ -31,10 +32,17 @@ export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { token, user, loading, error } = useSelector(AuthFeature.selectors.root);
+  const [sessionReady, setSessionReady] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
+
+  useEffect(() => {
+    clearAuthStorage();
+    dispatch(authActions.logout());
+    setSessionReady(true);
+  }, [dispatch]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -46,7 +54,7 @@ export default function Login() {
   };
 
   useEffect(() => {
-    if (!token || !user) {
+    if (!sessionReady || !token || !user) {
       return;
     }
 
@@ -54,7 +62,7 @@ export default function Login() {
 
     localStorage.setItem("platformUser", JSON.stringify(platformUser));
     navigate("/platform", { state: platformUser });
-  }, [navigate, token, user]);
+  }, [navigate, sessionReady, token, user]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

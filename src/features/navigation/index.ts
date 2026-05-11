@@ -20,7 +20,7 @@ export const topMenuItems: NavigationMenuItem[] = [
 
 export const bottomMenuItems: NavigationMenuItem[] = [
   { id: "support", label: "Поддержка", icon: "support" },
-  { id: "settings", label: "астройки", icon: "settings" },
+  { id: "settings", label: "Настройки", icon: "settings" },
   { id: "logout", label: "Выйти", icon: "logout" },
 ];
 

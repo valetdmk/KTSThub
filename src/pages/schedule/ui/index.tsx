@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+import { actions as authActions } from "../../../features/auth";
 import {
   actions as navigationActions,
   bottomMenuItems,
@@ -9,6 +10,7 @@ import {
   type NavigationMenuItem,
 } from "../../../features/navigation";
 import logo from "../../../shared/assets/logo.png";
+import { readSavedUser } from "../../../shared/lib/userProfile";
 import { PlatformIcon } from "../../../shared/ui/PlatformIcon";
 import "./index.scss";
 
@@ -33,15 +35,6 @@ type ScheduleEvent = {
   startDate: string;
   endDate: string;
   description: string;
-};
-
-const fallbackUser: PlatformUserData = {
-  lastName: "Фамилия",
-  firstName: "Имя",
-  avatar: logo,
-  username: "",
-  email: "email@example.com",
-  code: "",
 };
 
 const monthNames = [
@@ -130,16 +123,6 @@ const scheduleEvents: ScheduleEvent[] = [
     description: "Продуктовый хакатон с фокусом на презентацию решения и демо.",
   },
 ];
-
-function readSavedUser() {
-  const savedUser = localStorage.getItem("platformUser");
-  if (!savedUser) return fallbackUser;
-  try {
-    return { ...fallbackUser, ...JSON.parse(savedUser) } as PlatformUserData;
-  } catch {
-    return fallbackUser;
-  }
-}
 
 function formatDateRange(startDate: string, endDate: string) {
   const start = new Date(startDate);
@@ -273,7 +256,7 @@ export const SchedulePage = () => {
 
   const renderMenuButton = (item: NavigationMenuItem) => {
     const isActive = item.path ? item.path === location.pathname : activeBottomItemId === item.id;
-    return <button key={item.id} type="button" className={`platform-menu-button ${isActive ? "active" : ""}`} onClick={() => { if (item.path) return void navigate(item.path); if (item.id === "logout") return void navigate("/login"); dispatch(navigationActions.setActiveBottomItemId(item.id)); }}><span className="platform-button-inner"><PlatformIcon name={item.icon} /><span>{item.label}</span></span></button>;
+    return <button key={item.id} type="button" className={`platform-menu-button ${isActive ? "active" : ""}`} onClick={() => { if (item.path) return void navigate(item.path); if (item.id === "logout") { dispatch(authActions.logout()); return void navigate("/login"); } dispatch(navigationActions.setActiveBottomItemId(item.id)); }}><span className="platform-button-inner"><PlatformIcon name={item.icon} /><span>{item.label}</span></span></button>;
   };
 
   return (
@@ -466,5 +449,6 @@ export const SchedulePage = () => {
     </main>
   );
 };
+
 
 

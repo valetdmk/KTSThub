@@ -7,6 +7,7 @@ import { getApiErrorMessage } from "../../../shared/lib/apiError";
 import type { User } from "../../../entities/user/model";
 import { USE_MOCK_BACKEND } from "../../../shared/config/devFlags";
 import { readSavedUser } from "../../../shared/lib/userProfile";
+import { clearAuthStorage } from "../../../shared/lib/auth";
 
 const {
     loginRequest,
@@ -69,7 +70,7 @@ function* handleLogin(action: PayloadAction<LoginPayload>) {
         yield* loadProfile(token);
         yield put(loginSuccess(token));
     } catch (error) {
-        localStorage.removeItem("token");
+        clearAuthStorage();
         yield put(loginFailure(getApiErrorMessage(error, "Ошибка входа.")));
     }
 }
