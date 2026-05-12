@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { registerRequest, selectors, updateProfileRequest } from "../../../features/register";
 import "./index.scss";
 import registerBack from "../../../shared/assets/registerBack.png"
+import registerLines from "../../../shared/assets/registerLines.png"
 import boyregistration from "../../../shared/assets/boyregistration.png"
 import loginnregistr from "../../../shared/assets/loginnregistr.png"
 import BackLogin from "../../../shared/assets/BackLogin.png"
@@ -596,6 +597,7 @@ export default function Register() {
       formData.lastname.trim().length >= 2 &&
       formData.username.trim() !== "" &&
       formData.birthday !== "" &&
+      formData.phone.trim() !== "" &&
       formData.email.trim() !== "" &&
       formData.password.length >= 8 &&
       phoneValidationMessage === null &&
@@ -1249,6 +1251,14 @@ export default function Register() {
     <div className="step3-form">
       <img className="step3-union step3-union-top" src={UnionTop} alt="" />
       <img className="step3-union step3-union-bottom" src={UnionBottom} alt="" />
+      <button
+        type="button"
+        className="step3-page-arrow step3-page-arrow-outside"
+        onClick={() => setStep3Page(prev => (prev === 1 ? 2 : 1))}
+        aria-label={step3Page === 1 ? "РџРѕРєР°Р·Р°С‚СЊ РІС‚РѕСЂСѓСЋ СЃС‚СЂР°РЅРёС†Сѓ" : "Р’РµСЂРЅСѓС‚СЊСЃСЏ РЅР° РїРµСЂРІСѓСЋ СЃС‚СЂР°РЅРёС†Сѓ"}
+      >
+        <span>{step3Page === 1 ? ">" : "<"}</span>
+      </button>
       <div className="user-info-section">
         <button
           type="button"
@@ -1277,37 +1287,28 @@ export default function Register() {
             {formData.name && <p className="name-display">{formData.name}</p>}
           </div>
 
-          <div className="birthday-section">
+          <div className="step3-contact-group">
+            <div className="birthday-section">
             {formData.birthday && <span className="age-display">{calculateAge(formData.birthday)} лет</span>}
-          </div>
+            </div>
 
-          <div className="phone-preview">
+            <div className="phone-preview">
             <span className="phone-label">Телефон:</span>
             <span className="phone-value">{formData.phone || "Не указан"}</span>
-          </div>
+            </div>
 
-          <div className="telegram-preview">
+            <div className="telegram-preview">
             <span className="telegram-label">Telegram:</span>
             <span className="telegram-value">{step2Data.telegram || "Не указан"}</span>
-          </div>
-
-          <div className="skills-preview step3-hidden">
-            {step2Data.hardSkillsList && (
-              <div className="skills-list">
-                <span className="skills-label">Hard-skills:</span>
-                <span className="skills-value">{step2Data.hardSkillsList}</span>
-              </div>
-            )}
-            {step2Data.softSkillsList && (
-              <div className="skills-list">
-                <span className="skills-label">Soft-skills:</span>
-                <span className="skills-value">{step2Data.softSkillsList}</span>
-              </div>
-            )}
+            </div>
           </div>
         </div>
 
         <div className={`step3-right-column ${step3Page === 1 ? "" : "step3-hidden"}`}>
+          <div className="participant-section">
+            <span className="participant-display">Участник</span>
+          </div>
+
           <img className="renderstep3-girl" src={renderstep3Girl} alt="" />
 
           <div className="role-section">
@@ -1319,34 +1320,49 @@ export default function Register() {
           </div>
 
           <div className="description-section">
+            <div className="description-title">О себе...</div>
             <p className="description-display">{step2Data.description || "Описание не добавлено"}</p>
           </div>
         </div>
 
         <div className={`step3-secondary-page ${step3Page === 2 ? "" : "step3-hidden"}`}>
           <div className="step3-secondary-content">
-            <div className="status-section">
-              <span className="status-display">
-                Уровень: {levelOptions.find(s => s.id === step2Data.level)?.label || "Не указан"}
-              </span>
+            <div className="step3-secondary-header">
+              <div className="step3-secondary-profile">
+                <div className="secondary-avatar-section">
+                  <div className="secondary-avatar-placeholder">
+                    {selectedAvatar ? (
+                      <img src={selectedAvatar.src} alt={selectedAvatar.label} className="secondary-avatar-image" />
+                    ) : (
+                      <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                      </svg>
+                    )}
+                  </div>
+                </div>
+
+                <div className="secondary-role-section">
+                  <span className="secondary-role-display">
+                    {jobOptions.find(r => r.id === step2Data.job)?.label || "Не указано"}
+                  </span>
+                </div>
+              </div>
+
+              <div className="secondary-level-section">
+                <span className="secondary-level-display">
+                  {levelOptions.find(s => s.id === step2Data.level)?.label || "Не указано"}
+                </span>
+              </div>
             </div>
 
             <div className="skills-preview">
-              {step2Data.hardSkillsList && (
-                <div className="skills-list">
-                  <span className="skills-value">Hard-skills: {step2Data.hardSkillsList}</span>
-                </div>
-              )}
-              {step2Data.softSkillsList && (
-                <div className="skills-list">
-                  <span className="skills-value">Soft-skills: {step2Data.softSkillsList}</span>
-                </div>
-              )}
-              {!step2Data.hardSkillsList && !step2Data.softSkillsList && (
-                <div className="skills-list">
-                  <span className="skills-value">Навыки не указаны</span>
-                </div>
-              )}
+              <div className="skills-list">
+                <span className="skills-value">Hard-skills: {step2Data.hardSkillsList || "Не указано"}</span>
+              </div>
+              <div className="skills-list">
+                <span className="skills-value">Soft-skills: {step2Data.softSkillsList || "Не указано"}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -1364,6 +1380,7 @@ export default function Register() {
 
   return (
     <div className={`register-role-page ${selectedRole ? 'role-selected' : ''}`}>
+      <img className="register-lines" src={registerLines} alt="" />
       {selectedRole ? (
         <>
           <img className="BackLogin" src={BackLogin} alt="" />
