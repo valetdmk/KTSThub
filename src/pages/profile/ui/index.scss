@@ -1,5 +1,6 @@
 .platform-page {
   height: 100vh;
+  position: relative;
   display: grid;
   grid-template-columns: 286px minmax(0, 1fr);
   gap: 28px;
@@ -10,11 +11,13 @@
     #111;
   color: #fff;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .platform-sidebar {
   height: 100vh;
+  position: relative;
+  z-index: 1;
   display: grid;
   align-content: space-between;
   grid-template-rows: 486px 214px;
@@ -119,10 +122,12 @@
 
 .platform-workspace {
   min-width: 0;
+  position: relative;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   gap: 24px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .platform-header {
@@ -266,12 +271,47 @@
   }
 }
 
+.profile-dashboard-shell {
+  position: relative;
+  overflow: visible;
+  padding-left: 54px;
+}
+
+.profile-dashboard-accent {
+  position: absolute;
+  left: 112px;
+  top: 50%;
+  width: 52px;
+  height: 188px;
+  transform: translateY(-50%);
+  border-radius: 90px;
+  background: #000000;
+  box-shadow:
+    6px -3px 5px 0 #FF5100 inset,
+    1px 3px 8.6px 0 #FF5100 inset;
+  z-index: 2;
+}
+
+.profile-dashboard-badge {
+  position: absolute;
+  left: 140px;
+  top: 56%;
+  width: 156px;
+  height: auto;
+  transform: translateY(-50%) rotate(-90deg);
+  filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.24));
+  z-index: 5;
+  pointer-events: none;
+}
+
 .profile-dashboard {
   min-height: 0;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(320px, 1fr);
-  gap: 22px;
-  padding: 28px;
+  width: 100%;
+  align-self: stretch;
+  gap: 12px;
+  padding: 6px 18px;
   border-radius: 36px;
   background: linear-gradient(204deg, #FFD6C3 0.95%, #FF712F 26.24%, #A919AE 88.14%, #9605CA 102.09%);
   box-shadow: 0 32px 70px rgba(150, 5, 202, 0.22);
@@ -282,8 +322,8 @@
   min-width: 0;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-template-rows: minmax(220px, auto) minmax(280px, 1fr);
-  gap: 18px;
+  grid-template-rows: minmax(180px, auto) minmax(220px, 1fr);
+  gap: 12px;
 }
 
 .profile-panel {
@@ -305,14 +345,14 @@
 .profile-panel-details,
 .profile-panel-about,
 .profile-panel-projects {
-  padding: 24px;
+  padding: 16px;
 }
 
 .profile-panel-user {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 18px;
+  gap: 12px;
 }
 
 .profile-action-button {
@@ -348,8 +388,8 @@
 }
 
 .profile-panel-avatar {
-  width: 168px;
-  height: 168px;
+  width: 136px;
+  height: 136px;
   border-radius: 36px;
   object-fit: cover;
   border: 3px solid rgba(255, 255, 255, 0.72);
@@ -377,12 +417,12 @@
 .profile-panel-details {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 14px;
 }
 
 .profile-details-list {
   display: grid;
-  gap: 14px;
+  gap: 10px;
 }
 
 .profile-detail-row {
@@ -405,13 +445,13 @@
   grid-column: 1 / -1;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 12px;
 }
 
 .profile-about-content {
   min-height: 0;
   flex: 1;
-  padding: 20px;
+  padding: 14px;
   border-radius: 22px;
   background: rgba(0, 0, 0, 0.18);
   color: rgba(255, 255, 255, 0.92);
@@ -424,7 +464,7 @@
   min-height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 14px;
 }
 
 .profile-edit-layout {
@@ -534,7 +574,17 @@
     grid-template-columns: 1fr;
   }
 
+  .profile-dashboard-shell {
+    padding-left: 0;
+  }
+
+  .profile-dashboard-accent,
+  .profile-dashboard-badge {
+    display: none;
+  }
+
   .profile-dashboard {
+    width: 100%;
     grid-template-columns: 1fr;
   }
 
@@ -568,7 +618,7 @@
   }
 
   .profile-dashboard {
-    padding: 18px;
+    padding: 10px 16px;
     border-radius: 28px;
   }
 

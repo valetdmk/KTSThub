@@ -9,6 +9,7 @@ import {
   topMenuItems,
   type NavigationMenuItem,
 } from "../../../features/navigation";
+import badge from "../../../shared/assets/badge.png";
 import { mapBackendUserToPlatformUser } from "../../../shared/lib/userProfile";
 import logo from "../../../shared/assets/logo.png";
 import { PlatformIcon } from "../../../shared/ui/PlatformIcon";
@@ -93,6 +94,7 @@ export const ProfilePage = () => {
         </section>
       </aside>
 
+      <img className="profile-dashboard-badge" src={badge} alt="" aria-hidden="true" />
       <section className="platform-workspace">
         <header className="platform-header">
           <div className="platform-content-pill"><span>{activeTopItem.label}</span></div>
@@ -113,7 +115,9 @@ export const ProfilePage = () => {
           </div>
         </header>
 
-        <section className="profile-dashboard">
+        <div className="profile-dashboard-shell">
+          <div className="profile-dashboard-accent" aria-hidden="true" />
+          <section className="profile-dashboard">
           <div className="profile-info-grid">
             <article className="profile-panel profile-panel-user">
               <img
@@ -163,7 +167,8 @@ export const ProfilePage = () => {
               ))}
             </div>
           </article>
-        </section>
+          </section>
+        </div>
       </section>
     </main>
   );
