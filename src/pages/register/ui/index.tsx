@@ -962,8 +962,11 @@ export default function Register() {
     </form>
   );
 
-  const renderStep2 = () => (
-    <div className="step2-form">
+  const renderStep2 = () => {
+    const telegramValidationMessage = getTelegramValidationMessage(step2Data.telegram);
+
+    return (
+      <div className="step2-form">
       {error ? <div className="error-message">{error}</div> : null}
 
       <div className="avatar-section">
@@ -1018,7 +1021,7 @@ export default function Register() {
           <div className="dropdown-selected">
             {step2Data.job 
               ? jobOptions.find(r => r.id === step2Data.job)?.label 
-              : "Выберите направление (job)"}
+              : "Выберите направление"}
           </div>
           <div className="dropdown-arrow">
             <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
@@ -1046,7 +1049,7 @@ export default function Register() {
       </div>
 
       <div className="status-section">
-        <label>Уровень: </label>
+        <label>Статус: </label>
         <div 
           ref={levelDropdownRef}
           className={`custom-dropdown status-dropdown ${isLevelDropdownOpen ? 'open' : ''}`}
@@ -1055,7 +1058,7 @@ export default function Register() {
           <div className="dropdown-selected">
             {step2Data.level 
               ? levelOptions.find(s => s.id === step2Data.level)?.label 
-              : "Выберите уровень (level)"}
+              : "Выберите уровень"}
           </div>
           <div className="dropdown-arrow">
             <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
@@ -1214,11 +1217,10 @@ export default function Register() {
           className="social-input"
         />
       </div>
-      {getTelegramValidationMessage(step2Data.telegram) ? (
-        <div className="error-message">{getTelegramValidationMessage(step2Data.telegram)}</div>
-      ) : null}
-
       <div className="description-section">
+        {telegramValidationMessage ? (
+          <div className="error-message floating-error-message">{telegramValidationMessage}</div>
+        ) : null}
         <textarea
           value={step2Data.description}
           onChange={(e) => {
@@ -1244,8 +1246,9 @@ export default function Register() {
           <>Продолжить <span>→</span></>
         )}
       </button>
-    </div>
-  );
+      </div>
+    );
+  };
 
   const renderStep3 = () => (
     <div className="step3-form">
