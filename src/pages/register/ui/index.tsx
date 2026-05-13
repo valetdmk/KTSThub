@@ -777,7 +777,7 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
             value={birthdayInputValue}
             onChange={handleBirthdayInputChange}
             onBlur={handleBirthdayInputBlur}
-            placeholder="ДД.ММ.ГГГГ"
+            placeholder="DD.MM.YYYY"
             className="birthday-input birthday-text-input"
             inputMode="numeric"
           />
@@ -893,7 +893,7 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
           name="phone" 
           value={formData.phone} 
           onChange={handleInputChange} 
-          placeholder="Номер телефона" 
+          placeholder="Phone number" 
           className="phone-input" 
         />
       </div>
@@ -1377,10 +1377,10 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
 
   return (
     <div className={`register-role-page ${selectedRole ? 'role-selected' : ''}`}>
-      <img className="register-lines" src={registerLines} alt="" />
       {selectedRole ? (
         <>
           <img className="BackLogin" src={BackLogin} alt="" />
+          <img className="register-lines" src={registerLines} alt="" />
           <img className="loginnregistr" src={loginnregistr} alt="" />
           <img className="boyforma" src={boyregistration} alt="" />
           {renderProgressIndicator()}
