@@ -430,36 +430,18 @@
       min-height: 520px;
       padding: 34px 24px;
       border-radius: 90px;
-      border: 2px solid transparent;
+      border: 2px solid;
       border-image-source: linear-gradient(90deg, #FF5100 0%, #9605CA 100%);
       border-image-slice: 1;
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
       box-shadow: 0 24px 60px rgba(5, 7, 26, 0.22);
       box-sizing: border-box;
       color: #fff;
       z-index: 1002;
       align-self: flex-start;
       overflow: hidden;
-
-      &::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        padding: 2px;
-        border-radius: inherit;
-        background: linear-gradient(90deg, #FF5100 0%, #9605CA 100%);
-        -webkit-mask:
-          linear-gradient(#fff 0 0) content-box,
-          linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask:
-          linear-gradient(#fff 0 0) content-box,
-          linear-gradient(#fff 0 0);
-        mask-composite: exclude;
-        pointer-events: none;
-      }
 
       > * {
         position: relative;
@@ -476,8 +458,9 @@
       .skills-rating-list {
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: stretch;
         gap: 20px;
+        width: 100%;
       }
 
       .skills-rating-item {
@@ -515,12 +498,22 @@
       }
 
       .skills-rating-label {
+        display: block;
+        width: 100%;
         font-size: 15px;
         line-height: 1.15;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
+        text-transform: none;
+        letter-spacing: 0;
         color: rgba(255, 255, 255, 0.88);
       }
+    }
+
+    .skills-rating-sidebar-floating {
+      position: fixed;
+      top: 54%;
+      right: max(12px, calc(10% - 250px));
+      transform: translateY(-50%);
+      z-index: 1002;
     }
 
       .birthday-section {
@@ -1419,10 +1412,6 @@
           align-items: flex-start;
           gap: 24px;
           margin-bottom: 20px;
-
-          .skills-rating-sidebar {
-            display: none;
-          }
         }
 
         .skills-modal-main {
@@ -2205,3 +2194,106 @@
       text-align: center;
       margin-bottom: 10px;
     }
+
+.register-form-shell > .skills-rating-sidebar.skills-rating-sidebar-floating {
+  position: fixed;
+  top: calc(57% + 120px);
+  left: calc(90% + 32px);
+  transform: translateY(-50%);
+  width: 118px;
+  min-width: 118px;
+  min-height: 520px;
+  padding: 24px 8px;
+  border-radius: 90px;
+  border: 2px solid transparent;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  box-shadow: 0 24px 60px rgba(5, 7, 26, 0.22);
+  box-sizing: border-box;
+  color: #fff;
+  z-index: 1002;
+  overflow: hidden;
+}
+
+.register-form-shell > .skills-rating-sidebar.skills-rating-sidebar-floating::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  border-radius: 90px;
+  background: linear-gradient(90deg, #FF5100 0%, #9605CA 100%);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.register-form-shell > .skills-rating-sidebar.skills-rating-sidebar-floating > * {
+  position: relative;
+  z-index: 1;
+}
+
+.register-form-shell > .skills-rating-sidebar.skills-rating-sidebar-floating h3 {
+  margin: 0 0 28px 0;
+  font-size: 18px;
+  line-height: 1.15;
+  text-align: center;
+}
+
+.register-form-shell > .skills-rating-sidebar.skills-rating-sidebar-floating .skills-rating-list {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 20px;
+  width: 100%;
+}
+
+.register-form-shell > .skills-rating-sidebar.skills-rating-sidebar-floating .skills-rating-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease, filter 0.2s ease;
+}
+
+.register-form-shell > .skills-rating-sidebar.skills-rating-sidebar-floating .skills-rating-item.active {
+  transform: translateY(-2px) scale(1.02);
+}
+
+.register-form-shell > .skills-rating-sidebar.skills-rating-sidebar-floating .skills-rating-dot {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: block;
+  box-shadow: 0 0 0 4px transparent;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.register-form-shell > .skills-rating-sidebar.skills-rating-sidebar-floating .skills-rating-item.active .skills-rating-dot {
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.45);
+  transform: scale(1.08);
+}
+
+.register-form-shell > .skills-rating-sidebar.skills-rating-sidebar-floating .skills-rating-label {
+  display: block;
+  width: 100%;
+  font-size: 15px;
+  line-height: 1.15;
+  text-transform: none;
+  letter-spacing: 0;
+  color: rgba(255, 255, 255, 0.88);
+}

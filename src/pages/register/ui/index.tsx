@@ -155,7 +155,7 @@ export default function Register() {
   const [birthdayInputValue, setBirthdayInputValue] = useState("");
   const [skillsModal, setSkillsModal] = useState<SkillModalType | null>(null);
   const [enteredSkills, setEnteredSkills] = useState("");
-  const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId>("excellent");
+const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId | null>(null);
   const [activeRatedSkill, setActiveRatedSkill] = useState<string | null>(null);
   const [skillRatings, setSkillRatings] = useState<SkillRatingsState>({
     hardSkills: {},
@@ -358,8 +358,8 @@ export default function Register() {
     setActiveRatedSkill(currentSkills[0]?.toLowerCase() ?? null);
     setSelectedSkillRatingId(
       currentSkills[0]
-        ? skillRatings[type][currentSkills[0].toLowerCase()] ?? "excellent"
-        : "excellent"
+        ? skillRatings[type][currentSkills[0].toLowerCase()] ?? null
+        : null
     );
     setSkillsModal(type);
   };
@@ -427,15 +427,8 @@ export default function Register() {
 
     const updatedSkills = appendUniqueSkill(enteredSkills, skill);
 
-    setSkillRatings((prev) => ({
-      ...prev,
-      [skillsModal]: {
-        ...prev[skillsModal],
-        [normalizedSkill]: selectedSkillRatingId
-      }
-    }));
-
     setActiveRatedSkill(normalizedSkill);
+    setSelectedSkillRatingId(null);
     syncSkillField(skillsModal, updatedSkills);
   };
 
@@ -460,7 +453,7 @@ export default function Register() {
 
     const normalizedSkill = skill.trim().toLowerCase();
     setActiveRatedSkill(normalizedSkill);
-    setSelectedSkillRatingId(skillRatings[skillsModal][normalizedSkill] ?? "excellent");
+    setSelectedSkillRatingId(skillRatings[skillsModal][normalizedSkill] ?? null);
   };
 
   const selectedAvatar = avatarOptions.find((avatar) => avatar.id === selectedAvatarId) ?? null;
@@ -1126,7 +1119,7 @@ export default function Register() {
             <div className="skills-selected-box">
               {getSkillsArray(enteredSkills).length > 0 ? (
                 getSkillsArray(enteredSkills).map((skill) => {
-                  const ratingId = skillRatings[skillsModal][skill.toLowerCase()] ?? "excellent";
+                  const ratingId = skillRatings[skillsModal][skill.toLowerCase()];
                   const rating = skillRatingOptions.find((option) => option.id === ratingId);
 
                   return (
@@ -1135,7 +1128,7 @@ export default function Register() {
                       type="button"
                       className={`selected-skill-chip ${activeRatedSkill === skill.toLowerCase() ? "active" : ""}`}
                       onClick={() => handleActiveSkillSelect(skill)}
-                      style={{ background: rating?.color ?? "#93F890" }}
+                      style={{ background: rating?.color ?? "#FFFFFF" }}
                     >
                       {skill}
                     </button>
@@ -1175,30 +1168,6 @@ export default function Register() {
               </div>
             </div>
               </div>
-            <aside className="skills-rating-sidebar">
-              <h3>Оценка навыков</h3>
-              <div className="skills-rating-list">
-                {skillRatingOptions.map((option) => (
-                  <div
-                    key={option.id}
-                    className={`skills-rating-item ${selectedSkillRatingId === option.id ? "active" : ""}`}
-                  >
-                    <button
-                      type="button"
-                      className="skills-rating-dot-btn"
-                      onClick={() => setSelectedSkillRatingId(option.id)}
-                      aria-label={option.label}
-                    >
-                      <span
-                        className="skills-rating-dot"
-                        style={{ background: option.color }}
-                      />
-                    </button>
-                    <span className="skills-rating-label">{option.label}</span>
-                  </div>
-                ))}
-              </div>
-            </aside>
             </div>
             <button className="modal-save-btn" onClick={closeSkillsModal}>
               Сохранить
@@ -1381,6 +1350,31 @@ export default function Register() {
     </div>
   );
 
+  const renderSkillsRatingSidebar = () => (
+    <div className="skills-rating-sidebar skills-rating-sidebar-floating">
+      <h3>Оценка навыка</h3>
+      <div className="skills-rating-list">
+        {skillRatingOptions.map((option) => (
+          <button
+            key={option.id}
+            type="button"
+            className={`skills-rating-item ${selectedSkillRatingId === option.id && activeRatedSkill ? 'active' : ''}`}
+            onClick={() => handleSkillRatingSelect(option.id)}
+            aria-label={option.label}
+          >
+            <span
+              className="skills-rating-dot"
+              style={{ background: option.color }}
+            />
+            <span className="skills-rating-label">
+              {option.label.charAt(0).toUpperCase() + option.label.slice(1)}
+            </span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <div className={`register-role-page ${selectedRole ? 'role-selected' : ''}`}>
       <img className="register-lines" src={registerLines} alt="" />
@@ -1401,28 +1395,7 @@ export default function Register() {
               </>
             )}
           </div>
-          {skillsModal ? (
-            <div className="skills-rating-sidebar">
-              <h3>Оценка навыков</h3>
-              <div className="skills-rating-list">
-                {skillRatingOptions.map((option) => (
-                  <button
-                    key={option.id}
-                    type="button"
-                    className={`skills-rating-item ${selectedSkillRatingId === option.id ? 'active' : ''}`}
-                    onClick={() => handleSkillRatingSelect(option.id)}
-                    aria-label={option.label}
-                  >
-                    <span
-                      className="skills-rating-dot"
-                      style={{ background: option.color }}
-                    />
-                    <span className="skills-rating-label">{option.label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          ) : null}
+          {step === 2 && skillsModal ? renderSkillsRatingSidebar() : null}
           </div>
         </>
       ) : (

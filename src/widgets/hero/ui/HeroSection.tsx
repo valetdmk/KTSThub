@@ -66,12 +66,12 @@ import back5right from "../../../shared/assets/back5right.png";
 
 
 export const HeroSection = () => {
+    const MAX_SECTION = 5;
     const dispatch = useDispatch();
     const activeCard = useSelector(selectors.selectActiveCard);
     const activeTopBlock = useSelector(selectors.selectActiveTopBlock);
     const carouselOffset = useSelector(selectors.selectCarouselOffset);
     const currentSection = useSelector(selectors.selectCurrentSection);
-    const stateData = useSelector(selectors.root);
     const sixthsliceData = useSelector(selectors.selectSixthsliceData);
     const featuresContent = useSelector(selectors.selectFeaturesContent);
 
@@ -88,7 +88,7 @@ export const HeroSection = () => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'ArrowDown' || e.key === 'PageDown') {
                 e.preventDefault();
-                scrollToSection(currentSection < 6 ? currentSection + 1 : 6);
+                scrollToSection(currentSection < MAX_SECTION ? currentSection + 1 : MAX_SECTION);
             } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
                 e.preventDefault();
                 scrollToSection(currentSection > 1 ? currentSection - 1 : 1);
@@ -122,7 +122,7 @@ export const HeroSection = () => {
             window.removeEventListener('popstate', handlePopState);
             observer.disconnect();
         };
-    }, [currentSection, scrollToSection, dispatch]);
+    }, [currentSection, scrollToSection, dispatch, MAX_SECTION]);
 
     useEffect(() => {
         dispatch(setImages({
@@ -135,13 +135,11 @@ export const HeroSection = () => {
     }, [dispatch]);
 
     const goToNextSection = () => {
-        if (currentSection < 6) {
+        if (currentSection < MAX_SECTION) {
             scrollToSection(currentSection + 1);
         }
     };
 
-    const topBlockContent = stateData.topBlockContent;
-    const currentTopContent = activeTopBlock ? topBlockContent[activeTopBlock] : null;
     const content = activeCard ? featuresContent[activeCard] : null;
 
     const currentData = activeTopBlock ? sixthsliceData[activeTopBlock as keyof typeof sixthsliceData] : sixthsliceData[1];
@@ -479,50 +477,7 @@ export const HeroSection = () => {
                             </div>
                         </section>
 
-                        <section id="slice5" className="fifthslice">
-                            <img className="back5left" src={back5left} alt="" />
-                            <img className="back5right" src={back5right} alt="" />
-                            <div className="fifthslice_inner">
-                                <div className="fifthslice_left_images">
-                                    <div className="img-group-close">
-                                        <img className="img-most-left-5" src={joystick} alt="" />
-                                        <img className="img-top-left-5" src={kybok} alt="" />
-                                    </div>
-                                    <img className="img-right-5" src={molniya} alt="" />
-                                    <img className="img-most-right-5" src={raceta} alt="" />
-                                    <img className="img-right-5 img-lamp-5" src={lamp} alt="" />
-                                </div>
-                                <div className="fifthslice_rect">
-                                    <p className="fifthslice_text">{currentTopContent ? currentTopContent.text : "TEXT"}</p>
-                                    <p className="fifthslice_title">{currentTopContent ? currentTopContent.title : "PM/UX-UI дизайнер/Глава проекта"}</p>
-                                    <p className="fifthslice_desc">{currentTopContent ? currentTopContent.desc : "Главное лицо проекта бла бла бла бла сделал там то то се пятое десятое"}</p>
-                                </div>
-                                <div className="fifthslice_right_images">
-                                    <img className="right-pazl-5" src={pazl} alt="" />
-                                    <img className="right-game-5" src={game} alt="" />
-                                    <img className="right-brain-5" src={brain} alt="" />
-                                    <img className="right-unicorn-5" src={unicorn} alt="" />
-                                    <img className="right-game-second-5" src={game} alt="" />
-                                    <img className="right-molniya-5" src={molniya} alt="" />
-                                </div>
-                                <div className="fifthslice_top_right">
-                                    <div 
-                                        className={`top-right-block ${activeTopBlock === 1 ? 'active' : ''}`}
-                                        onClick={() => dispatch(setActiveTopBlock(1))}
-                                    >TEXT</div>
-                                    <div 
-                                        className={`top-right-block ${activeTopBlock === 2 ? 'active' : ''}`}
-                                        onClick={() => dispatch(setActiveTopBlock(2))}
-                                    >TEXT</div>
-                                    <div 
-                                        className={`top-right-block ${activeTopBlock === 3 ? 'active' : ''}`}
-                                        onClick={() => dispatch(setActiveTopBlock(3))}
-                                    >TEXT</div>
-                                </div>
-                            </div>
-                        </section>
-
-                        <section id="slice6" className="sixthslice">
+                        <section id="slice5" className="sixthslice">
                             <img className="back5left" src={back5left} alt="" />
                             <img className="back5right" src={back5right} alt="" />
                             <div className="sixthslice_container">
