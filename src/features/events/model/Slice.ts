@@ -25,7 +25,8 @@ const eventsSlice = createSlice({
             state.loading = false;
             state.error = action.payload;
         },
-        fetchEventByIdRequest(state, _action: PayloadAction<number>) {
+        fetchEventByIdRequest(state, action: PayloadAction<number>) {
+            void action;
             state.loading = true;
             state.error = null;
         },

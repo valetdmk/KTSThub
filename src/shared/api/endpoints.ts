@@ -33,6 +33,9 @@ export const apiPaths = {
         byId: (id: string) => `/user/${id}`,
         password: (id: string) => `/user/${id}/change-password`,
     },
+    skills: {
+        collection: "/skills/getall-skills",
+    },
     events: {
         collection: "/schedule",
         byId: (id: number) => `/events/${id}`,

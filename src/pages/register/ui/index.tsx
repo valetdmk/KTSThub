@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { registerRequest, selectors, updateProfileRequest } from "../../../features/register";
 import "./index.scss";
@@ -141,25 +141,6 @@ export default function Register() {
       age--;
     }
     return age;
-  };
-
-  const persistPlatformUser = () => {
-    const platformUser = {
-      lastName: formData.lastname,
-      firstName: formData.name,
-      avatar: selectedAvatar?.src ?? "",
-      username: formData.username,
-      email: formData.email,
-      code: "",
-      birthday: formData.birthday,
-      age: formData.birthday ? String(calculateAge(formData.birthday)) : "",
-      gender: "",
-      phone: formData.phone,
-      social: step2Data.telegram,
-      description: step2Data.description,
-    };
-
-    localStorage.setItem("platformUser", JSON.stringify(platformUser));
   };
 
   const [formData, setFormData] = useState({
@@ -340,6 +321,20 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
     return "Введите корректный Telegram: @username или https://t.me/username";
   };
 
+  const normalizeTelegramValue = (value: string) => {
+    const trimmedValue = value.trim();
+
+    if (!trimmedValue) {
+      return "";
+    }
+
+    if (trimmedValue.startsWith("@")) {
+      return `https://t.me/${trimmedValue.slice(1)}`;
+    }
+
+    return trimmedValue.replace(/\/$/, "");
+  };
+
   const getCalendarDays = (viewDate: Date) => {
     const year = viewDate.getFullYear();
     const month = viewDate.getMonth();
@@ -385,6 +380,28 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
       .map((skill) => skill.trim())
       .filter(Boolean)
   );
+
+  const getProfileSkillPayload = () => {
+    const skillNames = [
+      ...getSkillsArray(step2Data.hardSkillsList),
+      ...getSkillsArray(step2Data.softSkillsList),
+    ];
+
+    const skillLevelsByName = skillNames.reduce<Record<string, number>>((accumulator, skillName) => {
+      const normalizedName = skillName.toLowerCase();
+      const ratingId = skillRatings.hardSkills[normalizedName] ?? skillRatings.softSkills[normalizedName];
+
+      accumulator[normalizedName] = ratingId === "advanced"
+        ? 7
+        : ratingId === "medium"
+          ? 4
+          : 1;
+
+      return accumulator;
+    }, {});
+
+    return { skillNames, skillLevelsByName };
+  };
 
   const appendUniqueSkill = (currentValue: string, skill: string) => {
     return normalizeSkillsList(currentValue ? `${currentValue}, ${skill}` : skill);
@@ -498,6 +515,25 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
   };
 
   const selectedAvatar = avatarOptions.find((avatar) => avatar.id === selectedAvatarId) ?? null;
+
+  const persistPlatformUser = useCallback(() => {
+    const platformUser = {
+      lastName: formData.lastname,
+      firstName: formData.name,
+      avatar: selectedAvatar?.src ?? "",
+      username: formData.username,
+      email: formData.email,
+      code: "",
+      birthday: formData.birthday,
+      age: formData.birthday ? String(calculateAge(formData.birthday)) : "",
+      gender: "",
+      phone: formData.phone,
+      social: step2Data.telegram,
+      description: step2Data.description,
+    };
+
+    localStorage.setItem("platformUser", JSON.stringify(platformUser));
+  }, [formData.birthday, formData.email, formData.lastname, formData.name, formData.phone, formData.username, selectedAvatar, step2Data.description, step2Data.telegram]);
 
   const closeInteractivePanels = () => {
     setIsJobDropdownOpen(false);
@@ -653,6 +689,9 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
 
     return value.trim() !== "";
   });
+  const visiblePendingProgressStep = pendingProgressStep !== null && step > pendingProgressStep
+    ? null
+    : pendingProgressStep;
 
    const handleSignup = async (e: React.FormEvent) => {
      e.preventDefault();
@@ -698,30 +737,20 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
          bio: step2Data.description,
          gender: "OTHER",
          phone: formData.phone || null,
-         telegram: step2Data.telegram || null,
+         telegram: normalizeTelegramValue(step2Data.telegram) || null,
          github: null,
          job: step2Data.job || "FRONT",
          level: step2Data.level || "BEGINNER",
-         skills: []
+         ...getProfileSkillPayload()
        }
      }));
    };
 
   useEffect(() => {
-    if (pendingProgressStep !== null && step > pendingProgressStep) {
-      setPendingProgressStep(null);
-    }
-  }, [pendingProgressStep, step]);
-
-  useEffect(() => {
     if (step === 3) {
       persistPlatformUser();
     }
-  }, [step]);
-
-  useEffect(() => {
-    setBirthdayInputValue(formData.birthday ? formatBirthdayDisplay(formData.birthday) : "");
-  }, [formData.birthday]);
+  }, [persistPlatformUser, step]);
 
   useEffect(() => {
     const handlePointerDown = (event: PointerEvent) => {
@@ -750,7 +779,7 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
     <div className="register-progress" aria-label="Прогресс регистрации">
       {[1, 2, 3].map((progressStep) => {
         const isCompleted = step > progressStep;
-        const isLoading = loading && pendingProgressStep === progressStep;
+        const isLoading = loading && visiblePendingProgressStep === progressStep;
         const isPartial =
           !isCompleted &&
           !isLoading &&

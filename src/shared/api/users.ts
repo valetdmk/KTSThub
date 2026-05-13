@@ -21,7 +21,7 @@ export type UpdateUserPayload = {
     github: string | null;
     job: string;
     level: string;
-    skills: { skillId: number; level: number }[];
+    skills?: { skillId: number; level: number }[];
 };
 export const updateUserProfile = async (id: string, data: UpdateUserPayload): Promise<User> => {
     const response = await api.post<User>(apiPaths.users.byId(id), data);

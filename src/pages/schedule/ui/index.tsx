@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { actions as authActions } from "../../../features/auth";
+import { AuthFeature, actions as authActions } from "../../../features/auth";
+import { fetchEventsRequest, selectors as eventsSelectors } from "../../../features/events";
 import {
   actions as navigationActions,
   bottomMenuItems,
@@ -10,18 +11,9 @@ import {
   type NavigationMenuItem,
 } from "../../../features/navigation";
 import logo from "../../../shared/assets/logo.png";
-import { readSavedUser } from "../../../shared/lib/userProfile";
+import { mapBackendUserToPlatformUser } from "../../../shared/lib/userProfile";
 import { PlatformIcon } from "../../../shared/ui/PlatformIcon";
 import "./index.scss";
-
-type PlatformUserData = {
-  lastName: string;
-  firstName: string;
-  avatar: string;
-  username: string;
-  email: string;
-  code: string;
-};
 
 type EventLevel = string;
 type EventProfile = string;
@@ -61,69 +53,6 @@ const monthOptions = monthNames.map((label, value) => ({ label, value: String(va
 const currentYear = new Date().getFullYear();
 const calendarYearOptions = Array.from({ length: 5 }, (_, index) => currentYear + index - 1);
 
-const scheduleEvents: ScheduleEvent[] = [
-  {
-    id: 1,
-    title: "KTST Spring Hack",
-    type: "Хакатон",
-    profile: "Frontend",
-    level: "Средний",
-    startDate: "2026-05-12",
-    endDate: "2026-05-14",
-    description: "Командный хакатон по интерфейсам, AI-инструментам и быстрым MVP.",
-  },
-  {
-    id: 2,
-    title: "Game Prototype Lab",
-    type: "Проект",
-    profile: "Gamedev",
-    level: "Начинающий",
-    startDate: "2026-05-18",
-    endDate: "2026-05-25",
-    description: "Недельная проектная работа над игровыми механиками и визуалом.",
-  },
-  {
-    id: 3,
-    title: "Backend Core Sprint",
-    type: "Интенсив",
-    profile: "Backend",
-    level: "Продвинутый",
-    startDate: "2026-06-03",
-    endDate: "2026-06-05",
-    description: "Практика по API, очередям, логированию и проектированию сервисов.",
-  },
-  {
-    id: 4,
-    title: "Design Systems Meetup",
-    type: "Митап",
-    profile: "Design",
-    level: "Средний",
-    startDate: "2026-06-11",
-    endDate: "2026-06-11",
-    description: "Разбор кейсов по дизайн-системам, токенам и UI-паттернам.",
-  },
-  {
-    id: 5,
-    title: "Project Track Workshop",
-    type: "Воркшоп",
-    profile: "Project",
-    level: "Начинающий",
-    startDate: "2026-07-07",
-    endDate: "2026-07-09",
-    description: "Воркшоп по ролям в команде, дорожным картам и управлению рисками.",
-  },
-  {
-    id: 6,
-    title: "Summer Product Hack",
-    type: "Хакатон",
-    profile: "Frontend",
-    level: "Продвинутый",
-    startDate: "2026-08-20",
-    endDate: "2026-08-22",
-    description: "Продуктовый хакатон с фокусом на презентацию решения и демо.",
-  },
-];
-
 function formatDateRange(startDate: string, endDate: string) {
   const start = new Date(startDate);
   const end = new Date(endDate);
@@ -161,11 +90,31 @@ function toIsoDate(date: Date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 }
 
+function inferProfile(title: string, description: string, stack: string[]): EventProfile {
+  const haystack = `${title} ${description} ${stack.join(" ")}`.toLowerCase();
+
+  if (/(frontend|react|vue|ui)/.test(haystack)) return "Frontend";
+  if (/(backend|api|java|spring|node|django|database)/.test(haystack)) return "Backend";
+  if (/(design|figma|ux)/.test(haystack)) return "Design";
+  if (/(project|manager|scrum|kanban)/.test(haystack)) return "Project";
+  if (/(game|gamedev|unity|unreal|godot)/.test(haystack)) return "Gamedev";
+
+  return "Frontend";
+}
+
+function inferLevel(stack: string[]): EventLevel {
+  if (stack.length >= 3) return "Продвинутый";
+  if (stack.length >= 1) return "Средний";
+  return "Начинающий";
+}
+
 export const SchedulePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useMemo(() => ({ ...readSavedUser(), ...(location.state as Partial<PlatformUserData> | null) }), [location.state]);
+  const { token, user: backendUser, loading: authLoading } = useSelector(AuthFeature.selectors.root);
+  const { events, loading: eventsLoading, error: eventsError } = useSelector(eventsSelectors.root);
+  const user = useMemo(() => mapBackendUserToPlatformUser(backendUser), [backendUser]);
   const activeBottomItemId = useSelector(navigationSelectors.selectActiveBottomItemId);
   const [isAvatarBroken, setIsAvatarBroken] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState("");
@@ -180,6 +129,30 @@ export const SchedulePage = () => {
   const avatarSrc = !isAvatarBroken && user.avatar ? user.avatar : logo;
   const today = new Date();
   const currentMonthLabel = `${monthNames[today.getMonth()]} ${today.getFullYear()}`;
+
+  useEffect(() => {
+    dispatch(fetchEventsRequest());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (token && !backendUser && !authLoading) {
+      dispatch(authActions.fetchProfileRequest());
+    }
+  }, [authLoading, backendUser, dispatch, token]);
+
+  const scheduleEvents = useMemo<ScheduleEvent[]>(
+    () => events.map((event) => ({
+      id: event.id,
+      title: event.title,
+      type: event.type || "EVENT",
+      profile: inferProfile(event.title, event.description ?? "", event.stack),
+      level: inferLevel(event.stack),
+      startDate: event.startDate,
+      endDate: event.endDate,
+      description: event.description ?? "",
+    })),
+    [events]
+  );
 
   const filteredEvents = useMemo(() => {
     const normalizedQuery = searchValue.trim().toLowerCase();
@@ -211,7 +184,7 @@ export const SchedulePage = () => {
         return monthMatch && seasonMatch && levelMatch && profileMatch && searchMatch && rangeMatch;
       })
       .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
-  }, [rangeEnd, rangeStart, searchValue, selectedLevel, selectedMonth, selectedProfile, selectedSeason]);
+  }, [rangeEnd, rangeStart, scheduleEvents, searchValue, selectedLevel, selectedMonth, selectedProfile, selectedSeason]);
 
   const upcomingEvents = useMemo(() => {
     const now = new Date();
@@ -256,7 +229,26 @@ export const SchedulePage = () => {
 
   const renderMenuButton = (item: NavigationMenuItem) => {
     const isActive = item.path ? item.path === location.pathname : activeBottomItemId === item.id;
-    return <button key={item.id} type="button" className={`platform-menu-button ${isActive ? "active" : ""}`} onClick={() => { if (item.path) return void navigate(item.path); if (item.id === "logout") { dispatch(authActions.logout()); return void navigate("/login"); } dispatch(navigationActions.setActiveBottomItemId(item.id)); }}><span className="platform-button-inner"><PlatformIcon name={item.icon} /><span>{item.label}</span></span></button>;
+    return (
+      <button
+        key={item.id}
+        type="button"
+        className={`platform-menu-button ${isActive ? "active" : ""}`}
+        onClick={() => {
+          if (item.path) return void navigate(item.path);
+          if (item.id === "logout") {
+            dispatch(authActions.logout());
+            return void navigate("/login");
+          }
+          dispatch(navigationActions.setActiveBottomItemId(item.id));
+        }}
+      >
+        <span className="platform-button-inner">
+          <PlatformIcon name={item.icon} />
+          <span>{item.label}</span>
+        </span>
+      </button>
+    );
   };
 
   return (
@@ -340,7 +332,17 @@ export const SchedulePage = () => {
               </div>
 
               <div className="schedule-events-list">
-                {visibleEvents.length > 0 ? (
+                {eventsLoading ? (
+                  <div className="schedule-empty-state">
+                    <h2>Загрузка...</h2>
+                    <p>Получаем актуальное расписание с backend.</p>
+                  </div>
+                ) : eventsError ? (
+                  <div className="schedule-empty-state">
+                    <h2>Не удалось загрузить события</h2>
+                    <p>{eventsError}</p>
+                  </div>
+                ) : visibleEvents.length > 0 ? (
                   visibleEvents.map((event) => (
                     <article key={event.id} className="schedule-event-card">
                       <div className="schedule-event-meta">
@@ -449,6 +451,3 @@ export const SchedulePage = () => {
     </main>
   );
 };
-
-
-

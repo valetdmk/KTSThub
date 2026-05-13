@@ -187,7 +187,7 @@ export function EditProfilePage() {
       level: backendUser?.level ?? currentUser.level ?? "",
     });
     setFormHydrated(true);
-  }, [backendUser, currentUser, formHydrated]);
+  }, [backendUser, currentUser, formHydrated, token]);
 
   const avatarSrc = !isAvatarBroken && currentUser.avatar ? currentUser.avatar : logo;
   const activeTopItem = topMenuItems[0];
@@ -231,7 +231,6 @@ export function EditProfilePage() {
         github: null,
         job: formData.job || "FRONT",
         level: formData.level || "BEGINNER",
-        skills: [],
       };
 
       if (USE_MOCK_BACKEND) {

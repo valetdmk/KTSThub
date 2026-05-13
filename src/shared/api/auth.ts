@@ -39,7 +39,7 @@ export const authApi = {
         return response.data;
     },
 
-    getProfile: async (_token?: string): Promise<User> => {
+    getProfile: async (): Promise<User> => {
         const response = await api.get<User>(apiPaths.users.me);
         return response.data;
     },

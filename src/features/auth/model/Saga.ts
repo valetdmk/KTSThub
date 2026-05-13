@@ -40,14 +40,13 @@ function getMockUser(): User {
     };
 }
 
-function* loadProfile(token?: string) {
+function* loadProfile() {
     if (USE_MOCK_BACKEND) {
         yield put(fetchProfileSuccess(getMockUser()));
         return;
     }
 
-    // const user: User = yield call(authApi.getProfile, token);
-    const user: User = yield call(authApi.getProfile, token);
+    const user: User = yield call(authApi.getProfile);
     yield put(fetchProfileSuccess(user));
 }
 
@@ -57,7 +56,7 @@ function* handleLogin(action: PayloadAction<LoginPayload>) {
             const mockToken = "mock-auth-token";
 
             localStorage.setItem("token", mockToken);
-            yield* loadProfile(mockToken);
+            yield* loadProfile();
             yield put(loginSuccess(mockToken));
             return;
         }
@@ -67,7 +66,7 @@ function* handleLogin(action: PayloadAction<LoginPayload>) {
         const token = response.token;
 
         localStorage.setItem("token", token);
-        yield* loadProfile(token);
+        yield* loadProfile();
         yield put(loginSuccess(token));
     } catch (error) {
         clearAuthStorage();
@@ -84,7 +83,7 @@ function* handleFetchProfile() {
     }
 
     try {
-        yield* loadProfile(token);
+        yield* loadProfile();
     } catch (error) {
         yield put(fetchProfileFailure(getApiErrorMessage(error, "Ошибка загрузки профиля.")));
     }

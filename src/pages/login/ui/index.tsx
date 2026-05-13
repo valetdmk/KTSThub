@@ -32,7 +32,6 @@ export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { token, user, loading, error } = useSelector(AuthFeature.selectors.root);
-  const [sessionReady, setSessionReady] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -41,7 +40,6 @@ export default function Login() {
   useEffect(() => {
     clearAuthStorage();
     dispatch(authActions.logout());
-    setSessionReady(true);
   }, [dispatch]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,7 +52,7 @@ export default function Login() {
   };
 
   useEffect(() => {
-    if (!sessionReady || !token || !user) {
+    if (!token || !user) {
       return;
     }
 
@@ -62,7 +60,7 @@ export default function Login() {
 
     localStorage.setItem("platformUser", JSON.stringify(platformUser));
     navigate("/platform", { state: platformUser });
-  }, [navigate, sessionReady, token, user]);
+  }, [navigate, token, user]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

@@ -14,7 +14,8 @@ export const {name, reducer, actions} = createSlice({
     name: "auth",
     initialState,
     reducers: {
-        loginRequest(state, _action: PayloadAction<LoginPayload>) {
+        loginRequest(state, action: PayloadAction<LoginPayload>) {
+            void action;
             state.loading = true;
             state.error = null;
         },

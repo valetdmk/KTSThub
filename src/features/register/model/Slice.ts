@@ -16,7 +16,8 @@ export const {name, reducer, actions} = createSlice({
         setStep(state, action: PayloadAction<number>) {
             state.step = action.payload;
         },
-        registerRequest(state, _action: PayloadAction<RegisterPayload>) {
+        registerRequest(state, action: PayloadAction<RegisterPayload>) {
+            void action;
             state.loading = true;
             state.error = null;
         },
@@ -31,7 +32,8 @@ export const {name, reducer, actions} = createSlice({
             state.error = action.payload;
             state.step = 1;
         },
-        updateProfileRequest(state, _action: PayloadAction<{ token: string; userId: string; data: Record<string, unknown> }>) {
+        updateProfileRequest(state, action: PayloadAction<{ token: string; userId: string; data: Record<string, unknown> }>) {
+            void action;
             state.loading = true;
             state.error = null;
         },
