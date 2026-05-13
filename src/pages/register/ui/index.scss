@@ -118,6 +118,31 @@
     position: relative;
   }
 
+  .register-auth-star {
+    position: absolute;
+    z-index: 1;
+    pointer-events: none;
+    object-fit: contain;
+  }
+
+  .register-auth-star-top-left {
+    top: 90px;
+    left: 180px;
+    width: 120px;
+  }
+
+  .register-auth-star-bottom-left {
+    left: 140px;
+    bottom: 180px;
+    width: 180px;
+  }
+
+  .register-auth-star-top-right {
+    top: 70px;
+    right: 150px;
+    width: 260px;
+  }
+
   .roles-grid {
     display: flex;
     flex-direction: row;
@@ -379,10 +404,23 @@
         height: 33px;
         background: #000;
         border-radius: 90px;
+        position: relative;
+        overflow: visible;
         box-shadow: 
           6px -3px 5px 0px #FF5100 inset,
           1px 3px 8.6px 0px #FF5100 inset;
           z-index: 12;
+
+        .register-badge {
+          position: absolute;
+          left: 50%;
+          top: -415px;
+          transform: translateX(-50%);
+          width: 140px;
+          height: auto;
+          z-index: 13;
+          pointer-events: none;
+        }
       }
 
       .logoLogin {
@@ -1376,11 +1414,17 @@
       .skills-modal {
         width: 90%;
         max-width: 860px;
+        height: 640px;
+        max-height: 640px;
         background: #00000080;
         border-radius: 30px;
         padding: 30px;
         border: 2px solid rgba(255, 255, 255, 0.3);
         position: relative;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+        overflow: hidden;
 
         .modal-close {
           position: absolute;
@@ -1409,12 +1453,21 @@
           display: flex;
           align-items: flex-start;
           gap: 24px;
-          margin-bottom: 20px;
+          margin-bottom: 28px;
+          flex: 1;
+          height: 0;
+          min-height: 0;
+          overflow: hidden;
         }
 
         .skills-modal-main {
           flex: 1;
+          height: 100%;
           min-width: 0;
+          min-height: 0;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
         }
 
         .skills-selected-box {
@@ -1457,7 +1510,13 @@
         }
 
         .recommended-skills {
-          margin-bottom: 20px;
+          margin-bottom: 0;
+          flex: 1;
+          height: 100%;
+          min-height: 0;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
 
           p {
             color: rgba(255, 255, 255, 0.8);
@@ -1468,7 +1527,23 @@
           .recommended-skills-list {
             display: flex;
             flex-wrap: wrap;
+            align-content: flex-start;
             gap: 10px;
+            flex: 1 1 auto;
+            height: 100%;
+            min-height: 0;
+            max-height: 100%;
+            padding-bottom: 20px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+
+            &::-webkit-scrollbar {
+              width: 0;
+              height: 0;
+              display: none;
+            }
 
             .recommended-skill-btn {
               padding: 8px 15px;
@@ -1500,6 +1575,7 @@
 
         .modal-save-btn {
           width: 100%;
+          flex: 0 0 auto;
           padding: 15px;
           border-radius: 20px;
           border: 2px solid rgba(255, 255, 255, 0.3);
@@ -2195,13 +2271,13 @@
 
 .register-form-shell > .skills-rating-sidebar.skills-rating-sidebar-floating {
   position: fixed;
-  top: calc(57% + 120px);
+  top: calc(57% + 180px);
   left: calc(90% + 32px);
   transform: translateY(-50%);
   width: 118px;
   min-width: 118px;
-  min-height: 520px;
-  padding: 24px 8px;
+  min-height: 360px;
+  padding: 20px 8px;
   border-radius: 90px;
   border: 2px solid transparent;
   background: rgba(255, 255, 255, 0.12);
@@ -2238,7 +2314,7 @@
 }
 
 .register-form-shell > .skills-rating-sidebar.skills-rating-sidebar-floating h3 {
-  margin: 0 0 28px 0;
+  margin: 0 0 20px 0;
   font-size: 18px;
   line-height: 1.15;
   text-align: center;
@@ -2248,7 +2324,7 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 20px;
+  gap: 14px;
   width: 100%;
 }
 
@@ -2257,7 +2333,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
   padding: 0;
   border: 0;

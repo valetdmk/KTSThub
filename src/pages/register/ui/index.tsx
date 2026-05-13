@@ -11,6 +11,8 @@ import logo from "../../../shared/assets/logo.png"
 import renderstep3Girl from "../../../shared/assets/renderstep3Girl.png"
 import UnionTop from "../../../shared/assets/UnionTop.png"
 import UnionBottom from "../../../shared/assets/UnionBottom.png"
+import authStar from "../../../shared/assets/authStar.png"
+import badge from "../../../shared/assets/badge.png"
 import Axolotl from "../../../shared/assets/Axolotl.png"
 import BlackCat from "../../../shared/assets/BlackCat.png"
 import RainbowPic from "../../../shared/assets/RainbowPic.png"
@@ -56,6 +58,8 @@ const jobOptions = [
   { id: "GAME", label: "Gamedev" },
 ];
 
+type JobOptionId = (typeof jobOptions)[number]["id"];
+
 const levelOptions = [
   { id: "BEGINNER", label: "Начинающий" },
   { id: "INTERMEDIATE", label: "Средний" },
@@ -76,12 +80,43 @@ const avatarOptions = [
 ];
 
 const skillRatingOptions = [
-  { id: "excellent", label: "отлично", color: "#93F890" },
-  { id: "good", label: "хорошо", color: "#ABFF92" },
-  { id: "average", label: "средне", color: "#FFE47A" },
-  { id: "poor", label: "плохо", color: "#FFC073" },
-  { id: "unknown", label: "не знаю", color: "#FF5353" },
+  { id: "advanced", label: "Продвинутый уровень", color: "#93F890" },
+  { id: "medium", label: "Средний уровень", color: "#FFE47A" },
+  { id: "basic", label: "Базовый уровень", color: "#FD864B" },
 ];
+
+const sharedProgrammingLanguages = [
+  "Java", "Python", "JavaScript", "TypeScript", "C#", "C++", "Go", "PHP", "Kotlin", "Swift", "GDScript", "Bash"
+];
+
+const sharedDatabaseSkills = [
+  "PostgreSQL", "MySQL", "MongoDB", "Redis", "SQLite", "ClickHouse"
+];
+
+const sharedToolSkills = [
+  "Git", "Figma", "Postman", "VS Code", "Linux terminal"
+];
+
+const hardSkillsByJob: Record<JobOptionId, string[]> = {
+  FRONT: [
+    "HTML", "CSS", "SCSS/SASS", "React", "Vue.js", "Next.js", "Svelte", "Tailwind CSS", "Webpack", "Vite"
+  ],
+  BACK: [
+    "Spring Boot", "Django", "FastAPI", "Express.js", "Node.js", "REST API", "GraphQL", "Kafka", "gRPC",
+    "Docker", "Kubernetes", "Nginx", "Apache", "CI/CD", "GitLab", "GitHub Actions", "Ansible",
+    "Prometheus", "Grafana", "Linux", "Windows Server", "VPN", "DNS", "TCP/IP"
+  ],
+  DESIGNER: [
+    "Adobe Photoshop", "Adobe Illustrator", "Blender", "Tilda", "Motion-дизайн", "UI-дизайн", "UX-дизайн",
+    "Прототипирование", "Дизайн-системы", "Типографика", "Брендинг"
+  ],
+  PROJECT: [
+    "Agile", "Scrum", "Kanban", "Waterfall", "OKR", "Jira", "Notion", "Redmine", "Confluence", "Miro", "Excel/Google Sheets"
+  ],
+  GAME: [
+    "Unity", "Unreal Engine", "Godot", "Шейдеры", "Физика в играх", "Левел-дизайн", "3D-моделирование", "Анимация", "Геймдизайн"
+  ]
+};
 
 type SkillModalType = "hardSkills" | "softSkills";
 type SkillRatingId = (typeof skillRatingOptions)[number]["id"];
@@ -168,14 +203,20 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
   const avatarPickerRef = useRef<HTMLDivElement | null>(null);
   const birthdayCalendarRef = useRef<HTMLDivElement | null>(null);
 
-  const recommendedHardSkills = [
-    "JavaScript", "TypeScript", "React", "Node.js", "Python", "Java", "C++", 
-    "Unity", "Unreal Engine", "Figma", "SQL", "Git"
-  ];
+  const recommendedHardSkills = Array.from(
+    new Set([
+      ...sharedProgrammingLanguages,
+      ...sharedDatabaseSkills,
+      ...sharedToolSkills,
+      ...(step2Data.job ? hardSkillsByJob[step2Data.job as JobOptionId] ?? [] : [])
+    ])
+  );
 
   const recommendedSoftSkills = [
-    "Коммуникабельность", "Работа в команде", "Тайм-менеджмент", 
-    "Креативность", "Адаптивность", "Лидерство"
+    "Работа в команде", "Коммуникация", "Управление конфликтами", "Наставничество", "Помощь коллегам", "Лидерство",
+    "Тайм-менеджмент", "Работа в условиях дедлайна", "Расстановка приоритетов", "Ответственность", "Самостоятельность",
+    "Критическое мышление", "Аналитическое мышление", "Системное мышление", "Решение проблем", "Креативность",
+    "Обучаемость", "Адаптивность", "Инициативность", "Стрессоустойчивость", "Публичные выступления", "Работа с обратной связью"
   ];
 
   const handleSelect = (roleId: string) => {
@@ -1386,7 +1427,9 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
           {renderProgressIndicator()}
           <div className={`register-form-shell ${skillsModal ? 'skills-open' : ''}`}>
           <div className="register-form-container">
-            <div className="logo-block"></div>
+            <div className="logo-block">
+              <img className="register-badge" src={badge} alt="" />
+            </div>
             {step === 3 ? renderStep3() : step === 2 ? renderStep2() : (
               <>
                 <img className="logoLogin" src={logo} alt="Логотип KTSThub" />
@@ -1400,6 +1443,9 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
         </>
       ) : (
         <>
+          <img className="register-auth-star register-auth-star-top-left" src={authStar} alt="" />
+          <img className="register-auth-star register-auth-star-bottom-left" src={authStar} alt="" />
+          <img className="register-auth-star register-auth-star-top-right" src={authStar} alt="" />
           <h1 className="register-title">Выберите вашу роль</h1>
           <div className="roles-grid">
             {roles.map((role) => (
