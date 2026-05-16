@@ -236,6 +236,7 @@ export const AdminPage = () => {
                   ))}
                 </section>
               </article>
+
               <article className="admin-panel admin-panel-participants">
                 <div className="admin-panel-topbar">
                   <div className="admin-panel-pill">
@@ -272,6 +273,7 @@ export const AdminPage = () => {
                   ))}
                 </section>
               </article>
+
               <article className="admin-panel admin-panel-teams">
                 <div className="admin-panel-topbar">
                   <div className="admin-panel-pill">
@@ -332,7 +334,68 @@ export const AdminPage = () => {
                   ×
                 </button>
                 <div className="admin-modal-body">
-                  <h2 id="admin-create-event-modal-title">Создание мероприятия</h2>
+                  <div className="admin-modal-title-pill">
+                    <h2 id="admin-create-event-modal-title">Создать мероприятие</h2>
+                  </div>
+                  <div className="admin-modal-layout">
+                    <div className="admin-modal-fields">
+                      <div className="admin-modal-field-group">
+                        <span className="admin-modal-field-label">Название мероприятия</span>
+                        <label className="admin-modal-input-shell admin-modal-field-card-title">
+                          <input
+                            type="text"
+                            className="admin-modal-input"
+                            placeholder="Введите название"
+                          />
+                        </label>
+                      </div>
+                      <div className="admin-modal-field-group">
+                        <span className="admin-modal-field-label">Описание мероприятия</span>
+                        <label className="admin-modal-input-shell admin-modal-field-card-description">
+                          <textarea
+                            className="admin-modal-textarea"
+                            placeholder="Введите описание"
+                          />
+                        </label>
+                      </div>
+                        <div className="admin-modal-bottom-row">
+                          <div className="admin-modal-field-group">
+                            <span className="admin-modal-field-label">Количество участников</span>
+                            <label className="admin-modal-input-shell admin-modal-field-card-meta">
+                              <input
+                              type="number"
+                              min="1"
+                              className="admin-modal-input"
+                              placeholder="Например, 20"
+                            />
+                          </label>
+                        </div>
+                        <div className="admin-modal-field-group">
+                          <span className="admin-modal-field-label">Дата и время</span>
+                          <label className="admin-modal-input-shell admin-modal-field-card-meta">
+                            <input
+                              type="datetime-local"
+                              className="admin-modal-input admin-modal-input-datetime"
+                            />
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="admin-modal-poster-group">
+                      <span className="admin-modal-field-label">Афиша для карточки мероприятия</span>
+                      <div className="admin-modal-poster-card">
+                        <div className="admin-modal-poster-inner">
+                          <span className="admin-modal-poster-plus" aria-hidden="true">+</span>
+                          <span className="admin-modal-poster-text">Фотография для мероприятия</span>
+                        </div>
+                      </div>
+                      <div className="admin-modal-field-group">
+                        <span className="admin-modal-field-label">Тэги</span>
+                        <div className="admin-modal-field-card admin-modal-field-card-tags" />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </section>
             </div>
