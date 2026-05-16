@@ -1,6 +1,16 @@
+.admin-dashboard-stage {
+  width: 100%;
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
 .admin-dashboard-card {
   width: 100%;
-  min-height: 760px;
+  min-height: 0;
+  height: 100%;
+  flex: 1;
   padding: 28px;
   border-radius: 60px;
   background: #fff;
@@ -10,10 +20,10 @@
 
 .admin-dashboard-grid {
   height: 100%;
-  min-height: 704px;
+  min-height: 0;
   display: grid;
   grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.9fr);
-  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-rows: repeat(2, minmax(0, 1fr));
   gap: 10px;
 }
 
@@ -242,8 +252,9 @@
   gap: 14px;
   box-sizing: border-box;
   padding-right: 8px;
-  overflow-y: auto;
+  overflow-y: scroll;
   overflow-x: hidden;
+  scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color: #000 #fff;
 }
@@ -360,9 +371,9 @@
   flex-direction: column;
   gap: 14px;
   padding-right: 8px;
-  overflow-y: auto;
+  overflow-y: scroll;
   overflow-x: hidden;
-
+  scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color: #000 #fff;
 }
@@ -391,8 +402,9 @@
   flex-direction: column;
   gap: 14px;
   padding-right: 8px;
-  overflow-y: auto;
+  overflow-y: scroll;
   overflow-x: hidden;
+  scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color: #000 #fff;
 }
@@ -566,21 +578,18 @@
 }
 
 .admin-modal-overlay {
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: 50;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 28px;
-  background: rgba(0, 0, 0, 0.52);
-  backdrop-filter: blur(10px);
+  padding: 0;
+  background: transparent;
   box-sizing: border-box;
 }
 
 .admin-modal-card {
-  width: min(1280px, 100%);
-  min-height: min(760px, calc(100vh - 56px));
+  width: 100%;
+  min-height: 0;
+  height: 100%;
   position: relative;
   padding: 28px;
   border-radius: 60px;
@@ -609,6 +618,8 @@
 .admin-modal-body {
   width: 100%;
   min-height: 100%;
+  height: 100%;
+  padding: 36px;
   border-radius: 36px;
   background: rgba(0, 0, 0, 0.03);
   box-sizing: border-box;
@@ -666,6 +677,8 @@
 @media (max-width: 980px) {
   .admin-dashboard-card {
     min-height: auto;
+    height: auto;
+    flex: none;
     padding: 22px;
   }
 
@@ -717,7 +730,7 @@
   }
 
   .admin-modal-card {
-    min-height: min(680px, calc(100vh - 56px));
+    min-height: 636px;
     padding: 22px;
   }
 }
@@ -848,14 +861,15 @@
     min-height: 150px;
   }
 
-  .admin-modal-overlay {
-    padding: 16px;
-  }
-
   .admin-modal-card {
-    min-height: calc(100vh - 32px);
+    min-height: 100%;
     padding: 18px;
     border-radius: 36px;
+  }
+
+  .admin-modal-body {
+    min-height: 100%;
+    padding: 24px;
   }
 
   .admin-modal-close {
