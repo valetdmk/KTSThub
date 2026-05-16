@@ -18,6 +18,36 @@ import "./index.scss";
 type InfoItem = {
   label: string;
   value: string;
+  href?: string;
+};
+
+const roleLabels: Record<string, string> = {
+  USER: "Участник",
+  STUDENT: "Студент",
+  BUSINESS_PARTNER: "Бизнес-партнер",
+  JUDGE: "Судья",
+  ORGANIZER: "Организатор",
+};
+
+const statusLabels: Record<string, string> = {
+  ACTIVE: "Активный",
+  INACTIVE: "Неактивный",
+  BLOCKED: "Заблокирован",
+  PENDING: "На рассмотрении",
+};
+
+const jobLabels: Record<string, string> = {
+  FRONT: "Frontend-разработчик",
+  BACK: "Backend-разработчик",
+  DESIGNER: "UX/UI-разработчик",
+  PROJECT: "Project Manager",
+  GAME: "Gamedev",
+};
+
+const levelLabels: Record<string, string> = {
+  BEGINNER: "Начинающий",
+  INTERMEDIATE: "Средний",
+  ADVANCED: "Продвинутый",
 };
 
 const projectTags = ["Hackathon", "Frontend", "Design System", "MVP", "Команда", "Портфолио"];
@@ -29,6 +59,16 @@ function formatDate(date: string) {
   if (Number.isNaN(parsedDate.getTime())) return date;
 
   return new Intl.DateTimeFormat("ru-RU").format(parsedDate);
+}
+
+function formatMappedValue(value: string | undefined, labels: Record<string, string>, fallback: string) {
+  const normalizedValue = value?.trim();
+
+  if (!normalizedValue) {
+    return fallback;
+  }
+
+  return labels[normalizedValue] ?? normalizedValue;
 }
 
 export const ProfilePage = () => {
@@ -45,11 +85,12 @@ export const ProfilePage = () => {
     { label: "Возраст", value: user.age?.trim() || "Не указан" },
     { label: "Дата рождения", value: formatDate(user.birthday ?? "") },
     { label: "Телефон", value: user.phone?.trim() || "Не указан" },
-    { label: "Telegram", value: user.social?.trim() || "Не указан" },
-    { label: "Роль", value: user.role?.trim() || "Не указана" },
-    { label: "Статус", value: user.status?.trim() || "Не указан" },
-    { label: "Направление", value: user.job?.trim() || "Не указано" },
-    { label: "Уровень", value: user.level?.trim() || "Не указан" },
+    { label: "Telegram", value: user.social?.trim() || "Не указан", href: user.social?.trim() || undefined },
+    { label: "GitHub", value: user.github?.trim() || "Не указан", href: user.github?.trim() || undefined },
+    { label: "Роль", value: formatMappedValue(user.role, roleLabels, "Не указана") },
+    { label: "Статус", value: formatMappedValue(user.status, statusLabels, "Не указан") },
+    { label: "Направление", value: formatMappedValue(user.job, jobLabels, "Не указано") },
+    { label: "Уровень", value: formatMappedValue(user.level, levelLabels, "Не указан") },
   ];
 
   useEffect(() => {
@@ -145,7 +186,13 @@ export const ProfilePage = () => {
                 {infoItems.map((item) => (
                   <div key={item.label} className="profile-detail-row">
                     <span>{item.label}:</span>
-                    <strong>{item.value}</strong>
+                    {item.href && item.value !== "Не указан" ? (
+                      <a className="profile-detail-link" href={item.href} target="_blank" rel="noreferrer">
+                        {item.value}
+                      </a>
+                    ) : (
+                      <strong>{item.value}</strong>
+                    )}
                   </div>
                 ))}
               </div>

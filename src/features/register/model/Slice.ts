@@ -7,6 +7,7 @@ const initialState: RegisterState = {
     error: null,
     token: null,
     userId: null,
+    gender: null,
 };
 
 export const {name, reducer, actions} = createSlice({
@@ -17,9 +18,9 @@ export const {name, reducer, actions} = createSlice({
             state.step = action.payload;
         },
         registerRequest(state, action: PayloadAction<RegisterPayload>) {
-            void action;
             state.loading = true;
             state.error = null;
+            state.gender = action.payload.gender;
         },
         registerSuccess(state, action: PayloadAction<{ token: string; userId: string }>) {
             state.loading = false;
@@ -52,6 +53,7 @@ export const {name, reducer, actions} = createSlice({
             state.error = null;
             state.token = null;
             state.userId = null;
+            state.gender = null;
         },
     },
 });

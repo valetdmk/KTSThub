@@ -9,7 +9,7 @@ export interface SignupPayload {
     birthday: string;
     email: string;
     password: string;
-    gender?: "MALE" | "FEMALE" | "OTHER";
+    gender: "MALE" | "FEMALE";
 }
 
 export interface SigninPayload {
@@ -29,7 +29,7 @@ export const authApi = {
     signup: async (data: SignupPayload): Promise<ResponseMessage> => {
         const response = await api.post<ResponseMessage>(apiPaths.auth.signup, {
             ...data,
-            gender: data.gender ?? "OTHER",
+            lastName: data.lastname,
         });
         return response.data;
     },

@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import { AboutUs } from "../../pages/aboutus/ui";
 import { Achievements } from "../../pages/achievements/ui";
+import { AdminCreateEventPage } from "../../pages/admin/ui/create-event";
 import { AdminPage } from "../../pages/admin/ui";
 import { AuthPage } from "../../pages/auth/ui";
 import { Developers } from "../../pages/developers/ui";
@@ -31,6 +32,10 @@ export const router = createBrowserRouter([
   {
     path: "/admin",
     element: <ProtectedRoute><AdminPage /></ProtectedRoute>,
+  },
+  {
+    path: "/admin/create-event",
+    element: <ProtectedRoute><AdminCreateEventPage /></ProtectedRoute>,
   },
   {
     path: "/schedule",

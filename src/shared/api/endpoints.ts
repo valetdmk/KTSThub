@@ -17,6 +17,10 @@ function buildApiBaseUrl() {
     const version = normalizePathSegment(import.meta.env.VITE_API_VERSION ?? "");
     const segments = [basePath, version].filter(Boolean);
 
+    if (!origin) {
+        return segments.length > 0 ? `/${segments.join("/")}` : "";
+    }
+
     return segments.length > 0 ? `${origin}/${segments.join("/")}` : origin;
 }
 
@@ -38,7 +42,7 @@ export const apiPaths = {
     },
     events: {
         collection: "/schedule",
-        byId: (id: number) => `/events/${id}`,
+        byId: (id: number) => `/schedule/${id}`,
         scheduleById: (id: number) => `/schedule/${id}`,
     },
 } as const;

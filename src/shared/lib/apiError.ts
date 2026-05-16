@@ -46,9 +46,14 @@ export function getApiErrorMessage(error: unknown, fallbackMessage: string): str
     if (responseData && typeof responseData === "object") {
         const message = "message" in responseData ? responseData.message : null;
         const errorField = "error" in responseData ? responseData.error : null;
+        const detailedMessage = "detailedMessage" in responseData ? responseData.detailedMessage : null;
 
         if (isSafeUserMessage(message)) {
             return message;
+        }
+
+        if (isSafeUserMessage(detailedMessage)) {
+            return detailedMessage;
         }
 
         if (isSafeUserMessage(errorField)) {

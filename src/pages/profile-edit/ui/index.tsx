@@ -15,13 +15,52 @@ import { updateUserProfile, type UpdateUserPayload } from "../../../shared/api/u
 import { USE_MOCK_BACKEND } from "../../../shared/config/devFlags";
 import { mapBackendUserToPlatformUser } from "../../../shared/lib/userProfile";
 import logo from "../../../shared/assets/logo.png";
+import Axolotl from "../../../shared/assets/Axolotl.png";
+import BlackCat from "../../../shared/assets/BlackCat.png";
+import RainbowPic from "../../../shared/assets/RainbowPic.png";
+import Boy from "../../../shared/assets/Boy.png";
+import Girl from "../../../shared/assets/Girl.png";
+import panda from "../../../shared/assets/panda.png";
+import unicorn from "../../../shared/assets/unicorn.png";
+import brain from "../../../shared/assets/brain.png";
+import joystick from "../../../shared/assets/joystick.png";
+import game from "../../../shared/assets/game.png";
 import type { PlatformIconName } from "../../../shared/ui/PlatformIcon";
 import "../../profile/ui/index.scss";
 
 type IconName = PlatformIconName;
+type ProfileFieldName = "name" | "lastName" | "username" | "birthday" | "email" | "phone" | "telegram" | "github" | "gender" | "job" | "level";
 
 const jobOptions = ["FRONT", "BACK", "DESIGNER", "PROJECT", "GAME"];
 const levelOptions = ["BEGINNER", "INTERMEDIATE", "ADVANCED"];
+const genderLabels: Record<"MALE" | "FEMALE", string> = {
+  MALE: "Мужской",
+  FEMALE: "Женский",
+};
+const jobLabels: Record<(typeof jobOptions)[number], string> = {
+  FRONT: "Frontend-разработчик",
+  BACK: "Backend-разработчик",
+  DESIGNER: "UX/UI-разработчик",
+  PROJECT: "Project Manager",
+  GAME: "Gamedev",
+};
+const levelLabels: Record<(typeof levelOptions)[number], string> = {
+  BEGINNER: "Начинающий",
+  INTERMEDIATE: "Средний",
+  ADVANCED: "Продвинутый",
+};
+const avatarOptions = [
+  { id: "axolotl", label: "Axolotl", src: Axolotl },
+  { id: "cat", label: "Black Cat", src: BlackCat },
+  { id: "rainbow", label: "Rainbow", src: RainbowPic },
+  { id: "boy", label: "Boy", src: Boy },
+  { id: "girl", label: "Girl", src: Girl },
+  { id: "panda", label: "Panda", src: panda },
+  { id: "unicorn", label: "Unicorn", src: unicorn },
+  { id: "brain", label: "Brain", src: brain },
+  { id: "joystick", label: "Joystick", src: joystick },
+  { id: "game", label: "Game", src: game },
+];
 
 const iconPaths: Record<IconName, ReactNode> = {
   user: <><path d="M20 21a8 8 0 0 0-16 0" /><circle cx="12" cy="7" r="4" /></>,
@@ -54,6 +93,46 @@ function Icon({ name }: { name: IconName }) {
   );
 }
 
+function normalizePhoneValue(value: string) {
+  const digitsOnly = value.replace(/\D/g, "");
+
+  if (!digitsOnly) {
+    return "";
+  }
+
+  if (digitsOnly.length === 11 && digitsOnly.startsWith("8")) {
+    return `+7${digitsOnly.slice(1)}`;
+  }
+
+  if (digitsOnly.length === 11 && digitsOnly.startsWith("7")) {
+    return `+${digitsOnly}`;
+  }
+
+  if (digitsOnly.length === 10 && digitsOnly.startsWith("9")) {
+    return `+7${digitsOnly}`;
+  }
+
+  return value.trim();
+}
+
+function normalizeTelegramValue(value: string) {
+  const trimmedValue = value.trim();
+
+  if (!trimmedValue) {
+    return "";
+  }
+
+  if (trimmedValue.startsWith("@")) {
+    return `https://t.me/${trimmedValue.slice(1)}`;
+  }
+
+  return trimmedValue.replace(/\/$/, "");
+}
+
+function normalizeGithubValue(value: string) {
+  return value.trim().replace(/\/$/, "");
+}
+
 function validateProfileForm(formData: {
   name: string;
   lastName: string;
@@ -62,6 +141,8 @@ function validateProfileForm(formData: {
   email: string;
   phone: string;
   telegram: string;
+  github: string;
+  gender: string;
 }) {
   if (formData.name.trim().length < 2) {
     return "Имя должно содержать минимум 2 символа.";
@@ -83,18 +164,32 @@ function validateProfileForm(formData: {
     return "Укажи дату рождения.";
   }
 
+  if (formData.gender !== "MALE" && formData.gender !== "FEMALE") {
+    return "Укажи пол.";
+  }
+
   const birthdayDate = new Date(formData.birthday);
   const today = new Date();
   if (Number.isNaN(birthdayDate.getTime()) || birthdayDate >= today) {
     return "Дата рождения должна быть в прошлом.";
   }
 
-  if (formData.phone.trim() && !/^\+79\d{9}$/.test(formData.phone.trim())) {
+  const normalizedPhone = normalizePhoneValue(formData.phone);
+
+  if (normalizedPhone && !/^\+79\d{9}$/.test(normalizedPhone)) {
     return "Телефон должен быть в формате +79xxxxxxxxx.";
   }
 
-  if (formData.telegram.trim() && !/^https:\/\/t\.me\/[a-zA-Z0-9_]{5,32}$/.test(formData.telegram.trim())) {
+  const normalizedTelegram = normalizeTelegramValue(formData.telegram);
+
+  if (normalizedTelegram && !/^https:\/\/t\.me\/[a-zA-Z0-9_]{5,32}$/.test(normalizedTelegram)) {
     return "Telegram должен быть в формате https://t.me/username.";
+  }
+
+  const normalizedGithub = normalizeGithubValue(formData.github);
+
+  if (normalizedGithub && !/^https:\/\/github\.com\/[a-zA-Z0-9-_]+$/.test(normalizedGithub)) {
+    return "GitHub должен быть в формате https://github.com/username.";
   }
 
   return null;
@@ -109,8 +204,25 @@ function getErrorMessage(error: unknown) {
     }
 
     if (responseData && typeof responseData === "object") {
+      const detailedMessage = "detailedMessage" in responseData ? responseData.detailedMessage : null;
       const message = "message" in responseData ? responseData.message : null;
       const errorField = "error" in responseData ? responseData.error : null;
+
+      if (typeof detailedMessage === "string" && detailedMessage.trim()) {
+        if (detailedMessage.includes("'phone'") || detailedMessage.includes("Неправильный формат номера")) {
+          return "Проверь номер телефона. Нужен формат +79123456789.";
+        }
+
+        if (detailedMessage.includes("'telegram'")) {
+          return "Проверь Telegram. Введи ссылку в формате https://t.me/username.";
+        }
+
+        if (detailedMessage.includes("'github'") || detailedMessage.includes("GitHub")) {
+          return "Проверь ссылку на GitHub. Нужен формат https://github.com/username.";
+        }
+
+        return detailedMessage;
+      }
 
       if (typeof message === "string" && message.trim()) {
         return message;
@@ -137,6 +249,129 @@ function getErrorMessage(error: unknown) {
   return "Не удалось сохранить профиль. Проверь подключение к backend и данные формы.";
 }
 
+function collectProfileFormErrors(formData: {
+  name: string;
+  lastName: string;
+  username: string;
+  birthday: string;
+  email: string;
+  phone: string;
+  telegram: string;
+  github: string;
+  gender: string;
+}) {
+  const errors: string[] = [];
+
+  if (formData.name.trim().length < 2) {
+    errors.push("Имя должно содержать минимум 2 символа.");
+  }
+
+  if (formData.lastName.trim().length < 2) {
+    errors.push("Фамилия должна содержать минимум 2 символа.");
+  }
+
+  if (!formData.username.trim()) {
+    errors.push("Username не должен быть пустым.");
+  }
+
+  if (!formData.email.trim()) {
+    errors.push("Email не должен быть пустым.");
+  }
+
+  if (!formData.birthday) {
+    errors.push("Укажи дату рождения.");
+  } else {
+    const birthdayDate = new Date(formData.birthday);
+    const today = new Date();
+
+    if (Number.isNaN(birthdayDate.getTime()) || birthdayDate >= today) {
+      errors.push("Дата рождения должна быть в прошлом.");
+    }
+  }
+
+  if (formData.gender !== "MALE" && formData.gender !== "FEMALE") {
+    errors.push("Укажи пол.");
+  }
+
+  const normalizedPhone = normalizePhoneValue(formData.phone);
+  if (normalizedPhone && !/^\+79\d{9}$/.test(normalizedPhone)) {
+    errors.push("Телефон должен быть в формате +79123456789.");
+  }
+
+  const normalizedTelegram = normalizeTelegramValue(formData.telegram);
+  if (normalizedTelegram && !/^https:\/\/t\.me\/[a-zA-Z0-9_]{5,32}$/.test(normalizedTelegram)) {
+    errors.push("Telegram должен быть в формате https://t.me/username.");
+  }
+
+  const normalizedGithub = normalizeGithubValue(formData.github);
+  if (normalizedGithub && !/^https:\/\/github\.com\/[a-zA-Z0-9-_]+$/.test(normalizedGithub)) {
+    errors.push("GitHub должен быть в формате https://github.com/username.");
+  }
+
+  return errors;
+}
+
+void validateProfileForm;
+
+function getProfileFieldError(
+  fieldName: ProfileFieldName,
+  formData: {
+    name: string;
+    lastName: string;
+    username: string;
+    birthday: string;
+    email: string;
+    phone: string;
+    telegram: string;
+    github: string;
+    gender: string;
+    job: string;
+    level: string;
+  },
+) {
+  switch (fieldName) {
+    case "name":
+      return formData.name.trim().length < 2 ? "Имя должно содержать минимум 2 символа." : null;
+    case "lastName":
+      return formData.lastName.trim().length < 2 ? "Фамилия должна содержать минимум 2 символа." : null;
+    case "username":
+      return !formData.username.trim() ? "Username не должен быть пустым." : null;
+    case "email":
+      return !formData.email.trim() ? "Email не должен быть пустым." : null;
+    case "birthday":
+      if (!formData.birthday) {
+        return "Укажи дату рождения.";
+      }
+
+      const birthdayDate = new Date(formData.birthday);
+      return Number.isNaN(birthdayDate.getTime()) || birthdayDate >= new Date()
+        ? "Дата рождения должна быть в прошлом."
+        : null;
+    case "gender":
+      return formData.gender !== "MALE" && formData.gender !== "FEMALE" ? "Укажи пол." : null;
+    case "phone": {
+      const normalizedPhone = normalizePhoneValue(formData.phone);
+      return normalizedPhone && !/^\+79\d{9}$/.test(normalizedPhone)
+        ? "Телефон должен быть в формате +79123456789."
+        : null;
+    }
+    case "telegram": {
+      const normalizedTelegram = normalizeTelegramValue(formData.telegram);
+      return normalizedTelegram && !/^https:\/\/t\.me\/[a-zA-Z0-9_]{5,32}$/.test(normalizedTelegram)
+        ? "Telegram должен быть в формате https://t.me/username."
+        : null;
+    }
+    case "github": {
+      const normalizedGithub = normalizeGithubValue(formData.github);
+      return normalizedGithub && !/^https:\/\/github\.com\/[a-zA-Z0-9-_]+$/.test(normalizedGithub)
+        ? "GitHub должен быть в формате https://github.com/username."
+        : null;
+    }
+    default:
+      return null;
+  }
+}
+
 export function EditProfilePage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -146,8 +381,12 @@ export function EditProfilePage() {
   const activeBottomItemId = useSelector(navigationSelectors.selectActiveBottomItemId);
   const [isAvatarBroken, setIsAvatarBroken] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [saveErrors, setSaveErrors] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
   const [formHydrated, setFormHydrated] = useState(false);
+  const [isAvatarPickerOpen, setIsAvatarPickerOpen] = useState(false);
+  const [selectedAvatarSrc, setSelectedAvatarSrc] = useState("");
+  const [touchedFields, setTouchedFields] = useState<Partial<Record<ProfileFieldName, boolean>>>({});
   const [formData, setFormData] = useState({
     name: "",
     lastName: "",
@@ -156,6 +395,8 @@ export function EditProfilePage() {
     email: "",
     phone: "",
     telegram: "",
+    github: "",
+    gender: "",
     job: "",
     level: "",
   });
@@ -183,52 +424,78 @@ export function EditProfilePage() {
       email: backendUser?.email ?? currentUser.email ?? "",
       phone: backendUser?.phone ?? currentUser.phone ?? "",
       telegram: backendUser?.telegram ?? currentUser.social ?? "",
+      github: backendUser?.github ?? currentUser.github ?? "",
+      gender: backendUser?.gender === "MALE" || backendUser?.gender === "FEMALE" ? backendUser.gender : "",
       job: backendUser?.job ?? currentUser.job ?? "",
       level: backendUser?.level ?? currentUser.level ?? "",
     });
+    setSelectedAvatarSrc(currentUser.avatar ?? "");
     setFormHydrated(true);
   }, [backendUser, currentUser, formHydrated, token]);
 
-  const avatarSrc = !isAvatarBroken && currentUser.avatar ? currentUser.avatar : logo;
+  const avatarSrc = !isAvatarBroken && (selectedAvatarSrc || currentUser.avatar) ? (selectedAvatarSrc || currentUser.avatar) : logo;
   const activeTopItem = topMenuItems[0];
+  const liveValidationErrors = (Object.entries(touchedFields) as Array<[ProfileFieldName, boolean | undefined]>)
+    .filter(([, touched]) => Boolean(touched))
+    .map(([fieldName]) => getProfileFieldError(fieldName, formData))
+    .filter((errorMessage) => errorMessage !== null) as string[];
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
     setFormData((current) => ({ ...current, [name]: value }));
+    setTouchedFields((current) => ({ ...current, [name]: true }));
+    setSaveError(null);
+    setSaveErrors([]);
   };
 
   const handleSave = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setTouchedFields({
+      name: true,
+      lastName: true,
+      username: true,
+      birthday: true,
+      email: true,
+      phone: true,
+      telegram: true,
+      github: true,
+      gender: true,
+    });
 
     if (!editableUserId) {
       setSaveError("Не удалось определить пользователя для сохранения профиля.");
+      setSaveErrors(["Не удалось определить пользователя для сохранения профиля."]);
       return;
     }
 
-    const validationError = validateProfileForm(formData);
-    if (validationError) {
-      setSaveError(validationError);
+    const validationErrors = collectProfileFormErrors(formData);
+    if (validationErrors.length > 0) {
+      setSaveError(validationErrors[0]);
+      setSaveErrors(validationErrors);
       return;
     }
 
     setSaving(true);
     setSaveError(null);
+    setSaveErrors([]);
 
     try {
+      const normalizedPhone = normalizePhoneValue(formData.phone);
+      const normalizedTelegram = normalizeTelegramValue(formData.telegram);
+      const normalizedGithub = normalizeGithubValue(formData.github);
+      const nextAvatar = selectedAvatarSrc || currentUser.avatar || "";
       const payload: UpdateUserPayload = {
         name: formData.name,
         lastName: formData.lastName,
         username: formData.username,
         birthday: formData.birthday,
-        avatar: currentUser.avatar || "",
+        avatar: nextAvatar,
         email: formData.email,
         bio: currentUser.description || "",
-        gender: currentUser.gender === "MALE" || currentUser.gender === "FEMALE" || currentUser.gender === "OTHER"
-          ? currentUser.gender
-          : "OTHER",
-        phone: formData.phone.trim() || null,
-        telegram: formData.telegram.trim() || null,
-        github: null,
+        gender: formData.gender as "MALE" | "FEMALE",
+        phone: normalizedPhone,
+        telegram: normalizedTelegram,
+        github: normalizedGithub || null,
         job: formData.job || "FRONT",
         level: formData.level || "BEGINNER",
       };
@@ -240,9 +507,11 @@ export function EditProfilePage() {
           lastName: formData.lastName,
           username: formData.username,
           birthday: formData.birthday,
+          avatar: nextAvatar,
           email: formData.email,
-          phone: formData.phone.trim(),
-          social: formData.telegram.trim(),
+          phone: normalizedPhone,
+          social: normalizedTelegram,
+          github: normalizedGithub,
           job: formData.job,
           level: formData.level,
         };
@@ -254,13 +523,13 @@ export function EditProfilePage() {
           lastName: formData.lastName,
           username: formData.username,
           birthday: formData.birthday,
-          avatar: currentUser.avatar || "",
+          avatar: nextAvatar,
           email: formData.email,
           bio: currentUser.description || "",
-          gender: currentUser.gender || "OTHER",
-          phone: formData.phone.trim() || null,
-          telegram: formData.telegram.trim() || null,
-          github: null,
+          gender: formData.gender as "MALE" | "FEMALE",
+          phone: normalizedPhone,
+          telegram: normalizedTelegram,
+          github: normalizedGithub || null,
           role: backendUser?.role,
           status: backendUser?.status,
           job: formData.job || "FRONT",
@@ -275,7 +544,9 @@ export function EditProfilePage() {
       dispatch(authActions.fetchProfileSuccess(updatedUser));
       navigate("/profile");
     } catch (error) {
-      setSaveError(getErrorMessage(error));
+      const errorMessage = getErrorMessage(error);
+      setSaveError(errorMessage);
+      setSaveErrors([errorMessage]);
     } finally {
       setSaving(false);
     }
@@ -347,7 +618,35 @@ export function EditProfilePage() {
         <section className="profile-dashboard">
           <div className="profile-edit-layout">
             <article className="profile-panel profile-panel-user">
-              <img className="profile-panel-avatar" src={avatarSrc} alt={`${currentUser.lastName} ${currentUser.firstName}`} onError={() => setIsAvatarBroken(true)} />
+              <button
+                type="button"
+                className="profile-avatar-trigger"
+                onClick={() => setIsAvatarPickerOpen((current) => !current)}
+                aria-expanded={isAvatarPickerOpen}
+                aria-label="Изменить аватар"
+              >
+                <img className="profile-panel-avatar" src={avatarSrc} alt={`${currentUser.lastName} ${currentUser.firstName}`} onError={() => setIsAvatarBroken(true)} />
+                <span className="profile-avatar-hint">Нажми, чтобы сменить аватар</span>
+              </button>
+              {isAvatarPickerOpen ? (
+                <div className="profile-avatar-picker" role="list" aria-label="Выбор аватара">
+                  {avatarOptions.map((avatar) => (
+                    <button
+                      key={avatar.id}
+                      type="button"
+                      className={`profile-avatar-option ${selectedAvatarSrc === avatar.src ? "active" : ""}`}
+                      onClick={() => {
+                        setIsAvatarBroken(false);
+                        setSelectedAvatarSrc(avatar.src);
+                        setIsAvatarPickerOpen(false);
+                      }}
+                      aria-label={avatar.label}
+                    >
+                      <img src={avatar.src} alt={avatar.label} />
+                    </button>
+                  ))}
+                </div>
+              ) : null}
               <div className="profile-panel-user-text">
                 <h2>Редактирование профиля</h2>
                 <p>Измени данные и сохрани их прямо в backend.</p>
@@ -357,7 +656,13 @@ export function EditProfilePage() {
             <article className="profile-panel profile-panel-form">
               <h2>Данные пользователя</h2>
               <form className="profile-edit-form" onSubmit={handleSave}>
-                {saveError ? <div className="profile-form-message error">{saveError}</div> : null}
+                {liveValidationErrors.length > 0 || saveErrors.length > 0 || saveError ? (
+                  <div className="profile-form-message error">
+                    {(liveValidationErrors.length > 0 ? liveValidationErrors : saveErrors).map((errorMessage) => (
+                      <div key={errorMessage}>{errorMessage}</div>
+                    ))}
+                  </div>
+                ) : null}
 
                 <div className="profile-form-grid">
                   <label className="profile-form-field">
@@ -389,17 +694,29 @@ export function EditProfilePage() {
                     <input name="telegram" value={formData.telegram} onChange={handleInputChange} placeholder="https://t.me/username" />
                   </label>
                   <label className="profile-form-field">
+                    <span>GitHub</span>
+                    <input name="github" value={formData.github} onChange={handleInputChange} placeholder="https://github.com/username" />
+                  </label>
+                  <label className="profile-form-field">
+                    <span>Пол</span>
+                    <select name="gender" value={formData.gender} onChange={handleInputChange} required>
+                      <option value="">Не указано</option>
+                      <option value="MALE">{genderLabels.MALE}</option>
+                      <option value="FEMALE">{genderLabels.FEMALE}</option>
+                    </select>
+                  </label>
+                  <label className="profile-form-field">
                     <span>Направление</span>
                     <select name="job" value={formData.job} onChange={handleInputChange}>
                       <option value="">Не указано</option>
-                      {jobOptions.map((option) => <option key={option} value={option}>{option}</option>)}
+                      {jobOptions.map((option) => <option key={option} value={option}>{jobLabels[option]}</option>)}
                     </select>
                   </label>
                   <label className="profile-form-field">
                     <span>Уровень</span>
                     <select name="level" value={formData.level} onChange={handleInputChange}>
                       <option value="">Не указано</option>
-                      {levelOptions.map((option) => <option key={option} value={option}>{option}</option>)}
+                      {levelOptions.map((option) => <option key={option} value={option}>{levelLabels[option]}</option>)}
                     </select>
                   </label>
                 </div>

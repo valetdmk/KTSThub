@@ -12,6 +12,7 @@ export type PlatformUserData = {
     gender?: string;
     phone?: string;
     social?: string;
+    github?: string;
     description?: string;
     role?: string;
     status?: string;
@@ -32,6 +33,7 @@ export const fallbackUser: PlatformUserData = {
     gender: "",
     phone: "",
     social: "",
+    github: "",
     description: "",
     role: "",
     status: "",
@@ -95,6 +97,7 @@ export function mapBackendUserToPlatformUser(user: User | null, savedUser = read
         gender: user.gender ?? savedUser.gender,
         phone: user.phone ?? savedUser.phone,
         social: user.telegram ?? savedUser.social,
+        github: user.github ?? savedUser.github,
         description: user.bio ?? savedUser.description,
         role: user.role ?? savedUser.role,
         status: user.status ?? savedUser.status,

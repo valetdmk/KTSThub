@@ -8,7 +8,7 @@ import boyregistration from "../../../shared/assets/boyregistration.png"
 import loginnregistr from "../../../shared/assets/loginnregistr.png"
 import BackLogin from "../../../shared/assets/BackLogin.png"
 import logo from "../../../shared/assets/logo.png"
-import renderstep3Girl from "../../../shared/assets/renderstep3Girl.png"
+import boyngirl from "../../../shared/assets/boyngirl.jpg"
 import UnionTop from "../../../shared/assets/UnionTop.png"
 import UnionBottom from "../../../shared/assets/UnionBottom.png"
 import authStar from "../../../shared/assets/authStar.png"
@@ -49,6 +49,12 @@ const roles = [
   { id: "judge", number: "03", label: "JUDGE" },
   { id: "organizer", number: "04", label: "ORGANIZER" },
 ];
+
+const externalRoleForms: Record<string, string> = {
+  business_partner: "https://docs.google.com/forms/d/e/1FAIpQLSf8lYYBIzyrj-PJ3Vq2rscPzG_aRkwe_f6eJZFF4Mgxo6CGUQ/viewform?usp=publish-editor",
+  judge: "https://docs.google.com/forms/d/e/1FAIpQLSeLT7VSDIHsDIJy9i4sn-xcJwLZW0weR6IaCvdXJ_nb8TbS-g/viewform?usp=dialog",
+  organizer: "https://docs.google.com/forms/d/e/1FAIpQLSf1kKKTjcnW0iOz74QKqWj8RVuiknpYq26dMTuAYwVyonahWQ/viewform?usp=publish-editor",
+};
 
 const jobOptions = [
   { id: "FRONT", label: "Frontend-разработчик" },
@@ -124,7 +130,7 @@ type SkillRatingsState = Record<SkillModalType, Record<string, SkillRatingId>>;
 
 export default function Register() {
   const dispatch = useDispatch();
-   const { token, userId, loading, error, step } = useSelector(selectors.root);
+   const { token, userId, loading, error, step, gender: registeredGender } = useSelector(selectors.root);
    const [selectedRole, setSelectedRole] = useState<string | null>(null);
    const [showPassword, setShowPassword] = useState(false);
    const [localError, setLocalError] = useState<string | null>(null);
@@ -150,7 +156,8 @@ export default function Register() {
     birthday: "",
     phone: "",
     email: "",
-    password: ""
+    password: "",
+    gender: ""
   });
 
   const [step2Data, setStep2Data] = useState({
@@ -161,7 +168,8 @@ export default function Register() {
     description: "",
     hardSkillsList: "",
     softSkillsList: "",
-    telegram: ""
+    telegram: "",
+    github: ""
   });
 
   const [isJobDropdownOpen, setIsJobDropdownOpen] = useState(false);
@@ -201,6 +209,13 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
   ];
 
   const handleSelect = (roleId: string) => {
+    const externalFormUrl = externalRoleForms[roleId];
+
+    if (externalFormUrl) {
+      window.open(externalFormUrl, "_self");
+      return;
+    }
+
     setSelectedRole(roleId);
     setStep3Page(1);
     setPendingProgressStep(null);
@@ -277,15 +292,11 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
       return null;
     }
 
-    const normalizedValue = trimmedValue.replace(/[\s()-]/g, "");
-    const isRussianPhone = /^(\+7|8)\d{10}$/.test(normalizedValue);
-    const isInternationalPhone = /^\+\d{10,15}$/.test(normalizedValue);
-
-    if (isRussianPhone || isInternationalPhone) {
+    if (/^\+79\d{9}$/.test(trimmedValue)) {
       return null;
     }
 
-    return "Введите корректный номер телефона.";
+    return "Телефон должен быть в формате +79xxxxxxxxx.";
   };
 
   const getEmailValidationMessage = (value: string) => {
@@ -335,6 +346,26 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
     return trimmedValue.replace(/\/$/, "");
   };
 
+  const getGithubValidationMessage = (value: string) => {
+    const trimmedValue = value.trim();
+
+    if (trimmedValue === "") {
+      return null;
+    }
+
+    const isGithubUrl = /^https:\/\/github\.com\/[a-zA-Z0-9-_]+\/?$/.test(trimmedValue);
+
+    if (isGithubUrl) {
+      return null;
+    }
+
+    return "Введите GitHub в формате https://github.com/username";
+  };
+
+  const normalizeGithubValue = (value: string) => {
+    return value.trim().replace(/\/$/, "");
+  };
+
   const getCalendarDays = (viewDate: Date) => {
     const year = viewDate.getFullYear();
     const month = viewDate.getMonth();
@@ -382,10 +413,7 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
   );
 
   const getProfileSkillPayload = () => {
-    const skillNames = [
-      ...getSkillsArray(step2Data.hardSkillsList),
-      ...getSkillsArray(step2Data.softSkillsList),
-    ];
+    const skillNames = getSkillsArray(step2Data.hardSkillsList);
 
     const skillLevelsByName = skillNames.reduce<Record<string, number>>((accumulator, skillName) => {
       const normalizedName = skillName.toLowerCase();
@@ -526,14 +554,14 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
       code: "",
       birthday: formData.birthday,
       age: formData.birthday ? String(calculateAge(formData.birthday)) : "",
-      gender: "",
+      gender: formData.gender,
       phone: formData.phone,
       social: step2Data.telegram,
       description: step2Data.description,
     };
 
     localStorage.setItem("platformUser", JSON.stringify(platformUser));
-  }, [formData.birthday, formData.email, formData.lastname, formData.name, formData.phone, formData.username, selectedAvatar, step2Data.description, step2Data.telegram]);
+  }, [formData.birthday, formData.email, formData.gender, formData.lastname, formData.name, formData.phone, formData.username, selectedAvatar, step2Data.description, step2Data.telegram]);
 
   const closeInteractivePanels = () => {
     setIsJobDropdownOpen(false);
@@ -670,6 +698,7 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
       formData.phone.trim() !== "" &&
       formData.email.trim() !== "" &&
       formData.password.length >= 8 &&
+      (formData.gender === "MALE" || formData.gender === "FEMALE") &&
       phoneValidationMessage === null &&
       emailValidationMessage === null
     );
@@ -677,8 +706,9 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
 
   const isStep2Valid = () => {
     const telegramValidationMessage = getTelegramValidationMessage(step2Data.telegram);
+    const githubValidationMessage = getGithubValidationMessage(step2Data.github);
 
-    return telegramValidationMessage === null;
+    return telegramValidationMessage === null && githubValidationMessage === null;
   };
 
   const hasStep1Progress = Object.values(formData).some((value) => value.trim() !== "");
@@ -707,12 +737,23 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
        birthday: formData.birthday,
        email: formData.email,
        password: formData.password,
-       gender: "OTHER"
+       gender: formData.gender as "MALE" | "FEMALE"
      }));
    };
 
    const handleStep2Submit = () => {
      if (!isStep2Valid()) return;
+
+     const resolvedGender = formData.gender === "MALE" || formData.gender === "FEMALE"
+       ? formData.gender
+       : registeredGender === "MALE" || registeredGender === "FEMALE"
+         ? registeredGender
+         : null;
+
+     if (!resolvedGender) {
+       setLocalError("Выбери пол на первом шаге и повтори сохранение.");
+       return;
+     }
 
      setLocalError(null);
      setPendingProgressStep(2);
@@ -727,22 +768,22 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
      dispatch(updateProfileRequest({
        token,
        userId,
-       data: {
-         name: formData.name,
-         lastName: formData.lastname,
-         username: formData.username,
-         birthday: formData.birthday,
-         avatar: selectedAvatar?.src ?? "",
-         email: formData.email,
-         bio: step2Data.description,
-         gender: "OTHER",
-         phone: formData.phone || null,
-         telegram: normalizeTelegramValue(step2Data.telegram) || null,
-         github: null,
-         job: step2Data.job || "FRONT",
-         level: step2Data.level || "BEGINNER",
-         ...getProfileSkillPayload()
-       }
+        data: {
+          name: formData.name,
+          lastName: formData.lastname,
+          username: formData.username,
+          birthday: formData.birthday,
+          avatar: selectedAvatar?.src ?? "",
+          email: formData.email,
+          bio: step2Data.description,
+          gender: resolvedGender,
+          phone: formData.phone.trim(),
+          telegram: normalizeTelegramValue(step2Data.telegram),
+          github: normalizeGithubValue(step2Data.github) || null,
+          job: step2Data.job || "FRONT",
+          level: step2Data.level || "BEGINNER",
+          ...getProfileSkillPayload()
+        }
      }));
    };
 
@@ -966,6 +1007,26 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
           placeholder="Phone number" 
           className="phone-input" 
         />
+        <div className="gender-selector" aria-label="Выбор пола">
+          <div className="gender-options">
+            <button
+              type="button"
+              className={`gender-btn ${formData.gender === "FEMALE" ? "active" : ""}`}
+              onClick={() => setFormData((prev) => ({ ...prev, gender: "FEMALE" }))}
+              aria-pressed={formData.gender === "FEMALE"}
+            >
+              Ж
+            </button>
+            <button
+              type="button"
+              className={`gender-btn ${formData.gender === "MALE" ? "active" : ""}`}
+              onClick={() => setFormData((prev) => ({ ...prev, gender: "MALE" }))}
+              aria-pressed={formData.gender === "MALE"}
+            >
+              М
+            </button>
+          </div>
+        </div>
       </div>
       {getPhoneValidationMessage(formData.phone) ? (
         <div className="error-message">{getPhoneValidationMessage(formData.phone)}</div>
@@ -1027,6 +1088,7 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
 
   const renderStep2 = () => {
     const telegramValidationMessage = getTelegramValidationMessage(step2Data.telegram);
+    const githubValidationMessage = getGithubValidationMessage(step2Data.github);
 
     return (
       <div className="step2-form">
@@ -1255,10 +1317,20 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
           placeholder="Telegram (https://t.me/username)" 
           className="social-input"
         />
+        <input
+          type="text"
+          name="github"
+          value={step2Data.github}
+          onChange={handleStep2InputChange}
+          placeholder="GitHub (https://github.com/username)"
+          className="social-input"
+        />
       </div>
       <div className="description-section">
         {telegramValidationMessage ? (
           <div className="error-message floating-error-message">{telegramValidationMessage}</div>
+        ) : githubValidationMessage ? (
+          <div className="error-message floating-error-message">{githubValidationMessage}</div>
         ) : null}
         <textarea
           value={step2Data.description}
@@ -1339,9 +1411,13 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
             <span className="phone-value">{formData.phone || "Не указан"}</span>
             </div>
 
-            <div className="telegram-preview">
+<div className="telegram-preview">
             <span className="telegram-label">Telegram:</span>
             <span className="telegram-value">{step2Data.telegram || "Не указан"}</span>
+            </div>
+            <div className="github-preview">
+            <span className="github-label">GitHub:</span>
+            <span className="github-value">{step2Data.github || "Не указан"}</span>
             </div>
           </div>
         </div>
@@ -1351,7 +1427,7 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
             <span className="participant-display">Участник</span>
           </div>
 
-          <img className="renderstep3-girl" src={renderstep3Girl} alt="" />
+          <img className="renderstep3-girl" src={boyngirl} alt="" />
 
           <div className="role-section">
             <span className="role-display">{jobOptions.find(r => r.id === step2Data.job)?.label}</span>

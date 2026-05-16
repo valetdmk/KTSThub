@@ -5,7 +5,7 @@ export interface RegisterPayload {
     birthday: string;
     email: string;
     password: string;
-    gender?: "MALE" | "FEMALE" | "OTHER";
+    gender: "MALE" | "FEMALE";
 }
 
 export interface RegisterState {
@@ -14,4 +14,5 @@ export interface RegisterState {
     error: string | null;
     token: string | null;
     userId: string | null;
+    gender: "MALE" | "FEMALE" | null;
 }

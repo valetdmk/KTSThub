@@ -15,9 +15,9 @@ export type UpdateUserPayload = {
     avatar: string;
     email: string;
     bio: string;
-    gender: "MALE" | "FEMALE" | "OTHER";
-    phone: string | null;
-    telegram: string | null;
+    gender: "MALE" | "FEMALE";
+    phone: string;
+    telegram: string;
     github: string | null;
     job: string;
     level: string;
