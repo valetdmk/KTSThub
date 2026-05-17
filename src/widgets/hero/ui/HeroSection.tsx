@@ -1,79 +1,97 @@
-import { useEffect, useCallback } from "react";
+﻿import { useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../../shared/ui/Hero/Hero.scss";
-import { HeroCard } from "../../../shared/ui/HeroCard";
 import {
-    setActiveCard,
-    setActiveTopBlock,
-    setCarouselOffset,
     setCurrentSection,
     setImages,
     selectors,
 } from "../../../features/hero";
 
 import logo from "../../../shared/assets/logo.png";
-import numbers from "../../../shared/assets/numbers.png";
+import heroLogo from "../../../shared/assets/heroLogo.png";
+import boyngirlHome from "../../../shared/assets/boyngirlHome.png";
 
-import Hack from "../../../shared/assets/HacK.png";
-import KCT from "../../../shared/assets/KCT.png";
+import forstudent1 from "../../../shared/assets/badge.png";
+import forstudent2 from "../../../shared/assets/titleproject.png";
+import forstudent3 from "../../../shared/assets/RainbowPic.png";
+import forstudent4 from "../../../shared/assets/VectorRegistration.png";
+import forstudentcircle from "../../../shared/assets/Group 239910.png";
 
-import {
-    Block1Left,
-    Block2Left,
-    Block3Left,
-    Block4Left,
-    Block5Left,
-    Block1Right,
-    Block2Right,
-    Block3Right,
-    Block4Right,
-    Block5Right,
-    BlockCentral,
-} from "../../../shared/ui/Hero/HeroImages";
-
-import card from "../../../shared/assets/card.png";
-import down from "../../../shared/assets/down.png";
-
-import Boy from "../../../shared/assets/Boy.png";
-import Girl from "../../../shared/assets/Girl.png";
-
-import secondtop from "../../../shared/assets/secondtop.png";
-import secondbottom from "../../../shared/assets/secondbottom.png";
-import forstudent1 from "../../../shared/assets/forstudent1.png";
-import forstudent2 from "../../../shared/assets/forstudent2.png";
-import forstudent3 from "../../../shared/assets/forstudent3.png";
-import forstudent4 from "../../../shared/assets/forstudent4.png";
-import forstudentcircle from "../../../shared/assets/forstudentcircle.png";
-
-import ikon from "../../../shared/assets/ikon.png";
-import LOGOTIP from "../../../shared/assets/LOGOTIP.png";
-
-import pazl from "../../../shared/assets/pazl.png";
 import brain from "../../../shared/assets/brain.png";
-import game from "../../../shared/assets/game.png";
-import unicorn from "../../../shared/assets/unicorn.png";
 
-import joystick from "../../../shared/assets/joystick.png";
-import molniya from "../../../shared/assets/molniya.png";
 import kybok from "../../../shared/assets/kybok.png";
-import raceta from "../../../shared/assets/raceta.png";
-import lamp from "../../../shared/assets/lamp.png";
-
-import back5left from "../../../shared/assets/back5left.png";
-import back5right from "../../../shared/assets/back5right.png";
+import Arseniy from "../../../shared/assets/Arseniy.png";
+import Maria from "../../../shared/assets/Maria.png";
+import Danil from "../../../shared/assets/Danil.png";
+import Ksenia from "../../../shared/assets/Ksenia.png";
+import Artem from "../../../shared/assets/Artem.png";
 
 
 
 export const HeroSection = () => {
-    const MAX_SECTION = 5;
+    const MAX_SECTION = 6;
+    const TEAM_LOOP_MULTIPLIER = 7;
+    const TEAM_MIDDLE_LOOP_INDEX = Math.floor(TEAM_LOOP_MULTIPLIER / 2);
+    const TEAM_MEMBERS = [
+        { name: "Arseniy", image: Arseniy },
+        { name: "Maria", image: Maria },
+        { name: "Danil", image: Danil },
+        { name: "Ksenia", image: Ksenia },
+        { name: "Artem", image: Artem },
+    ];
+    const FAQ_ITEMS = [
+        {
+            question: "Что такое KTSThub?",
+            answer:
+                "Это платформа для хакатонов, командной работы и развития портфолио, где можно участвовать в событиях и находить команду.",
+        },
+        {
+            question: "Кто может пользоваться платформой?",
+            answer:
+                "Студенты, участники хакатонов, наставники, организаторы и партнеры. Позже список можно уточнить под реальные роли проекта.",
+        },
+        {
+            question: "Нужно ли регистрироваться заранее?",
+            answer:
+                "Да, так участник сможет заранее заполнить профиль, подать заявку и быстрее подключиться к событиям и командам.",
+        },
+        {
+            question: "Можно ли участвовать без команды?",
+            answer:
+                "Да, смысл платформы как раз в том, чтобы помогать искать людей и собирать команду под хакатон или проект.",
+        },
+    ];
+    const STUDENT_FEATURES = [
+        {
+            title: "Реальные кейсы",
+            text: "Задачи от компаний, а не учебные примеры",
+        },
+        {
+            title: "Своя команда",
+            text: "Находи разработчиков, дизайнеров и PM-ов под проект",
+        },
+        {
+            title: "Портфолио",
+            text: "Реальные проекты вместо строчки \"Прошёл курс\"",
+        },
+        {
+            title: "Рейтинг и баллы",
+            text: "Участвуй, расти, попадай в топ",
+        },
+        {
+            title: "Карьерный старт",
+            text: "Лучших забирают на стажировку или оффер",
+        },
+    ];
     const dispatch = useDispatch();
-    const activeCard = useSelector(selectors.selectActiveCard);
-    const activeTopBlock = useSelector(selectors.selectActiveTopBlock);
-    const carouselOffset = useSelector(selectors.selectCarouselOffset);
     const currentSection = useSelector(selectors.selectCurrentSection);
-    const sixthsliceData = useSelector(selectors.selectSixthsliceData);
-    const featuresContent = useSelector(selectors.selectFeaturesContent);
+    const [openFaqIndex, setOpenFaqIndex] = useState(0);
+    const teamCarouselTrackRef = useRef<HTMLDivElement | null>(null);
+    const teamDragStartX = useRef<number | null>(null);
+    const teamDragStartScrollLeft = useRef(0);
+    const [isTeamDragging, setIsTeamDragging] = useState(false);
 
     const scrollToSection = useCallback((sectionNum: number) => {
         const container = document.querySelector('.sections-container');
@@ -134,410 +152,278 @@ export const HeroSection = () => {
         }));
     }, [dispatch]);
 
-    const goToNextSection = () => {
-        if (currentSection < MAX_SECTION) {
-            scrollToSection(currentSection + 1);
-        }
-    };
+    const loopedTeamMembers = Array.from({ length: TEAM_LOOP_MULTIPLIER }, (_, loopIndex) =>
+        TEAM_MEMBERS.map((member, memberIndex) => ({
+            key: `${member.name}-${loopIndex}-${memberIndex}`,
+            member,
+        }))
+    ).flat();
 
-    const content = activeCard ? featuresContent[activeCard] : null;
+    const recenterTeamTrack = useCallback((force = false) => {
+        const track = teamCarouselTrackRef.current;
 
-    const currentData = activeTopBlock ? sixthsliceData[activeTopBlock as keyof typeof sixthsliceData] : sixthsliceData[1];
-
-    const handlePrev = () => {
-        dispatch(setCarouselOffset(carouselOffset - 1));
-    };
-
-    const handleNext = () => {
-        dispatch(setCarouselOffset(carouselOffset + 1));
-    };
-
-    const getDisplayItems = () => {
-        const items = [];
-        const totalItems = currentData.length;
-
-        for (let i = -2; i <= 2; i++) {
-            const index = ((carouselOffset + i) % totalItems + totalItems) % totalItems;
-            items.push({
-                ...currentData[index],
-                position: i,
-                key: `${activeTopBlock}-${carouselOffset}-${i}`
-            });
+        if (!track) {
+            return;
         }
 
-        return items;
+        const singleLoopWidth = track.scrollWidth / TEAM_LOOP_MULTIPLIER;
+
+        if (!singleLoopWidth) {
+            return;
+        }
+
+        const middleLoopStart = singleLoopWidth * TEAM_MIDDLE_LOOP_INDEX;
+        const safeStart = singleLoopWidth;
+        const safeEnd = singleLoopWidth * (TEAM_LOOP_MULTIPLIER - 2);
+
+        if (force || track.scrollLeft < safeStart || track.scrollLeft > safeEnd) {
+            const normalizedOffset =
+                ((track.scrollLeft % singleLoopWidth) + singleLoopWidth) % singleLoopWidth;
+
+            track.scrollLeft = middleLoopStart + normalizedOffset;
+        }
+    }, [TEAM_LOOP_MULTIPLIER, TEAM_MIDDLE_LOOP_INDEX]);
+
+    const scrollTeamByCard = useCallback((direction: 1 | -1) => {
+        const track = teamCarouselTrackRef.current;
+
+        if (!track) {
+            return;
+        }
+
+        const firstCard = track.querySelector<HTMLElement>(".team-card");
+        const trackStyles = window.getComputedStyle(track);
+        const gap = Number.parseFloat(trackStyles.columnGap || trackStyles.gap || "0");
+        const fallbackCardWidth = track.clientWidth >= 960 ? track.clientWidth / 3 : Math.min(track.clientWidth * 0.82, 420);
+        const cardWidth = firstCard?.offsetWidth ?? fallbackCardWidth;
+
+        track.scrollBy({
+            left: direction * (cardWidth + gap),
+            behavior: "smooth",
+        });
+    }, []);
+
+    const showPrevTeamMember = () => {
+        scrollTeamByCard(-1);
     };
 
-    const displayItems = getDisplayItems();
+    const showNextTeamMember = () => {
+        scrollTeamByCard(1);
+    };
+
+    const handleTeamPointerDown = (clientX: number) => {
+        const track = teamCarouselTrackRef.current;
+
+        if (!track) {
+            return;
+        }
+
+        teamDragStartX.current = clientX;
+        teamDragStartScrollLeft.current = track.scrollLeft;
+        setIsTeamDragging(true);
+    };
+
+    const handleTeamPointerMove = (clientX: number) => {
+        const track = teamCarouselTrackRef.current;
+
+        if (!track || teamDragStartX.current === null) {
+            return;
+        }
+
+        track.scrollLeft = teamDragStartScrollLeft.current - (clientX - teamDragStartX.current);
+    };
+
+    const handleTeamPointerUp = () => {
+        teamDragStartX.current = null;
+        setIsTeamDragging(false);
+        recenterTeamTrack();
+    };
+
+    useEffect(() => {
+        const track = teamCarouselTrackRef.current;
+
+        if (!track) {
+            return;
+        }
+
+        const frameId = window.requestAnimationFrame(() => {
+            recenterTeamTrack(true);
+        });
+
+        const handleResize = () => {
+            recenterTeamTrack(true);
+        };
+
+        window.addEventListener("resize", handleResize);
+
+        return () => {
+            window.cancelAnimationFrame(frameId);
+            window.removeEventListener("resize", handleResize);
+        };
+    }, [recenterTeamTrack]);
+
     const showStickyHeader = currentSection >= 2;
     const navigate = useNavigate();
 
     return (
         <div className="sections-container">
             <section id="slice1" className="hero">
-                <img className={`hero_logo ${showStickyHeader ? 'fixed-on-scroll' : ''}`} src={logo} alt="Логотип KTSThub" />
-                <img className="hero_numbers" src={numbers} alt="Статистика проекта" />
+                <img className={`hero_logo ${showStickyHeader ? 'fixed-on-scroll' : ''}`} src={logo} alt="Р›РѕРіРѕС‚РёРї KTSThub" />
 
                 <div className="hero_content">
-
-                    <div className="hero_center">
-                            <img className="kct" src={KCT} alt="Логотип KCT" />
-                            <img className="hack" src={Hack} alt="Логотип Хакathon" />
-
-                        <p className="text-bottom-left">
-                            Вы переходите в мир нового уровня погружения в ИТ-сферу разработки
-                        </p>
-
-                        <p className="text-top-right">
-                            Вы переходите не просто в платформу,
-                        </p>
-                    </div>
-
-                    <button className={`hero_button ${showStickyHeader ? 'move-to-nav' : ''}`} onClick={() => navigate('/auth')}>
-                        Войти в мир хакатонов
-                    </button>
-
-                    <div className="hero_cards">
-                        <img className="card card-left" src={card} alt="Карточка участника" />
-                        <img className="card card-center" src={card} alt="Карточка участника" />
-                        <img className="card card-right" src={card} alt="Карточка участника" />
-                        <button className="cards_button" onClick={goToNextSection}>
-                        <img className="card-down" src={down} alt="Показать ещё" loading="lazy" />
+                    <div className="hero_intro">
+                        <img className="hero_intro_logo" src={heroLogo} alt="KTSThub" />
+                        <p className="hero_intro_text">Мы дадим тебе портфолио и кейсы</p>
+                        <button className={`hero_button ${showStickyHeader ? 'move-to-nav' : ''}`} onClick={() => navigate('/auth')}>
+                            Войти в мир Хакатонов
                         </button>
                     </div>
-
-                    
-
-                    <div className="hero_blocks">
-                            <Block1Left />
-                            <Block2Left />
-                            <Block3Left />
-                            <Block4Left />
-                            <Block5Left />
-
-                            <BlockCentral />
-
-                            <Block1Right />
-                            <Block2Right />
-                            <Block3Right />
-                            <Block4Right />
-                            <Block5Right />
-                    </div>
-
-                    <div className="hero_people">
-                        <img className="hero_boy" src={Boy} alt="Участник" loading="lazy" />
-                        <img className="hero_girl" src={Girl} alt="Участница" loading="lazy" />
-                    </div>
-
-                    <HeroCard
-                        title="100+"
-                        text="Участников и подписчиков"
-                        className="top-right"
-                        description="Наша цель по количеству людей в Telegram-сообществе."
-                    />
-                    <HeroCard
-                        title="76%"
-                        text="Получают реальные кейсы"
-                        className="bottom-left"
-                        description="Доля студентов, для которых доступ к реальным проектам - ключевая ценность. "
-                    />
-                    <HeroCard
-                        title="40%"
-                        text="Сокращение пути к офферу"
-                        className="bottom-right"
-                        description="На столько снижается время поиска первой работы благодаря участию в проекте."
-                    />
                 </div>
             </section>
 
             <section id="slice2" className="secondslice">
                 <div className="secondslice_inner">
-
-                    <div className="left-block">
-                        <img className="second-top" src={secondtop} alt="Фон верх" />
-                        <img className="molniya-top" src={molniya} alt="Молния" />
-                        <img className="kybok-top" src={kybok} alt="Кубок" />
-                        <img className="unicorn-top" src={unicorn} alt="Единорог" />
-                        <img className="lamp-top" src={lamp} alt="Лампа" />
-                        <img className="boy2" src={Boy} alt="Участник" />
-                        <img className="game-left" src={game} alt="Игра" />
-                        <img className="raceta-bottom" src={raceta} alt="Ракета" />
-                        <img className="joystick-bottom" src={joystick} alt="Джойстик" />
-                        <img className="brain-bottom" src={brain} alt="Мозг" />
-                        <img className="pazl-bottom" src={pazl} alt="Пазл" />
-                        <img className="second-bottom" src={secondbottom} alt="Фон низ" />
-                    </div>
-
-                    <div className="center-block">
-                        <div className="features">
-
-                            <div className="left-col">
-                                {content ? (
-                                    <>
-                                        <div className="feature">
-                                            <img src={content.left[0].img} alt="Иконка" />
-                                            <div className="content">
-                                                <h1>{content.left[0].title}</h1>
-                                                <p>{content.left[0].desc}</p>
-                                            </div>
-                                        </div>
-
-                                        <div className="feature">
-                                            <img src={content.left[1].img} alt="Иконка" />
-                                            <div className="content">
-                                                <h1>{content.left[1].title}</h1>
-                                                <p>{content.left[1].desc}</p>
-                                            </div>
-                                        </div>
-
-                                        <div className="feature">
-                                            <img src={content.left[2].img} alt="Иконка" />
-                                            <div className="content">
-                                                <h1>{content.left[2].title}</h1>
-                                                <p>{content.left[2].desc}</p>
-                                            </div>
-                                        </div>
-                                    </>
-                                ) : (
-                                    <>
-                                        <div className="feature">
-                                            <img src={forstudent1} alt="Иконка" />
-                                            <div className="content">
-                                                <h1>Реальный опыт IT-индустрии</h1>
-                                                <p>Личный кабинет с вашими активностями.</p>
-                                            </div>
-                                        </div>
-
-                                        <div className="feature">
-                                            <img src={forstudentcircle} alt="Иконка" />
-                                            <div className="content">
-                                                <h1>Студентам</h1>
-                                                <p>IT-специалисты команды и проекты в одном месте.</p>
-                                            </div>
-                                        </div>
-
-                                        <div className="feature">
-                                            <img src={forstudent2} alt="Иконка" />
-                                            <div className="content">
-                                                <h1>Опыт командной работы</h1>
-                                                <p>IT-специалисты команды и проекты в одном месте</p>
-                                            </div>
-                                        </div>
-                                    </>
-                                )}
+                    <div className="secondslice_content">
+                        <h2>Для участников и студентов</h2>
+                        <img
+                            className="secondslice_image"
+                            src={boyngirlHome}
+                            alt="Для участников и студентов"
+                        />
+                        <div className="secondslice_arcstage">
+                            <div className="secondslice_cards">
+                                {STUDENT_FEATURES.map((item, index) => (
+                                    <article
+                                        key={item.title}
+                                        className={`secondslice_card secondslice_card--${index + 1}`}
+                                    >
+                                        <h3>{item.title}</h3>
+                                        <p>{item.text}</p>
+                                    </article>
+                                ))}
                             </div>
-
-                            <div className="right-col">
-                                {content ? (
-                                    <>
-                                        <div className="feature">
-                                            <img src={content.right[0].img} alt="Иконка" />
-                                            <div className="content">
-                                                <h1>{content.right[0].title}</h1>
-                                                <p>{content.right[0].desc}</p>
-                                            </div>
-                                        </div>
-
-                                        <div className="feature">
-                                            <img src={content.right[1].img} alt="Иконка" />
-                                            <div className="content">
-                                                <h1>{content.right[1].title}</h1>
-                                                <p>{content.right[1].desc}</p>
-                                            </div>
-                                        </div>
-                                    </>
-                                ) : (
-                                    <>
-                                        <div className="feature">
-                                            <img src={forstudent3} alt="Иконка" />
-                                            <div className="content">
-                                                <h1>Контакт с HR компаний</h1>
-                                                <p>IT-специалисты команды и проекты в одном месте</p>
-                                            </div>
-                                        </div>
-
-                                        <div className="feature">
-                                            <img src={forstudent4} alt="Иконка" />
-                                            <div className="content">
-                                                <h1>Рабочие проекты в портфолио</h1>
-                                                <p>IT-специалисты команды и проекты в одном месте.</p>
-                                            </div>
-                                        </div>
-                                    </>
-                                )}
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div className="right-block">
-                        <div 
-                            className={`info-card ${activeCard === 1 ? 'active' : ''}`}
-                            onClick={() => dispatch(setActiveCard(1))}
-                        >
-                            <span className="info-number">01</span>
-                            <h2>Для<br />студентов</h2>
-                            <p>Уникальная возможность раскрыть свой потенциал и сделать первый шаг к мечте!</p>
-                        </div>
-
-                        <div 
-                            className={`info-card ${activeCard === 2 ? 'active' : ''}`}
-                            onClick={() => dispatch(setActiveCard(2))}
-                        >
-                            <span className="info-number">02</span>
-                            <h2>Для<br />Партнеров</h2>
-                            <p>Уникальная возможность раскрыть свой потенциал и сделать первый шаг к мечте!</p>
-                        </div>
-
-                        <div 
-                            className={`info-card ${activeCard === 3 ? 'active' : ''}`}
-                            onClick={() => dispatch(setActiveCard(3))}
-                        >
-                            <span className="info-number">03</span>
-                            <h2>Для<br />Судей</h2>
-                            <p>Уникальная возможность раскрыть свой потенциал и сделать первый шаг к мечте!</p>
-                        </div>
-                    </div>
-
-                </div>
-            </section>
-
-            <section id="slice3" className="thirdslice">
-                <div className="thirdslice_inner">
-                    <img className="girl-mirrored" src={Girl} alt="Девушка" />
-                    <div className="thirdslice_columns">
-                        <div className="third-col">
-                            <p>Кадры с ивентов результаты<br /> хакатонов<br />и успехи команд</p>
-                            <div className="rect-block rect-block-info-bign" onClick={() => window.location.href = '/block7'}>Блок 7</div>
-                            <div className="rect-block rect-block-info-small" onClick={() => window.location.href = '/block8'}>Блок 8</div>
-                        </div>
-                        <div className="third-col">
-                            <div className="rect-block rect-block-large" onClick={() => window.location.href = '/block1'}>Блок 1</div>
-                            <div className="rect-block" onClick={() => window.location.href = '/block2'}>Блок 2</div>
-                            <div className="rect-block" onClick={() => window.location.href = '/block3'}>Блок 3</div>
-                        </div>
-                        <div className="third-col">
-                            <div className="rect-block rect-block-large" onClick={() => window.location.href = '/block4'}>Блок 4</div>
-                            <div className="rect-block" onClick={() => window.location.href = '/block5'}>
-                                <div className="sub-blocks">
-                                    <div className="sub-block" onClick={(e) => { e.stopPropagation(); window.location.href = '/block5a' }}>5a</div>
-                                    <div className="sub-block" onClick={(e) => { e.stopPropagation(); window.location.href = '/block5b' }}>5b</div>
-                                </div>
-                            </div>
-                            <div className="rect-block" onClick={() => window.location.href = '/block6'}>
-                                <div className="sub-blocks">
-                                    <div className="sub-block" onClick={(e) => { e.stopPropagation(); window.location.href = '/block6a' }}>6a</div>
-                                    <div className="sub-block" onClick={(e) => { e.stopPropagation(); window.location.href = '/block6b' }}>6b</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="third-col">
-                            <div className="rect-block rect-block-info" onClick={() => window.location.href = '/block9'}>Блок 9</div>
-                            <div className="rect-block rect-block-info-big" onClick={() => window.location.href = '/block10'}>Блок 10</div>
+                            <svg
+                                className="secondslice_smile"
+                                viewBox="0 0 1500 360"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    className="secondslice_smile-path"
+                                    d="M30 40 Q750 498 1470 40"
+                                />
+                                <circle className="secondslice_smile-dot" cx="30" cy="40" r="20" />
+                                <circle className="secondslice_smile-dot" cx="390" cy="211.75" r="20" />
+                                <circle className="secondslice_smile-dot" cx="750" cy="269" r="20" />
+                                <circle className="secondslice_smile-dot" cx="1110" cy="211.75" r="20" />
+                                <circle className="secondslice_smile-dot" cx="1470" cy="40" r="20" />
+                            </svg>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section id="slice4" className="fourthslice">
-                            <div className="rectangle-top">
-                                <img src={LOGOTIP} alt="Логотип" />
-                            </div>
-                            <div className="left-shapes">
-                                <div className="shape-group">
-                                    <img src={game} alt="game" />
-                                    <img src={unicorn} alt="unicorn" />
-                                </div>
-                                <div className="shape-group">
-                                    <img src={pazl} alt="pazl" />
-                                    <img src={brain} alt="brain" />
-                                </div>
-                            </div>
-                            <div className="right-shapes">
-                                <div className="shape-group">
-                                    <img src={game} alt="game" />
-                                    <img src={unicorn} alt="unicorn" />
-                                </div>
-                                <div className="shape-group">
-                                    <img src={pazl} alt="pazl" />
-                                    <img src={brain} alt="brain" />
-                                </div>
-                            </div>
+            <section id="slice3" className="fourthslice">
+                            <div className="platform-title">Наша платформа</div>
                             <div className="fourthslice_inner">
-                                <h2>Все активности вашего соревнования на брендированной под вас платформе</h2>
-                                <p>Самая удобная платформа по отзывам участников. От классического ИТ-марафона (Хакатона) и кейс-чемпионата до ИИ‑чемпионата с поддержкой докера и Быстрых собеседований (One Day/Weekend Offer). Все в одном месте: регистрация, тимбилдинг, полное брендирование и интерактивные инструменты.</p>
+                                <h2>KCTHack<br />Platform</h2>
+                                <p>Найди команду, реши реальный кейс,получи портфолио.</p>
 
                                 <div className="info-block">
-                                    <img className="info-icon" src={ikon} alt="Иконка" />
                                     <div className="info-content">
-                                        <h3>Регистрация участников</h3>
-                                        <p>Сбор данных: анкета, мотивация, резюме, маркетинговая аналитика.</p>
+                                        <div className="info-heading">
+                                            <img className="info-heading-icon info-heading-icon-left" src={brain} alt="" />
+                                            <h3>Участвуй в хакатонах</h3>
+                                            <img className="info-heading-icon info-heading-icon-right" src={kybok} alt="" />
+                                        </div>
+                                        <p>Регистрируйся на события, собирай команду и решай реальные кейсы от компаний-партнёров.</p>
                                     </div>
                                 </div>
                             </div>
                         </section>
 
-                        <section id="slice5" className="sixthslice">
-                            <img className="back5left" src={back5left} alt="" />
-                            <img className="back5right" src={back5right} alt="" />
-                            <div className="sixthslice_container">
-                                <div className="fifthslice_left_images">
-                                    <div className="img-group-close">
-                                        <img className="img-most-left" src={joystick} alt="" />
-                                        <img className="img-top-left" src={kybok} alt="" />
-                                    </div>
-                                    <img className="img-right" src={molniya} alt="" />
-                                    <img className="img-most-right" src={raceta} alt="" />
-                                    <img className="img-right img-lamp" src={lamp} alt="" />
+                        <section id="slice4" className="sixthslice">
+                            <div className="platform-title">Наши партнеры</div>
+                            <div className="sixthslice_inner">
+                                <div className="partners-grid">
+                                    <div className="partner-placeholder">Партнёр 1</div>
+                                    <div className="partner-placeholder">Партнёр 2</div>
+                                    <div className="partner-placeholder">Партнёр 3</div>
+                                    <div className="partner-placeholder">Партнёр 4</div>
+                                    <div className="partner-placeholder">Партнёр 5</div>
+                                    <div className="partner-placeholder">Партнёр 6</div>
                                 </div>
-                                <button className="carousel-arrow carousel-arrow-left" onClick={handlePrev}>
+
+                                <div className="gratitude-card">
+                                    <p className="gratitude-card_name">Максим Сергеевич Грохульский</p>
+                                    <p className="gratitude-card_role">Директор Колледжа Цифровых Технологий</p>
+                                    <p className="gratitude-card_text">Максим Сергеевич выражает благодарность команде КЦТхак за проделанную работу</p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section id="slice5" className="teamslice">
+                            <div className="platform-title">Наша команда</div>
+                            <div className="teamslice_inner">
+                                <button
+                                    type="button"
+                                    className="team-carousel_arrow"
+                                    onClick={showPrevTeamMember}
+                                    aria-label="Показать предыдущего участника"
+                                >
                                     ←
                                 </button>
-                                <div className="sixthslice_cards">
-                                    {displayItems.map((item) => (
-                                        <div 
-                                            key={item.key} 
-                                            className={`fifthslice_rect sixth_${item.position === -2 ? 'left_2' : item.position === -1 ? 'left_1' : item.position === 0 ? 'center' : item.position === 1 ? 'right_1' : 'right_2'}`}
-                                        >
-                                            <p className="fifthslice_text">{item.text}</p>
-                                            <p className="fifthslice_title">{item.title}</p>
-                                            <p className="fifthslice_desc">{item.desc}</p>
+                                <div
+                                    ref={teamCarouselTrackRef}
+                                    className={`team-carousel_track ${isTeamDragging ? "is-dragging" : ""}`}
+                                    onScroll={() => recenterTeamTrack()}
+                                    onMouseDown={(event) => handleTeamPointerDown(event.clientX)}
+                                    onMouseMove={(event) => handleTeamPointerMove(event.clientX)}
+                                    onMouseUp={handleTeamPointerUp}
+                                    onMouseLeave={handleTeamPointerUp}
+                                >
+                                    {loopedTeamMembers.map((member) => (
+                                        <div key={member.key} className="team-card">
+                                            <img className="team-card_image" src={member.member.image} alt={member.member.name} />
                                         </div>
                                     ))}
                                 </div>
-                                <button className="carousel-arrow carousel-arrow-right" onClick={handleNext}>
+                                <button
+                                    type="button"
+                                    className="team-carousel_arrow"
+                                    onClick={showNextTeamMember}
+                                    aria-label="Показать следующего участника"
+                                >
                                     →
                                 </button>
-                                <div className="fifthslice_right_images">
-                                    <img className="right-pazl" src={pazl} alt="" />
-                                    <img className="right-game" src={game} alt="" />
-                                    <img className="right-brain" src={brain} alt="" />
-                                    <img className="right-unicorn" src={unicorn} alt="" />
-                                    <img className="right-game-second" src={game} alt="" />
-                                    <img className="right-molniya" src={molniya} alt="" />
-                                </div>
-                                <div className="fifthslice_top_right">
-                                    <div 
-                                        className={`top-right-block ${activeTopBlock === 1 ? 'active' : ''}`}
-                                        onClick={() => { 
-                                            dispatch(setActiveTopBlock(1)); 
-                                            dispatch(setCarouselOffset(0)); 
-                                        }}
-                                    >СПОНСОРЫ</div>
-                                    <div 
-                                        className={`top-right-block ${activeTopBlock === 2 ? 'active' : ''}`}
-                                        onClick={() => { 
-                                            dispatch(setActiveTopBlock(2)); 
-                                            dispatch(setCarouselOffset(0)); 
-                                        }}
-                                    >РАЗРАБОТЧИКИ</div>
-                                    <div 
-                                        className={`top-right-block ${activeTopBlock === 3 ? 'active' : ''}`}
-                                        onClick={() => { 
-                                            dispatch(setActiveTopBlock(3)); 
-                                            dispatch(setCarouselOffset(0)); 
-                                        }}
-                                    >ПАРТНЁРЫ</div>
+                            </div>
+                        </section>
+
+                        <section id="slice6" className="faqslice">
+                            <div className="platform-title">Популярные вопросы</div>
+                            <div className="faqslice_inner">
+                                <div className="faq-list">
+                                    {FAQ_ITEMS.map((item, index) => {
+                                        const isOpen = index === openFaqIndex;
+
+                                        return (
+                                            <article
+                                                key={item.question}
+                                                className={`faq-card ${isOpen ? "is-open" : ""}`}
+                                            >
+                                                <button
+                                                    type="button"
+                                                    className="faq-card_trigger"
+                                                    onClick={() => setOpenFaqIndex(isOpen ? -1 : index)}
+                                                    aria-expanded={isOpen}
+                                                >
+                                                    <span>{item.question}</span>
+                                                    <span className="faq-card_icon">{isOpen ? "−" : "+"}</span>
+                                                </button>
+
+                                                {isOpen && <p className="faq-card_answer">{item.answer}</p>}
+                                            </article>
+                                        );
+                                    })}
                                 </div>
                             </div>
                         </section>

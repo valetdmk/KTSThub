@@ -16,3 +16,47 @@
   right: 0;
   transform: translate(120px, -120px);
 }
+
+.bg--faq-left {
+  top: 0;
+  left: 0;
+  height: 82vh;
+  transform: none;
+  object-position: top left;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 1) 60%,
+    rgba(0, 0, 0, 0.58) 82%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 1) 60%,
+    rgba(0, 0, 0, 0.58) 82%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.bg--faq-right {
+  top: 0;
+  right: 0;
+  height: 82vh;
+  transform: none;
+  object-position: top right;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 1) 60%,
+    rgba(0, 0, 0, 0.58) 82%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 1) 60%,
+    rgba(0, 0, 0, 0.58) 82%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
