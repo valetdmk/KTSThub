@@ -17,6 +17,7 @@ import { ProfilePage } from "../../pages/profile/ui";
 import { EditProfilePage } from "../../pages/profile-edit/ui";
 import { ProjectsPage } from "../../pages/projects/ui";
 import Register from "../../pages/register/ui";
+import { RoleSelectPage } from "../../pages/role-select/ui";
 import { SchedulePage } from "../../pages/schedule/ui";
 import { ProtectedRoute } from "./ProtectedRoute";
 
@@ -92,6 +93,10 @@ export const router = createBrowserRouter([
   {
     path: "/auth",
     element: <AuthPage />,
+  },
+  {
+    path: "/roles",
+    element: <RoleSelectPage />,
   },
   {
     path: "/platform",

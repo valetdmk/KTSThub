@@ -11,12 +11,12 @@ import {
 
 import logo from "../../../shared/assets/logo.png";
 import heroLogo from "../../../shared/assets/heroLogo.png";
-import boyngirlHome from "../../../shared/assets/boyngirlHome.png";
-import partnerLending from "../../../shared/assets/partnerLending.png";
-import judgeLending from "../../../shared/assets/judgeLending.png";
 import panda from "../../../shared/assets/panda.png";
 import partnerBack from "../../../shared/assets/PartnerBack.png";
-import frameToFAQ from "../../../shared/assets/frameToFAQ.png";
+import platformAuth from "../../../shared/assets/platformAuth.png";
+import platformHero from "../../../shared/assets/platformHero.png";
+import platformReting from "../../../shared/assets/platformReting.png";
+import platformSchedule from "../../../shared/assets/platformSchedule.png";
 
 import forstudent1 from "../../../shared/assets/badge.png";
 import forstudent2 from "../../../shared/assets/titleproject.png";
@@ -25,8 +25,12 @@ import forstudent4 from "../../../shared/assets/VectorRegistration.png";
 import forstudentcircle from "../../../shared/assets/Group 239910.png";
 
 import brain from "../../../shared/assets/brain.png";
-
+import joystick from "../../../shared/assets/joystick.png";
 import kybok from "../../../shared/assets/kybok.png";
+import lamp from "../../../shared/assets/lamp.png";
+import molniya from "../../../shared/assets/molniya.png";
+import pazl from "../../../shared/assets/pazl.png";
+import unicorn from "../../../shared/assets/unicorn.png";
 import Arseniy from "../../../shared/assets/Arseniy.png";
 import Maria from "../../../shared/assets/Maria.png";
 import Danil from "../../../shared/assets/Danil.png";
@@ -44,20 +48,14 @@ export const HeroSection = () => {
     const AUDIENCE_SLIDES = [
         {
             title: "Для участников и студентов",
-            image: boyngirlHome,
-            alt: "Для участников и студентов",
             type: "students",
         },
         {
             title: "Для Партнёров",
-            image: partnerLending,
-            alt: "Для партнёров",
             type: "partners",
         },
         {
             title: "Для Судьи",
-            image: judgeLending,
-            alt: "Для судьи",
             type: "judges",
         },
     ] as const;
@@ -69,22 +67,11 @@ export const HeroSection = () => {
             text: "Спасибо КЦТхак за эффективное и профессиональную платформу со своей созданной экосистемой...",
         },
         {
-            name: "Анна Викторовна",
-            role: "Руководитель партнёрских программ",
-            title: "Анна Викторовна отмечает высокий уровень организации и внимания к деталям",
-            text: "Проект показывает, как образовательная и технологическая среда могут работать вместе и приносить реальную пользу...",
-        },
-        {
-            name: "Илья Андреевич",
-            role: "Куратор цифровых инициатив",
-            title: "Илья Андреевич благодарит команду за качественную реализацию платформы",
-            text: "Решение выглядит целостным, удобным для пользователей и хорошо продуманным с точки зрения экосистемы...",
-        },
-        {
-            name: "Елена Сергеевна",
-            role: "Представитель индустриального партнёра",
-            title: "Елена Сергеевна подчёркивает ценность платформы для совместной работы и роста команд",
-            text: "Особенно важно, что продукт не просто красивый, а помогает выстраивать устойчивое взаимодействие внутри сообщества...",
+            name: "Здесь могли бы быть Вы",
+            role: "",
+            title: "",
+            text: "",
+            isPlaceholder: true,
         },
     ];
     const TEAM_MEMBERS = [
@@ -129,6 +116,59 @@ export const HeroSection = () => {
             question: "Можно ли собрать свою команду?",
             answer:
                 "Да, можно присоединиться к существующей или собрать свою.",
+        },
+    ];
+    const PLATFORM_FEATURES = [
+        {
+            title: "Участвуй в хакатонах",
+            text: "Регистрируйся на события, собирай команду и решай реальные кейсы от компаний-партнёров.",
+            leftIcon: brain,
+            rightIcon: kybok,
+            platformImage: platformAuth,
+            platformImageClassName: "fourthslice_decor-image--auth",
+        },
+        {
+            title: "Собери свою команду",
+            text: "Находи единомышленников с нужным стеком, создавай команду и берись за проекты вместе.",
+            leftIcon: unicorn,
+            rightIcon: molniya,
+            rightIconLarge: true,
+            platformImage: platformHero,
+            platformImageClassName: "fourthslice_decor-image--hero",
+        },
+        {
+            title: "Прокачай портфолио",
+            text: "Добавляй реальные проекты в профиль и показывай работодателям на что ты способен.",
+            leftIcon: pazl,
+            rightIcon: lamp,
+            platformImage: platformAuth,
+            platformImageClassName: "fourthslice_decor-image--auth",
+        },
+        {
+            title: "Взойди на вершину\nрейтинга",
+            text: "Участвуй в событиях, получай баллы и поднимайся в таблице лидеров сообщества.",
+            leftIcon: joystick,
+            rightIcon: kybok,
+            platformImage: platformReting,
+            platformImageClassName: "fourthslice_decor-image--rating",
+        },
+        {
+            title: "Следи за расписанием",
+            text: "Все воркшопы, хакатоны, митапы и тренировки в одном календаре — ничего не пропустишь.",
+            leftIcon: unicorn,
+            rightIcon: molniya,
+            rightIconLarge: true,
+            platformImage: platformSchedule,
+            platformImageClassName: "fourthslice_decor-image--schedule",
+        },
+        {
+            title: "Стань частью сообщества",
+            text: "Общайся с разработчиками, дизайнерами и PM-ами, которые горят IT так же, как ты.",
+            leftIcon: brain,
+            leftIconMirrored: true,
+            rightIcon: kybok,
+            platformImage: platformAuth,
+            platformImageClassName: "fourthslice_decor-image--auth",
         },
     ];
     const STUDENT_FEATURES = [
@@ -214,6 +254,9 @@ export const HeroSection = () => {
     const teamDragStartScrollLeft = useRef(0);
     const [isTeamDragging, setIsTeamDragging] = useState(false);
     const [activeAudienceIndex, setActiveAudienceIndex] = useState(0);
+    const infoScrollInnerRef = useRef<HTMLDivElement | null>(null);
+    const platformFeatureRefs = useRef<Array<HTMLDivElement | null>>([]);
+    const [activePlatformFeatureIndex, setActivePlatformFeatureIndex] = useState(0);
 
     const scrollToSection = useCallback((sectionNum: number) => {
         const container = document.querySelector('.sections-container');
@@ -226,6 +269,7 @@ export const HeroSection = () => {
 
     const activeAudienceSlide = AUDIENCE_SLIDES[activeAudienceIndex];
     const activeAudienceFeatures = AUDIENCE_FEATURES[activeAudienceSlide.type];
+    const activePlatformFeature = PLATFORM_FEATURES[activePlatformFeatureIndex] ?? PLATFORM_FEATURES[0];
 
     const showPrevAudienceSlide = useCallback(() => {
         setActiveAudienceIndex((prev) => (prev - 1 + AUDIENCE_SLIDES.length) % AUDIENCE_SLIDES.length);
@@ -505,6 +549,40 @@ export const HeroSection = () => {
         };
     }, [recenterTeamTrack]);
 
+    useEffect(() => {
+        const scrollContainer = infoScrollInnerRef.current;
+
+        if (!scrollContainer) {
+            return;
+        }
+
+        const updateActivePlatformFeature = () => {
+            const scrollTop = scrollContainer.scrollTop;
+            let nextActiveIndex = 0;
+
+            platformFeatureRefs.current.forEach((element, index) => {
+                if (!element) {
+                    return;
+                }
+
+                if (scrollTop >= element.offsetTop - 16) {
+                    nextActiveIndex = index;
+                }
+            });
+
+            setActivePlatformFeatureIndex((prev) => (prev === nextActiveIndex ? prev : nextActiveIndex));
+        };
+
+        updateActivePlatformFeature();
+        scrollContainer.addEventListener("scroll", updateActivePlatformFeature, { passive: true });
+        window.addEventListener("resize", updateActivePlatformFeature);
+
+        return () => {
+            scrollContainer.removeEventListener("scroll", updateActivePlatformFeature);
+            window.removeEventListener("resize", updateActivePlatformFeature);
+        };
+    }, []);
+
     const showStickyHeader = currentSection >= 2;
     const navigate = useNavigate();
 
@@ -517,8 +595,8 @@ export const HeroSection = () => {
                     <div className="hero_intro">
                         <img className="hero_intro_logo" src={heroLogo} alt="KTSThub" />
                         <p className="hero_intro_text">Мы дадим тебе портфолио и кейсы</p>
-                        <button className={`hero_button ${showStickyHeader ? 'move-to-nav' : ''}`} onClick={() => navigate('/auth')}>
-                            Присоединиться к нашей команде
+                        <button className={`hero_button ${showStickyHeader ? 'move-to-nav' : ''}`} onClick={() => navigate('/roles')}>
+                            Присоединиться к нашему<br />миру КЦТхак
                         </button>
                     </div>
                 </div>
@@ -527,110 +605,109 @@ export const HeroSection = () => {
             <section id="slice2" className="secondslice">
                 <div className="secondslice_inner">
                     <div className="secondslice_content" key={activeAudienceSlide.type}>
-                        <h2>{activeAudienceSlide.title}</h2>
-                        <div className="secondslice_media">
-                            <button
-                                type="button"
-                                className="secondslice_arrow secondslice_arrow--left"
-                                onClick={showPrevAudienceSlide}
-                                aria-label="Показать предыдущий блок"
-                            >
-                                ←
-                            </button>
-                            <div className="secondslice_image-frame">
-                                {activeAudienceSlide.type === "students" ? (
-                                    <img
-                                        className="secondslice_image"
-                                        src={boyngirlHome}
-                                        alt="Для участников и студентов"
-                                    />
-                                ) : activeAudienceSlide.type === "partners" ? (
-                                    <img
-                                        className="secondslice_image secondslice_image--audience"
-                                        src={partnerLending}
-                                        alt="Для партнёров"
-                                    />
-                                ) : (
-                                    <img
-                                        className="secondslice_image secondslice_image--audience"
-                                        src={judgeLending}
-                                        alt="Для судьи"
-                                    />
-                                )}
-                            </div>
-                            <button
-                                type="button"
-                                className="secondslice_arrow secondslice_arrow--right"
-                                onClick={showNextAudienceSlide}
-                                aria-label="Показать следующий блок"
-                            >
-                                →
-                            </button>
+                        <div className="secondslice_header">
+                            <h2>{activeAudienceSlide.title}</h2>
                         </div>
-                        <div className="secondslice_arcstage">
+                        <div className="secondslice_body">
                             <div className="secondslice_cards">
                                 {activeAudienceFeatures.map((item, index) => (
                                     <article
                                         key={`${activeAudienceSlide.type}-${item.title}`}
-                                        className={`secondslice_card secondslice_card--${index + 1}${index === 0 || index === 4 ? " secondslice_card--tall secondslice_card--raised" : " secondslice_card--wide"}`}
+                                        className={`secondslice_card${index === 0 || index === activeAudienceFeatures.length - 1
+                                            ? " secondslice_card--edge"
+                                            : index === 2
+                                                ? " secondslice_card--center secondslice_card--center-bottom"
+                                                : " secondslice_card--center secondslice_card--center-top"}`}
                                     >
                                         <h3>{item.title}</h3>
                                         <p>{item.text}</p>
                                     </article>
                                 ))}
                             </div>
-                            <svg
-                                className="secondslice_smile"
-                                viewBox="0 0 1500 360"
-                                aria-hidden="true"
-                            >
-                                <defs>
-                                    <linearGradient
-                                        id="secondsliceSmileDotFill"
-                                        x1="0%"
-                                        y1="100%"
-                                        x2="31.06%"
-                                        y2="6.36%"
-                                    >
-                                        <stop offset="10.77%" stopColor="#FF7345" />
-                                        <stop offset="93.64%" stopColor="#CF3BEE" />
-                                    </linearGradient>
-                                </defs>
-                                <path
-                                    className="secondslice_smile-path"
-                                    d="M30 40 Q750 498 1470 40"
-                                />
-                                <circle className="secondslice_smile-dot" cx="30" cy="40" r="20" />
-                                <circle className="secondslice_smile-dot" cx="390" cy="211.75" r="20" />
-                                <circle className="secondslice_smile-dot" cx="750" cy="269" r="20" />
-                                <circle className="secondslice_smile-dot" cx="1110" cy="211.75" r="20" />
-                                <circle className="secondslice_smile-dot" cx="1470" cy="40" r="20" />
-                            </svg>
+                            <div className="secondslice_arrows">
+                                <button
+                                    type="button"
+                                    className="secondslice_arrow secondslice_arrow--up"
+                                    onClick={showPrevAudienceSlide}
+                                    aria-label="Показать предыдущий блок"
+                                >
+                                    ↑
+                                </button>
+                                <button
+                                    type="button"
+                                    className="secondslice_arrow secondslice_arrow--down"
+                                    onClick={showNextAudienceSlide}
+                                    aria-label="Показать следующий блок"
+                                >
+                                    ↓
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
             <section id="slice3" className="fourthslice">
-                            <div className="platform-title">Наша платформа</div>
-                            <div className="fourthslice_inner">
-                                <h2>KCTHack<br />Platform</h2>
-                                <p>Найди команду, реши реальный кейс,получи портфолио.</p>
-
-                                <div className="info-block">
-                                    <div className="info-content">
-                                        <div className="info-heading">
-                                            <img className="info-heading-icon info-heading-icon-left" src={brain} alt="" />
-                                            <h3>Участвуй в хакатонах</h3>
-                                            <img className="info-heading-icon info-heading-icon-right" src={kybok} alt="" />
-                                        </div>
-                                        <p>Регистрируйся на события, собирай команду и решай реальные кейсы от компаний-партнёров.</p>
+                <div className="platform-title">Наша платформа</div>
+                <div className="fourthslice_inner">
+                    <div className="info-scroll">
+                        <div ref={infoScrollInnerRef} className="info-scroll_inner">
+                            <div className="info-scroll_layout">
+                                <div className="info-scroll_content">
+                                    <div className="fourthslice_intro">
+                                        <h2>KCTHack<br />Platform</h2>
+                                        <p>Найди команду, реши реальный кейс,получи портфолио.</p>
                                     </div>
+                                    {PLATFORM_FEATURES.map((item, index) => (
+                                        <div
+                                            key={item.title}
+                                            ref={(element) => {
+                                                platformFeatureRefs.current[index] = element;
+                                            }}
+                                            className={`info-block${index === activePlatformFeatureIndex ? " info-block--active" : ""}`}
+                                        >
+                                            <div className="info-content">
+                                                <div className="info-heading">
+                                                    {item.leftIcon ? (
+                                                        <img
+                                                            className={`info-heading-icon info-heading-icon-left${item.leftIconMirrored ? " info-heading-icon--mirrored" : ""}`}
+                                                            src={item.leftIcon}
+                                                            alt=""
+                                                        />
+                                                    ) : (
+                                                        <span className="info-heading-spacer" aria-hidden="true" />
+                                                    )}
+                                                    <h3>{item.title}</h3>
+                                                    {item.rightIcon ? (
+                                                        <img
+                                                            className={`info-heading-icon info-heading-icon-right${item.rightIconLarge ? " info-heading-icon--large" : ""}`}
+                                                            src={item.rightIcon}
+                                                            alt=""
+                                                        />
+                                                    ) : (
+                                                        <span className="info-heading-spacer" aria-hidden="true" />
+                                                    )}
+                                                </div>
+                                                <p>{item.text}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="fourthslice_preview" aria-hidden="true">
+                                    <img
+                                        key={activePlatformFeature.title}
+                                        className={`fourthslice_preview-image ${activePlatformFeature.platformImageClassName}`}
+                                        src={activePlatformFeature.platformImage}
+                                        alt=""
+                                    />
                                 </div>
                             </div>
-                        </section>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-                        <section id="slice4" className="sixthslice">
+                        <section id="slice4" className={`sixthslice ${currentSection === 4 ? "sixthslice--active" : ""}`}>
                             <div className="platform-title">Наши партнеры</div>
                             <div className="sixthslice_inner">
                                 <button
@@ -661,14 +738,20 @@ export const HeroSection = () => {
                                                 alt=""
                                                 aria-hidden="true"
                                             />
-                                            <div className="partner-spotlight_content">
-                                                <div className="partner-spotlight_avatar">
-                                                    <img src={panda} alt={partner.name} />
-                                                </div>
-                                                <div className="partner-spotlight_name">{partner.name}</div>
-                                                <p className="partner-spotlight_role">{partner.role}</p>
-                                                <p className="partner-spotlight_title">{partner.title}</p>
-                                                <p className="partner-spotlight_text">{partner.text}</p>
+                                            <div className={`partner-spotlight_content${partner.isPlaceholder ? " partner-spotlight_content--placeholder" : ""}`}>
+                                                {partner.isPlaceholder ? (
+                                                    <div className="partner-spotlight_placeholder">{partner.name}</div>
+                                                ) : (
+                                                    <>
+                                                        <div className="partner-spotlight_avatar">
+                                                            <img src={panda} alt={partner.name} />
+                                                        </div>
+                                                        <div className="partner-spotlight_name">{partner.name}</div>
+                                                        <p className="partner-spotlight_role">{partner.role}</p>
+                                                        <p className="partner-spotlight_title">{partner.title}</p>
+                                                        <p className="partner-spotlight_text">{partner.text}</p>
+                                                    </>
+                                                )}
                                             </div>
                                         </article>
                                     ))}
@@ -733,14 +816,6 @@ export const HeroSection = () => {
                                                 key={item.question}
                                                 className={`faq-card ${isOpen ? "is-open" : ""}`}
                                             >
-                                                {isOpen && (
-                                                    <img
-                                                        className="faq-card_frame"
-                                                        src={frameToFAQ}
-                                                        alt=""
-                                                        aria-hidden="true"
-                                                    />
-                                                )}
                                                 <button
                                                     type="button"
                                                     className="faq-card_trigger"

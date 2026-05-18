@@ -1,0 +1,225 @@
+.role-select-shell {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.role-select-page {
+  height: 100vh;
+  padding: 116px 24px 24px;
+  color: #fff;
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.role-select-page__inner {
+  width: min(100%, 1360px);
+  height: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.role-select-page__title {
+  margin: 0;
+  text-align: center;
+  font-size: clamp(28px, 3vw, 50px);
+  line-height: 1.05;
+  font-weight: 700;
+  max-width: 980px;
+  transform: translateY(42px);
+}
+
+.role-select-page__grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  flex: 1;
+  min-height: 0;
+}
+
+.role-card {
+  position: relative;
+  min-height: 0;
+  height: 100%;
+  padding: 0 20px 0;
+  border-radius: 48px;
+  background: transparent;
+  border: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.role-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.role-card__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  margin-bottom: -68px;
+  margin-left: 56px;
+  transform: translateY(88px);
+  position: relative;
+  z-index: 3;
+}
+
+.role-card__index {
+  font-size: clamp(58px, 5vw, 96px);
+  line-height: 1;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.role-card__label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 10px 18px;
+  background: #00000099;
+  border: 1px solid #fff;
+  border-radius: 10px;
+  transform: skewX(-18deg);
+  font-size: clamp(16px, 1.1vw, 21px);
+  line-height: 1;
+  font-weight: 700;
+  text-transform: lowercase;
+}
+
+.role-card__label::before {
+  content: attr(data-label);
+  transform: skewX(18deg);
+}
+
+.role-card__image-wrap {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.role-card__image {
+  width: 100%;
+  max-width: 740px;
+  max-height: 580px;
+  object-fit: contain;
+  display: block;
+}
+
+.role-card__action {
+  min-height: 62px;
+  padding: 14px 20px;
+  border-radius: 22px;
+  background: #000;
+  color: #fff;
+  text-decoration: none;
+  font-size: clamp(18px, 1.2vw, 24px);
+  line-height: 1.2;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-top: -56px;
+  align-self: center;
+  width: min(100%, 460px);
+  position: relative;
+  z-index: 3;
+  transform: translateY(-40px);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+  box-shadow:
+    0 0 18px rgba(255, 138, 0, 0.75),
+    0 0 36px rgba(255, 94, 0, 0.45);
+}
+
+.role-card__action:hover {
+  transform: translateY(-42px);
+  background: #fff;
+  color: #000;
+  box-shadow:
+    0 0 24px rgba(150, 5, 202, 0.9),
+    0 0 42px rgba(150, 5, 202, 0.65);
+}
+
+@media (max-width: 980px) {
+  .role-select-page {
+    height: auto;
+    min-height: 100vh;
+    padding: 120px 16px 32px;
+    overflow: visible;
+  }
+
+  .role-select-page__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .role-card {
+    min-height: 680px;
+    height: auto;
+    padding: 0 12px;
+  }
+
+  .role-card__meta {
+    margin-left: 34px;
+    margin-bottom: -52px;
+    transform: translateY(56px);
+  }
+
+  .role-card__image {
+    max-height: 420px;
+  }
+}
+
+@media (max-width: 640px) {
+  .role-select-page__inner {
+    gap: 28px;
+    height: auto;
+    justify-content: flex-start;
+  }
+
+  .role-card {
+    min-height: 560px;
+    border-radius: 36px;
+    padding: 0 8px;
+  }
+
+  .role-card__index {
+    font-size: 58px;
+  }
+
+  .role-card__label {
+    font-size: 18px;
+  }
+
+  .role-card__image {
+    max-height: 320px;
+  }
+
+  .role-card__action {
+    min-height: 60px;
+    padding: 14px 18px;
+    border-radius: 18px;
+    font-size: 18px;
+    margin-top: -42px;
+    transform: translateY(-24px);
+  }
+
+  .role-card__meta {
+    margin-left: 18px;
+    margin-bottom: -42px;
+    transform: translateY(40px);
+  }
+}
