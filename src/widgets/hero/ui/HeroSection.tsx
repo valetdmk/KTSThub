@@ -12,6 +12,9 @@ import {
 import logo from "../../../shared/assets/logo.png";
 import heroLogo from "../../../shared/assets/heroLogo.png";
 import boyngirlHome from "../../../shared/assets/boyngirlHome.png";
+import panda from "../../../shared/assets/panda.png";
+import partnerBack from "../../../shared/assets/PartnerBack.png";
+import frameToFAQ from "../../../shared/assets/frameToFAQ.png";
 
 import forstudent1 from "../../../shared/assets/badge.png";
 import forstudent2 from "../../../shared/assets/titleproject.png";
@@ -32,8 +35,36 @@ import Artem from "../../../shared/assets/Artem.png";
 
 export const HeroSection = () => {
     const MAX_SECTION = 6;
+    const PARTNER_LOOP_MULTIPLIER = 7;
+    const PARTNER_MIDDLE_LOOP_INDEX = Math.floor(PARTNER_LOOP_MULTIPLIER / 2);
     const TEAM_LOOP_MULTIPLIER = 7;
     const TEAM_MIDDLE_LOOP_INDEX = Math.floor(TEAM_LOOP_MULTIPLIER / 2);
+    const PARTNER_SPOTLIGHTS = [
+        {
+            name: "Максим Сергеевич",
+            role: "Директор “Колледжа Цифровых Технологий” ИТ-колледж",
+            title: "Максим Сергеевич выражает благодарность команде КЦТхак за проделанную работу",
+            text: "Спасибо КЦТхак за эффективное и профессиональную платформу со своей созданной экосистемой...",
+        },
+        {
+            name: "Анна Викторовна",
+            role: "Руководитель партнёрских программ",
+            title: "Анна Викторовна отмечает высокий уровень организации и внимания к деталям",
+            text: "Проект показывает, как образовательная и технологическая среда могут работать вместе и приносить реальную пользу...",
+        },
+        {
+            name: "Илья Андреевич",
+            role: "Куратор цифровых инициатив",
+            title: "Илья Андреевич благодарит команду за качественную реализацию платформы",
+            text: "Решение выглядит целостным, удобным для пользователей и хорошо продуманным с точки зрения экосистемы...",
+        },
+        {
+            name: "Елена Сергеевна",
+            role: "Представитель индустриального партнёра",
+            title: "Елена Сергеевна подчёркивает ценность платформы для совместной работы и роста команд",
+            text: "Особенно важно, что продукт не просто красивый, а помогает выстраивать устойчивое взаимодействие внутри сообщества...",
+        },
+    ];
     const TEAM_MEMBERS = [
         { name: "Arseniy", image: Arseniy },
         { name: "Maria", image: Maria },
@@ -43,24 +74,39 @@ export const HeroSection = () => {
     ];
     const FAQ_ITEMS = [
         {
-            question: "Что такое KTSThub?",
+            question: "Что это вообще за платформа?",
             answer:
-                "Это платформа для хакатонов, командной работы и развития портфолио, где можно участвовать в событиях и находить команду.",
+                "Это сообщество, где студенты делают реальные IT-проекты, работают в командах и получают практический опыт через хакатоны и задачи от партнёров.",
         },
         {
-            question: "Кто может пользоваться платформой?",
+            question: "Это бесплатно?",
             answer:
-                "Студенты, участники хакатонов, наставники, организаторы и партнеры. Позже список можно уточнить под реальные роли проекта.",
+                "Да, участие бесплатное.",
         },
         {
-            question: "Нужно ли регистрироваться заранее?",
+            question: "Сколько времени нужно уделять?",
             answer:
-                "Да, так участник сможет заранее заполнить профиль, подать заявку и быстрее подключиться к событиям и командам.",
+                "В среднем 5–10 часов в неделю (зависит от проекта и твоей вовлеченности).",
         },
         {
-            question: "Можно ли участвовать без команды?",
+            question: "Как попасть в проект?",
             answer:
-                "Да, смысл платформы как раз в том, чтобы помогать искать людей и собирать команду под хакатон или проект.",
+                "После запуска ты сможешь: выбрать направление, откликнуться на проект и начать участие.",
+        },
+        {
+            question: "Это похоже на хакатоны?",
+            answer:
+                "Да, но шире. Есть и хакатоны, и долгосрочные проекты.",
+        },
+        {
+            question: "Будут ли реальные задачи от компаний?",
+            answer:
+                "Да, мы планируем работать с партнёрами, чтобы участники решали реальные кейсы.",
+        },
+        {
+            question: "Можно ли собрать свою команду?",
+            answer:
+                "Да, можно присоединиться к существующей или собрать свою.",
         },
     ];
     const STUDENT_FEATURES = [
@@ -88,6 +134,10 @@ export const HeroSection = () => {
     const dispatch = useDispatch();
     const currentSection = useSelector(selectors.selectCurrentSection);
     const [openFaqIndex, setOpenFaqIndex] = useState(0);
+    const partnerCarouselTrackRef = useRef<HTMLDivElement | null>(null);
+    const partnerDragStartX = useRef<number | null>(null);
+    const partnerDragStartScrollLeft = useRef(0);
+    const [isPartnerDragging, setIsPartnerDragging] = useState(false);
     const teamCarouselTrackRef = useRef<HTMLDivElement | null>(null);
     const teamDragStartX = useRef<number | null>(null);
     const teamDragStartScrollLeft = useRef(0);
@@ -152,12 +202,44 @@ export const HeroSection = () => {
         }));
     }, [dispatch]);
 
+    const loopedPartnerSpotlights = Array.from({ length: PARTNER_LOOP_MULTIPLIER }, (_, loopIndex) =>
+        PARTNER_SPOTLIGHTS.map((partner, partnerIndex) => ({
+            key: `${partner.name}-${loopIndex}-${partnerIndex}`,
+            partner,
+        }))
+    ).flat();
+
     const loopedTeamMembers = Array.from({ length: TEAM_LOOP_MULTIPLIER }, (_, loopIndex) =>
         TEAM_MEMBERS.map((member, memberIndex) => ({
             key: `${member.name}-${loopIndex}-${memberIndex}`,
             member,
         }))
     ).flat();
+
+    const recenterPartnerTrack = useCallback((force = false) => {
+        const track = partnerCarouselTrackRef.current;
+
+        if (!track) {
+            return;
+        }
+
+        const singleLoopWidth = track.scrollWidth / PARTNER_LOOP_MULTIPLIER;
+
+        if (!singleLoopWidth) {
+            return;
+        }
+
+        const middleLoopStart = singleLoopWidth * PARTNER_MIDDLE_LOOP_INDEX;
+        const safeStart = singleLoopWidth;
+        const safeEnd = singleLoopWidth * (PARTNER_LOOP_MULTIPLIER - 2);
+
+        if (force || track.scrollLeft < safeStart || track.scrollLeft > safeEnd) {
+            const normalizedOffset =
+                ((track.scrollLeft % singleLoopWidth) + singleLoopWidth) % singleLoopWidth;
+
+            track.scrollLeft = middleLoopStart + normalizedOffset;
+        }
+    }, [PARTNER_LOOP_MULTIPLIER, PARTNER_MIDDLE_LOOP_INDEX]);
 
     const recenterTeamTrack = useCallback((force = false) => {
         const track = teamCarouselTrackRef.current;
@@ -210,6 +292,84 @@ export const HeroSection = () => {
     const showNextTeamMember = () => {
         scrollTeamByCard(1);
     };
+
+    const scrollPartnerByCard = useCallback((direction: 1 | -1) => {
+        const track = partnerCarouselTrackRef.current;
+
+        if (!track) {
+            return;
+        }
+
+        const firstCard = track.querySelector<HTMLElement>(".partner-spotlight");
+        const trackStyles = window.getComputedStyle(track);
+        const gap = Number.parseFloat(trackStyles.columnGap || trackStyles.gap || "0");
+        const fallbackCardWidth = track.clientWidth;
+        const cardWidth = firstCard?.offsetWidth ?? fallbackCardWidth;
+
+        track.scrollBy({
+            left: direction * (cardWidth + gap),
+            behavior: "smooth",
+        });
+    }, []);
+
+    const showPrevPartner = () => {
+        scrollPartnerByCard(-1);
+    };
+
+    const showNextPartner = () => {
+        scrollPartnerByCard(1);
+    };
+
+    const handlePartnerPointerDown = (clientX: number) => {
+        const track = partnerCarouselTrackRef.current;
+
+        if (!track) {
+            return;
+        }
+
+        partnerDragStartX.current = clientX;
+        partnerDragStartScrollLeft.current = track.scrollLeft;
+        setIsPartnerDragging(true);
+    };
+
+    const handlePartnerPointerMove = (clientX: number) => {
+        const track = partnerCarouselTrackRef.current;
+
+        if (!track || partnerDragStartX.current === null) {
+            return;
+        }
+
+        track.scrollLeft = partnerDragStartScrollLeft.current - (clientX - partnerDragStartX.current);
+    };
+
+    const handlePartnerPointerUp = () => {
+        partnerDragStartX.current = null;
+        setIsPartnerDragging(false);
+        recenterPartnerTrack();
+    };
+
+    useEffect(() => {
+        const track = partnerCarouselTrackRef.current;
+
+        if (!track) {
+            return;
+        }
+
+        const frameId = window.requestAnimationFrame(() => {
+            recenterPartnerTrack(true);
+        });
+
+        const handleResize = () => {
+            recenterPartnerTrack(true);
+        };
+
+        window.addEventListener("resize", handleResize);
+
+        return () => {
+            window.cancelAnimationFrame(frameId);
+            window.removeEventListener("resize", handleResize);
+        };
+    }, [recenterPartnerTrack]);
 
     const handleTeamPointerDown = (clientX: number) => {
         const track = teamCarouselTrackRef.current;
@@ -275,7 +435,7 @@ export const HeroSection = () => {
                         <img className="hero_intro_logo" src={heroLogo} alt="KTSThub" />
                         <p className="hero_intro_text">Мы дадим тебе портфолио и кейсы</p>
                         <button className={`hero_button ${showStickyHeader ? 'move-to-nav' : ''}`} onClick={() => navigate('/auth')}>
-                            Войти в мир Хакатонов
+                            Присоединиться к нашей команде
                         </button>
                     </div>
                 </div>
@@ -344,20 +504,54 @@ export const HeroSection = () => {
                         <section id="slice4" className="sixthslice">
                             <div className="platform-title">Наши партнеры</div>
                             <div className="sixthslice_inner">
-                                <div className="partners-grid">
-                                    <div className="partner-placeholder">Партнёр 1</div>
-                                    <div className="partner-placeholder">Партнёр 2</div>
-                                    <div className="partner-placeholder">Партнёр 3</div>
-                                    <div className="partner-placeholder">Партнёр 4</div>
-                                    <div className="partner-placeholder">Партнёр 5</div>
-                                    <div className="partner-placeholder">Партнёр 6</div>
+                                <button
+                                    type="button"
+                                    className="team-carousel_arrow"
+                                    onClick={showPrevPartner}
+                                    aria-label="Показать предыдущего партнёра"
+                                >
+                                    ←
+                                </button>
+                                <div
+                                    ref={partnerCarouselTrackRef}
+                                    className={`partner-carousel_track ${isPartnerDragging ? "is-dragging" : ""}`}
+                                    onScroll={() => recenterPartnerTrack()}
+                                    onMouseDown={(event) => handlePartnerPointerDown(event.clientX)}
+                                    onMouseMove={(event) => handlePartnerPointerMove(event.clientX)}
+                                    onMouseUp={handlePartnerPointerUp}
+                                    onMouseLeave={handlePartnerPointerUp}
+                                    onTouchStart={(event) => handlePartnerPointerDown(event.touches[0].clientX)}
+                                    onTouchMove={(event) => handlePartnerPointerMove(event.touches[0].clientX)}
+                                    onTouchEnd={handlePartnerPointerUp}
+                                >
+                                    {loopedPartnerSpotlights.map(({ key, partner }) => (
+                                        <article key={key} className="partner-spotlight">
+                                            <img
+                                                className="partner-spotlight_background"
+                                                src={partnerBack}
+                                                alt=""
+                                                aria-hidden="true"
+                                            />
+                                            <div className="partner-spotlight_content">
+                                                <div className="partner-spotlight_avatar">
+                                                    <img src={panda} alt={partner.name} />
+                                                </div>
+                                                <div className="partner-spotlight_name">{partner.name}</div>
+                                                <p className="partner-spotlight_role">{partner.role}</p>
+                                                <p className="partner-spotlight_title">{partner.title}</p>
+                                                <p className="partner-spotlight_text">{partner.text}</p>
+                                            </div>
+                                        </article>
+                                    ))}
                                 </div>
-
-                                <div className="gratitude-card">
-                                    <p className="gratitude-card_name">Максим Сергеевич Грохульский</p>
-                                    <p className="gratitude-card_role">Директор Колледжа Цифровых Технологий</p>
-                                    <p className="gratitude-card_text">Максим Сергеевич выражает благодарность команде КЦТхак за проделанную работу</p>
-                                </div>
+                                <button
+                                    type="button"
+                                    className="team-carousel_arrow"
+                                    onClick={showNextPartner}
+                                    aria-label="Показать следующего партнёра"
+                                >
+                                    →
+                                </button>
                             </div>
                         </section>
 
@@ -410,6 +604,14 @@ export const HeroSection = () => {
                                                 key={item.question}
                                                 className={`faq-card ${isOpen ? "is-open" : ""}`}
                                             >
+                                                {isOpen && (
+                                                    <img
+                                                        className="faq-card_frame"
+                                                        src={frameToFAQ}
+                                                        alt=""
+                                                        aria-hidden="true"
+                                                    />
+                                                )}
                                                 <button
                                                     type="button"
                                                     className="faq-card_trigger"
@@ -420,7 +622,11 @@ export const HeroSection = () => {
                                                     <span className="faq-card_icon">{isOpen ? "−" : "+"}</span>
                                                 </button>
 
-                                                {isOpen && <p className="faq-card_answer">{item.answer}</p>}
+                                                {isOpen && (
+                                                    <div className="faq-card_answer">
+                                                        <p>{item.answer}</p>
+                                                    </div>
+                                                )}
                                             </article>
                                         );
                                     })}
