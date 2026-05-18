@@ -604,7 +604,7 @@ export const HeroSection = () => {
                 </div>
             </section>
 
-            <section id="slice2" className="secondslice">
+            <section id="slice2" className={`secondslice${currentSection === 2 ? " secondslice--active" : ""}`}>
                 <div className="secondslice_inner">
                     <div className="secondslice_content" key={activeAudienceSlide.type}>
                         <div className="secondslice_header">
@@ -619,7 +619,11 @@ export const HeroSection = () => {
                                             ? " secondslice_card--edge"
                                             : index === 2
                                                 ? " secondslice_card--center secondslice_card--center-bottom"
-                                                : " secondslice_card--center secondslice_card--center-top"}`}
+                                                : " secondslice_card--center secondslice_card--center-top"}${index <= 1
+                                            ? " secondslice_card--from-left"
+                                            : index === 2
+                                                ? " secondslice_card--from-bottom"
+                                                : " secondslice_card--from-right"}`}
                                     >
                                         <h3>{item.title}</h3>
                                         <p>{item.text}</p>
