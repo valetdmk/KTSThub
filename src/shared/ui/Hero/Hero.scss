@@ -354,10 +354,11 @@ section {
 .secondslice_content {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   gap: 22px;
   width: min(100%, 1100px);
+  min-height: calc(100vh - 220px);
   margin: 0 auto;
   text-align: center;
 }
@@ -367,18 +368,69 @@ section {
   line-height: 1.05;
   font-weight: 700;
   max-width: 840px;
+  min-height: calc(2 * 1.05em);
+  display: flex;
+  align-items: flex-end;
+}
+
+.secondslice_media {
+  width: min(100%, 980px);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: clamp(2px, 0.5vw, 6px);
+}
+
+.secondslice_image-frame {
+  width: min(100%, 860px);
+  height: 620px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  margin: 0 auto;
+}
+
+.secondslice_arrow {
+  width: clamp(56px, 5vw, 72px);
+  height: clamp(56px, 5vw, 72px);
+  border: 0;
+  border-radius: 20px;
+  background: #FFFFFF12;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: clamp(30px, 2.5vw, 40px);
+  font-weight: 900;
+  line-height: 1;
+  cursor: pointer;
+  align-self: start;
+  margin-top: 118px;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.secondslice_arrow:hover {
+  transform: scale(1.04);
+  background: rgba(255, 255, 255, 0.18);
 }
 
 .secondslice_image {
-  width: min(100%, 660px);
-  height: auto;
+  width: auto;
+  max-width: min(100%, 900px);
+  max-height: 100%;
+  height: 100%;
   display: block;
+  margin: 0 auto;
+  object-fit: contain;
+}
+
+.secondslice_image--audience {
+  max-width: min(100%, 980px);
 }
 
 .secondslice_arcstage {
   position: relative;
   width: min(calc(100vw - 96px), 1500px);
-  padding-top: 36px;
+  padding-top: 48px;
   overflow: visible;
 }
 
@@ -386,7 +438,7 @@ section {
   width: 100%;
   height: auto;
   aspect-ratio: 1500 / 360;
-  margin-top: -380px;
+  margin-top: -338px;
   display: block;
 }
 
@@ -397,7 +449,7 @@ section {
 }
 
 .secondslice_smile-dot {
-  background: #000000;
+  fill: url(#secondsliceSmileDotFill);
   stroke: #FFFFFF;
   stroke-width: 3;
 }
@@ -405,7 +457,7 @@ section {
 .secondslice_cards {
   position: absolute;
   left: 0;
-  top: -520px;
+  top: -458px;
   width: 100%;
   height: 440px;
   margin-bottom: 0;
@@ -430,6 +482,19 @@ section {
   text-align: center;
   overflow: hidden;
   transform: translateX(-50%);
+}
+
+.secondslice_card--tall {
+  min-height: 290px;
+}
+
+.secondslice_card--wide {
+  width: min(300px, 21vw);
+}
+
+.secondslice_card--raised.secondslice_card--1,
+.secondslice_card--raised.secondslice_card--5 {
+  top: -130px;
 }
 
 .secondslice_card::before {
@@ -501,21 +566,43 @@ section {
 
   .secondslice_content {
     gap: 20px;
+    min-height: auto;
+  }
+
+  .secondslice_media {
+    width: 100%;
+    gap: 4px;
+  }
+
+  .secondslice_image-frame {
+    width: min(100%, 620px);
+    height: 500px;
   }
 
   .secondslice_image {
-    width: min(100%, 460px);
+    max-width: min(100%, 660px);
+  }
+
+  .secondslice_image--audience {
+    max-width: min(100%, 700px);
+  }
+
+  .secondslice_arrow {
+    width: 52px;
+    height: 52px;
+    font-size: 30px;
+    margin-top: 66px;
   }
 
   .secondslice_arcstage {
     width: min(calc(100vw - 32px), 820px);
-    padding-top: 18px;
+    padding-top: 30px;
   }
 
   .secondslice_smile {
     width: 100%;
     height: auto;
-    margin-top: -230px;
+    margin-top: -194px;
   }
 
   .secondslice_smile-path {
@@ -548,6 +635,14 @@ section {
     top: auto;
   }
 
+  .secondslice_card--tall {
+    min-height: 248px;
+  }
+
+  .secondslice_card--wide {
+    width: 100%;
+  }
+
   .secondslice_card::before {
     border-radius: 42px;
     padding: 12px;
@@ -563,6 +658,26 @@ section {
 }
 
 @media (max-width: 640px) {
+  .secondslice_content h2 {
+    min-height: auto;
+  }
+
+  .secondslice_media {
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
+  }
+
+  .secondslice_image-frame {
+    width: 100%;
+    height: 360px;
+  }
+
+  .secondslice_arrow {
+    width: 44px;
+    height: 44px;
+    font-size: 26px;
+    margin-top: 42px;
+  }
+
   .secondslice_cards {
     grid-template-columns: 1fr;
   }

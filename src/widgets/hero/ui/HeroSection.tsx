@@ -12,6 +12,8 @@ import {
 import logo from "../../../shared/assets/logo.png";
 import heroLogo from "../../../shared/assets/heroLogo.png";
 import boyngirlHome from "../../../shared/assets/boyngirlHome.png";
+import partnerLending from "../../../shared/assets/partnerLending.png";
+import judgeLending from "../../../shared/assets/judgeLending.png";
 import panda from "../../../shared/assets/panda.png";
 import partnerBack from "../../../shared/assets/PartnerBack.png";
 import frameToFAQ from "../../../shared/assets/frameToFAQ.png";
@@ -39,6 +41,26 @@ export const HeroSection = () => {
     const PARTNER_MIDDLE_LOOP_INDEX = Math.floor(PARTNER_LOOP_MULTIPLIER / 2);
     const TEAM_LOOP_MULTIPLIER = 7;
     const TEAM_MIDDLE_LOOP_INDEX = Math.floor(TEAM_LOOP_MULTIPLIER / 2);
+    const AUDIENCE_SLIDES = [
+        {
+            title: "Для участников и студентов",
+            image: boyngirlHome,
+            alt: "Для участников и студентов",
+            type: "students",
+        },
+        {
+            title: "Для Партнёров",
+            image: partnerLending,
+            alt: "Для партнёров",
+            type: "partners",
+        },
+        {
+            title: "Для Судьи",
+            image: judgeLending,
+            alt: "Для судьи",
+            type: "judges",
+        },
+    ] as const;
     const PARTNER_SPOTLIGHTS = [
         {
             name: "Максим Сергеевич",
@@ -131,6 +153,55 @@ export const HeroSection = () => {
             text: "Лучших забирают на стажировку или оффер",
         },
     ];
+    const PARTNER_FEATURES = [
+        {
+            title: "Живые кандидаты",
+            text: "Смотри студентов в деле, а не по резюме",
+        },
+        {
+            title: "Дешевле найма",
+            text: "Хакатон вместо долгого рекрутинга",
+        },
+        {
+            title: "Прямой контакт",
+            text: "Забирай лучших на стажировку или оффер сразу после защиты",
+        },
+        {
+            title: "HR-бренд",
+            text: "Стань компанией, в которую хотят попасть",
+        },
+        {
+            title: "Закрой технический долг",
+            text: "Передай реальную задачу команде студентов",
+        },
+    ];
+    const JUDGE_FEATURES = [
+        {
+            title: "Живые проекты",
+            text: "Оценивай реальные решения, а не учебные работы",
+        },
+        {
+            title: "Влияние на индустрию",
+            text: "Помогай лучшим студентам попасть в профессию",
+        },
+        {
+            title: "Выбирай Лучших",
+            text: "Рекомендуй тех, кого хотелбы видеть в своей команде",
+        },
+        {
+            title: "нетворкинг",
+            text: "Знакомься с мотивированными ребятами напрямую",
+        },
+        {
+            title: "Давай честный фидбэк",
+            text: "Твоя оценка меняет каарьерный путь участника",
+        },
+    ];
+    const AUDIENCE_FEATURES = {
+        students: STUDENT_FEATURES,
+        partners: PARTNER_FEATURES,
+        judges: JUDGE_FEATURES,
+    } as const;
     const dispatch = useDispatch();
     const currentSection = useSelector(selectors.selectCurrentSection);
     const [openFaqIndex, setOpenFaqIndex] = useState(0);
@@ -142,6 +213,7 @@ export const HeroSection = () => {
     const teamDragStartX = useRef<number | null>(null);
     const teamDragStartScrollLeft = useRef(0);
     const [isTeamDragging, setIsTeamDragging] = useState(false);
+    const [activeAudienceIndex, setActiveAudienceIndex] = useState(0);
 
     const scrollToSection = useCallback((sectionNum: number) => {
         const container = document.querySelector('.sections-container');
@@ -151,6 +223,17 @@ export const HeroSection = () => {
             dispatch(setCurrentSection(sectionNum));
         }
     }, [dispatch]);
+
+    const activeAudienceSlide = AUDIENCE_SLIDES[activeAudienceIndex];
+    const activeAudienceFeatures = AUDIENCE_FEATURES[activeAudienceSlide.type];
+
+    const showPrevAudienceSlide = useCallback(() => {
+        setActiveAudienceIndex((prev) => (prev - 1 + AUDIENCE_SLIDES.length) % AUDIENCE_SLIDES.length);
+    }, [AUDIENCE_SLIDES.length]);
+
+    const showNextAudienceSlide = useCallback(() => {
+        setActiveAudienceIndex((prev) => (prev + 1) % AUDIENCE_SLIDES.length);
+    }, [AUDIENCE_SLIDES.length]);
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -443,19 +526,53 @@ export const HeroSection = () => {
 
             <section id="slice2" className="secondslice">
                 <div className="secondslice_inner">
-                    <div className="secondslice_content">
-                        <h2>Для участников и студентов</h2>
-                        <img
-                            className="secondslice_image"
-                            src={boyngirlHome}
-                            alt="Для участников и студентов"
-                        />
+                    <div className="secondslice_content" key={activeAudienceSlide.type}>
+                        <h2>{activeAudienceSlide.title}</h2>
+                        <div className="secondslice_media">
+                            <button
+                                type="button"
+                                className="secondslice_arrow secondslice_arrow--left"
+                                onClick={showPrevAudienceSlide}
+                                aria-label="Показать предыдущий блок"
+                            >
+                                ←
+                            </button>
+                            <div className="secondslice_image-frame">
+                                {activeAudienceSlide.type === "students" ? (
+                                    <img
+                                        className="secondslice_image"
+                                        src={boyngirlHome}
+                                        alt="Для участников и студентов"
+                                    />
+                                ) : activeAudienceSlide.type === "partners" ? (
+                                    <img
+                                        className="secondslice_image secondslice_image--audience"
+                                        src={partnerLending}
+                                        alt="Для партнёров"
+                                    />
+                                ) : (
+                                    <img
+                                        className="secondslice_image secondslice_image--audience"
+                                        src={judgeLending}
+                                        alt="Для судьи"
+                                    />
+                                )}
+                            </div>
+                            <button
+                                type="button"
+                                className="secondslice_arrow secondslice_arrow--right"
+                                onClick={showNextAudienceSlide}
+                                aria-label="Показать следующий блок"
+                            >
+                                →
+                            </button>
+                        </div>
                         <div className="secondslice_arcstage">
                             <div className="secondslice_cards">
-                                {STUDENT_FEATURES.map((item, index) => (
+                                {activeAudienceFeatures.map((item, index) => (
                                     <article
-                                        key={item.title}
-                                        className={`secondslice_card secondslice_card--${index + 1}`}
+                                        key={`${activeAudienceSlide.type}-${item.title}`}
+                                        className={`secondslice_card secondslice_card--${index + 1}${index === 0 || index === 4 ? " secondslice_card--tall secondslice_card--raised" : " secondslice_card--wide"}`}
                                     >
                                         <h3>{item.title}</h3>
                                         <p>{item.text}</p>
@@ -467,6 +584,18 @@ export const HeroSection = () => {
                                 viewBox="0 0 1500 360"
                                 aria-hidden="true"
                             >
+                                <defs>
+                                    <linearGradient
+                                        id="secondsliceSmileDotFill"
+                                        x1="0%"
+                                        y1="100%"
+                                        x2="31.06%"
+                                        y2="6.36%"
+                                    >
+                                        <stop offset="10.77%" stopColor="#FF7345" />
+                                        <stop offset="93.64%" stopColor="#CF3BEE" />
+                                    </linearGradient>
+                                </defs>
                                 <path
                                     className="secondslice_smile-path"
                                     d="M30 40 Q750 498 1470 40"
