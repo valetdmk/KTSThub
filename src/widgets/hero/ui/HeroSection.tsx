@@ -36,11 +36,13 @@ import Maria from "../../../shared/assets/Maria.png";
 import Danil from "../../../shared/assets/Danil.png";
 import Ksenia from "../../../shared/assets/Ksenia.png";
 import Artem from "../../../shared/assets/Artem.png";
+import footerOrange from "../../../shared/assets/footerOrange.png";
+import footerPurple from "../../../shared/assets/footerPurple.png";
 
 
 
 export const HeroSection = () => {
-    const MAX_SECTION = 6;
+    const MAX_SECTION = 7;
     const PARTNER_LOOP_MULTIPLIER = 7;
     const PARTNER_MIDDLE_LOOP_INDEX = Math.floor(PARTNER_LOOP_MULTIPLIER / 2);
     const TEAM_LOOP_MULTIPLIER = 7;
@@ -594,7 +596,7 @@ export const HeroSection = () => {
                 <div className="hero_content">
                     <div className="hero_intro">
                         <img className="hero_intro_logo" src={heroLogo} alt="KTSThub" />
-                        <p className="hero_intro_text">Мы дадим тебе портфолио и кейсы</p>
+                        <p className="hero_intro_text">Мы дадим тебе<br />портфолио и кейсы</p>
                         <button className={`hero_button ${showStickyHeader ? 'move-to-nav' : ''}`} onClick={() => navigate('/roles')}>
                             Присоединиться к нашему<br />миру КЦТхак
                         </button>
@@ -834,6 +836,52 @@ export const HeroSection = () => {
                                             </article>
                                         );
                                     })}
+                                </div>
+                            </div>
+                        </section>
+
+                        <section id="slice7" className="footerslice">
+                            <div className="footerslice_content">
+                                <div className="footerslice_info">
+                                    <h2>ООО “КЦТHack”</h2>
+                                    <p className="footerslice_info-line">ИНН: 7777777777</p>
+                                    <p className="footerslice_info-line">Актуальные сведения о проекте деятельности фирмы в IT-сфере</p>
+                                    <p className="footerslice_info-note">
+                                        Сайт защищён сервисом ....... (.....),
+                                        <br />
+                                        который может обрабатывать IP- адрес и иные технические данные пользователей для защиты веб-форм от спама и автоматических отправок.
+                                    </p>
+                                </div>
+                                <div className="footerslice_right">
+                                    <div className="footerslice_subscribe">
+                                        <div className="footerslice_subscribe-copy">
+                                            <h3>Войдите в мир КЦТхак</h3>
+                                            <p>Анонсы предстаящих ивентов, нетворкинг сообщество и публикации</p>
+                                        </div>
+                                        <a
+                                            className="footerslice_subscribe-button"
+                                            href="https://t.me/kcthack"
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            Подписаться
+                                        </a>
+                                    </div>
+                                    <div className="footerslice_contacts">
+                                        <a href="mailto:kcthack@mail.ru">кцтhack@mail.ru</a>
+                                        <a href="tel:+75671230000">+7 (567) 123-00-00</a>
+                                    </div>
+                                </div>
+                                <div className="footerslice_bottom">
+                                    <div className="footerslice_copy">©2021-2026 АНПОО "Колледж Цифровых Технологий"</div>
+                                    <div className="footerslice_links">
+                                        <span>Политика конфидециальности</span>
+                                        <span>Условия и положения</span>
+                                    </div>
+                                </div>
+                                <div className="footerslice_art" aria-hidden="true">
+                                    <img className="footerslice_orange" src={footerOrange} alt="" />
+                                    <img className="footerslice_purple" src={footerPurple} alt="" />
                                 </div>
                             </div>
                         </section>

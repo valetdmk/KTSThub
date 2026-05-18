@@ -9,8 +9,13 @@ import "./Background.scss";
 export const Background = () => {
   const currentSection = useSelector(selectors.selectCurrentSection);
   const isFaqSection = currentSection === 6;
+  const isFooterSection = currentSection === 7;
   const leftBackground = currentSection === 6 ? faqBackOrange : Orange1;
   const rightBackground = currentSection === 6 ? faqBackPurple : Purple1;
+
+  if (isFooterSection) {
+    return null;
+  }
 
   return (
     <>
