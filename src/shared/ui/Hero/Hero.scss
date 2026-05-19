@@ -668,22 +668,26 @@ section {
 .secondslice_header {
   width: min(100%, 1120px);
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  justify-content: center;
+  align-items: center;
   gap: 20px;
 }
 
 .secondslice_content h2 {
-  font-size: clamp(34px, 4.2vw, 60px);
+  font-size: clamp(30px, 3.4vw, 50px);
   line-height: 1.35;
   font-weight: 700;
   font-family: 'Press Start 2P', cursive;
   text-align: center;
+  margin: 0 auto;
 }
 
 .secondslice_body {
   width: min(100%, 1460px);
-  display: block;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: clamp(20px, 2vw, 32px);
 }
 
 .secondslice_arrows {
@@ -691,6 +695,17 @@ section {
   flex-direction: column;
   gap: 16px;
   flex: 0 0 auto;
+}
+
+.secondslice_arrows--mobile {
+  display: none;
+}
+
+.secondslice_arrows--desktop {
+  order: 2;
+  min-height: 320px;
+  justify-content: center;
+  align-self: flex-start;
 }
 
 .secondslice_arrow {
@@ -716,6 +731,7 @@ section {
 
 .secondslice_cards {
   width: min(100%, 1380px);
+  flex: 1 1 auto;
   display: grid;
   grid-template-columns: 1.16fr 1.28fr 1.28fr 1.16fr;
   column-gap: 20px;
@@ -830,7 +846,7 @@ section {
   position: absolute;
   inset: 0;
   border-radius: 60px;
-  padding: 2px;
+  padding: 4px;
   background: linear-gradient(147.87deg, #FE7940 4.89%, #CF3BEE 95.63%);
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
@@ -914,6 +930,14 @@ section {
   .secondslice_arrows {
     flex-direction: column;
     gap: 12px;
+  }
+
+  .secondslice_arrows--mobile {
+    display: flex;
+  }
+
+  .secondslice_arrows--desktop {
+    display: none;
   }
 
   .secondslice_arrow {
@@ -1182,7 +1206,8 @@ section {
   align-items: stretch;
   justify-content: flex-start;
   width: min(92vw, 1680px);
-  height: min(66vh, 700px);
+  height: min(74vh, 780px);
+  min-height: calc(100vh - 260px);
   padding: 56px 64px 44px;
   background: #000;
   border: 2px solid #fff;
@@ -1271,6 +1296,22 @@ section {
   gap: 20px;
   min-width: 0;
   padding-bottom: 160px;
+}
+
+.info-scroll_inner::after {
+  content: none;
+}
+
+@media (min-width: 769px) {
+  .info-scroll_inner::after {
+    content: "";
+    display: block;
+    flex: 0 0 120px;
+  }
+
+  .info-scroll_inner > .info-block:last-child {
+    margin-bottom: 120px;
+  }
 }
 
 .fourthslice_preview {
@@ -2250,15 +2291,10 @@ section {
   grid-template-areas: "prev track next";
   align-items: center;
   gap: 24px;
-  background:
-    radial-gradient(circle at top left, rgba(255, 126, 98, 0.12), transparent 36%),
-    radial-gradient(circle at bottom right, rgba(207, 59, 238, 0.14), transparent 34%),
-    rgba(0, 0, 0, 0.78);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
+  border: none;
   border-radius: 72px;
-  box-shadow:
-    0 30px 80px rgba(0, 0, 0, 0.32),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  box-shadow: none;
   opacity: 0;
   transform: translateY(36px) scale(0.985);
   transition: opacity 0.7s ease, transform 0.7s ease;
@@ -2280,10 +2316,13 @@ section {
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
-  scroll-snap-type: x proximity;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 0;
+  overscroll-behavior-x: contain;
   scrollbar-width: none;
   -ms-overflow-style: none;
   padding: 12px 0;
+  scroll-behavior: smooth;
   user-select: none;
   cursor: grab;
   touch-action: pan-x;
@@ -2309,6 +2348,7 @@ section {
   align-items: center;
   justify-content: center;
   scroll-snap-align: center;
+  scroll-snap-stop: always;
   opacity: 0;
   transform: scale(0.96);
   transition: opacity 0.65s ease, transform 0.65s ease;
@@ -2526,7 +2566,15 @@ section {
       "track track"
       "prev next";
     gap: 16px 12px;
+    background:
+      radial-gradient(circle at top left, rgba(255, 126, 98, 0.12), transparent 36%),
+      radial-gradient(circle at bottom right, rgba(207, 59, 238, 0.14), transparent 34%),
+      rgba(0, 0, 0, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 42px;
+    box-shadow:
+      0 30px 80px rgba(0, 0, 0, 0.32),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
 
   .partner-carousel_track {
@@ -2623,13 +2671,16 @@ section {
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
-  scroll-snap-type: x proximity;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: calc((100% - ((100% - 128px) / 3)) / 2);
+  overscroll-behavior-x: contain;
   scrollbar-width: none;
   -ms-overflow-style: none;
   user-select: none;
   cursor: grab;
   touch-action: pan-x;
   padding: 12px 0;
+  scroll-behavior: smooth;
 }
 
 .team-carousel_track::-webkit-scrollbar {
@@ -2685,6 +2736,7 @@ section {
   font-weight: 600;
   overflow: hidden;
   scroll-snap-align: center;
+  scroll-snap-stop: always;
   transition: transform 0.28s ease, opacity 0.28s ease, filter 0.28s ease;
 }
 
@@ -2720,6 +2772,7 @@ section {
 
   .team-carousel_track {
     gap: 40px;
+    scroll-padding-inline: calc((100% - ((100% - 40px) / 2)) / 2);
   }
 
   .team-card {
@@ -2824,6 +2877,24 @@ section {
   box-shadow: 0 28px 80px rgba(0, 0, 0, 0.34);
   justify-self: end;
   overflow: visible;
+}
+
+@media (min-width: 761px) {
+  .faqslice {
+    align-items: center;
+  }
+
+  .faqslice .platform-title {
+    align-self: center;
+    position: sticky;
+    top: 50vh;
+    transform: translateY(-50%);
+  }
+
+  .faqslice_inner {
+    min-height: calc(100vh - 210px);
+    align-self: start;
+  }
 }
 
 .faq-list {
@@ -3031,9 +3102,9 @@ section {
 
 .footerslice_info h2 {
   margin: 0 0 8px;
-  font-size: clamp(28px, 2.2vw, 38px);
-  line-height: 1.08;
-  font-weight: 700;
+  font-size: clamp(18px, 1.35vw, 24px);
+  line-height: 1.2;
+  font-weight: 600;
 }
 
 .footerslice_info p {
@@ -3170,8 +3241,11 @@ section {
 }
 
 .footerslice_art {
-  position: relative;
-  width: 100%;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
   min-height: min(72vh, 760px);
   overflow: hidden;
 }
@@ -3179,25 +3253,31 @@ section {
 .footerslice_orange {
   position: absolute;
   left: 50%;
-  bottom: -5vh;
-  width: max(112vw, 2150px);
+  bottom: 0;
+  width: 100vw;
+  min-width: 100vw;
   max-width: none;
-  height: auto;
+  height: 100%;
   z-index: 1;
   pointer-events: none;
   transform: translateX(-50%);
+  object-fit: cover;
+  object-position: center bottom;
 }
 
 .footerslice_purple {
   position: absolute;
   left: 50%;
-  bottom: -16vh;
-  width: max(106vw, 2035px);
+  bottom: 0;
+  width: 100vw;
+  min-width: 100vw;
   max-width: none;
-  height: auto;
+  height: 100%;
   z-index: 2;
   pointer-events: none;
   transform: translateX(-50%);
+  object-fit: cover;
+  object-position: center bottom;
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.35) 22%, rgba(0, 0, 0, 0.85) 42%, #000 60%);
   mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.35) 22%, rgba(0, 0, 0, 0.85) 42%, #000 60%);
 }

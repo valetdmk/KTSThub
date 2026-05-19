@@ -262,6 +262,41 @@ export const HeroSection = () => {
     const [activePlatformFeatureIndex, setActivePlatformFeatureIndex] = useState(0);
     const [isPlatformPreviewOpen, setIsPlatformPreviewOpen] = useState(false);
 
+    const snapTrackToClosestCard = useCallback((
+        track: HTMLDivElement | null,
+        selector: string,
+        behavior: ScrollBehavior = "smooth"
+    ) => {
+        if (!track) {
+            return;
+        }
+
+        const cards = Array.from(track.querySelectorAll<HTMLElement>(selector));
+
+        if (!cards.length) {
+            return;
+        }
+
+        const trackCenter = track.scrollLeft + track.clientWidth / 2;
+        let nextScrollLeft = track.scrollLeft;
+        let nearestDistance = Number.POSITIVE_INFINITY;
+
+        cards.forEach((card) => {
+            const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+            const distance = Math.abs(trackCenter - cardCenter);
+
+            if (distance < nearestDistance) {
+                nearestDistance = distance;
+                nextScrollLeft = cardCenter - track.clientWidth / 2;
+            }
+        });
+
+        track.scrollTo({
+            left: Math.max(0, nextScrollLeft),
+            behavior,
+        });
+    }, []);
+
     const scrollToSection = useCallback((sectionNum: number) => {
         const container = document.querySelector('.sections-container');
         const target = document.getElementById(`slice${sectionNum}`);
@@ -504,9 +539,12 @@ export const HeroSection = () => {
     };
 
     const handlePartnerPointerUp = () => {
+        const track = partnerCarouselTrackRef.current;
+
         partnerDragStartX.current = null;
         setIsPartnerDragging(false);
         recenterPartnerTrack();
+        snapTrackToClosestCard(track, ".partner-spotlight");
     };
 
     useEffect(() => {
@@ -555,9 +593,12 @@ export const HeroSection = () => {
     };
 
     const handleTeamPointerUp = () => {
+        const track = teamCarouselTrackRef.current;
+
         teamDragStartX.current = null;
         setIsTeamDragging(false);
         recenterTeamTrack();
+        snapTrackToClosestCard(track, ".team-card");
         updateActiveTeamCard();
     };
 
@@ -661,7 +702,7 @@ export const HeroSection = () => {
                     <div className="secondslice_content" key={activeAudienceSlide.type}>
                         <div className="secondslice_header">
                             <h2>{activeAudienceSlide.title}</h2>
-                            <div className="secondslice_arrows">
+                            <div className="secondslice_arrows secondslice_arrows--mobile">
                                 <button
                                     type="button"
                                     className="secondslice_arrow secondslice_arrow--up"
@@ -681,6 +722,24 @@ export const HeroSection = () => {
                             </div>
                         </div>
                         <div className="secondslice_body">
+                            <div className="secondslice_arrows secondslice_arrows--desktop">
+                                <button
+                                    type="button"
+                                    className="secondslice_arrow secondslice_arrow--up"
+                                    onClick={showPrevAudienceSlide}
+                                    aria-label="Показать предыдущий блок"
+                                >
+                                    ↑
+                                </button>
+                                <button
+                                    type="button"
+                                    className="secondslice_arrow secondslice_arrow--down"
+                                    onClick={showNextAudienceSlide}
+                                    aria-label="Показать следующий блок"
+                                >
+                                    ↓
+                                </button>
+                            </div>
                             <div className="secondslice_cards">
                                 {activeAudienceFeatures.map((item, index) => (
                                     <article
