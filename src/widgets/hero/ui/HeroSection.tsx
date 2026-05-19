@@ -255,6 +255,7 @@ export const HeroSection = () => {
     const teamDragStartX = useRef<number | null>(null);
     const teamDragStartScrollLeft = useRef(0);
     const [isTeamDragging, setIsTeamDragging] = useState(false);
+    const [activeTeamCardKey, setActiveTeamCardKey] = useState("");
     const [activeAudienceIndex, setActiveAudienceIndex] = useState(0);
     const infoScrollInnerRef = useRef<HTMLDivElement | null>(null);
     const platformFeatureRefs = useRef<Array<HTMLDivElement | null>>([]);
@@ -396,6 +397,36 @@ export const HeroSection = () => {
         }
     }, [TEAM_LOOP_MULTIPLIER, TEAM_MIDDLE_LOOP_INDEX]);
 
+    const updateActiveTeamCard = useCallback(() => {
+        const track = teamCarouselTrackRef.current;
+
+        if (!track) {
+            return;
+        }
+
+        const cards = Array.from(track.querySelectorAll<HTMLElement>(".team-card"));
+
+        if (!cards.length) {
+            return;
+        }
+
+        const trackCenter = track.scrollLeft + track.clientWidth / 2;
+        let nextActiveCardKey = "";
+        let nearestDistance = Number.POSITIVE_INFINITY;
+
+        cards.forEach((card) => {
+            const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+            const distance = Math.abs(trackCenter - cardCenter);
+
+            if (distance < nearestDistance) {
+                nearestDistance = distance;
+                nextActiveCardKey = card.dataset.cardKey ?? "";
+            }
+        });
+
+        setActiveTeamCardKey((prev) => (prev === nextActiveCardKey ? prev : nextActiveCardKey));
+    }, []);
+
     const scrollTeamByCard = useCallback((direction: 1 | -1) => {
         const track = teamCarouselTrackRef.current;
 
@@ -527,6 +558,7 @@ export const HeroSection = () => {
         teamDragStartX.current = null;
         setIsTeamDragging(false);
         recenterTeamTrack();
+        updateActiveTeamCard();
     };
 
     useEffect(() => {
@@ -538,10 +570,12 @@ export const HeroSection = () => {
 
         const frameId = window.requestAnimationFrame(() => {
             recenterTeamTrack(true);
+            updateActiveTeamCard();
         });
 
         const handleResize = () => {
             recenterTeamTrack(true);
+            updateActiveTeamCard();
         };
 
         window.addEventListener("resize", handleResize);
@@ -550,7 +584,7 @@ export const HeroSection = () => {
             window.cancelAnimationFrame(frameId);
             window.removeEventListener("resize", handleResize);
         };
-    }, [recenterTeamTrack]);
+    }, [recenterTeamTrack, updateActiveTeamCard]);
 
     useEffect(() => {
         const scrollContainer = infoScrollInnerRef.current;
@@ -806,7 +840,10 @@ export const HeroSection = () => {
                                 <div
                                     ref={teamCarouselTrackRef}
                                     className={`team-carousel_track ${isTeamDragging ? "is-dragging" : ""}`}
-                                    onScroll={() => recenterTeamTrack()}
+                                    onScroll={() => {
+                                        recenterTeamTrack();
+                                        updateActiveTeamCard();
+                                    }}
                                     onMouseDown={(event) => handleTeamPointerDown(event.clientX)}
                                     onMouseMove={(event) => handleTeamPointerMove(event.clientX)}
                                     onMouseUp={handleTeamPointerUp}
@@ -816,7 +853,11 @@ export const HeroSection = () => {
                                     onTouchEnd={handleTeamPointerUp}
                                 >
                                     {loopedTeamMembers.map((member) => (
-                                        <div key={member.key} className="team-card">
+                                        <div
+                                            key={member.key}
+                                            className={`team-card${activeTeamCardKey === member.key ? " is-active" : ""}`}
+                                            data-card-key={member.key}
+                                        >
                                             <img className="team-card_image" src={member.member.image} alt={member.member.name} />
                                         </div>
                                     ))}
