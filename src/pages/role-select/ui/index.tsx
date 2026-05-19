@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import "./index.scss";
 import { Background } from "../../../shared/ui/Background/Background";
 import logo from "../../../shared/assets/logo.png";
@@ -24,18 +25,56 @@ const ROLE_CARDS = [
 ] as const;
 
 export const RoleSelectPage = () => {
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+  const headerRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!isMobileNavOpen) {
+      return;
+    }
+
+    const handlePointerDown = (event: globalThis.MouseEvent | TouchEvent) => {
+      const target = event.target;
+
+      if (!(target instanceof Node)) {
+        return;
+      }
+
+      if (!headerRef.current?.contains(target)) {
+        setIsMobileNavOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("touchstart", handlePointerDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("touchstart", handlePointerDown);
+    };
+  }, [isMobileNavOpen]);
+
   return (
     <div className="role-select-shell">
       <Background />
       <img className="hero_logo role-select-page__logo" src={logo} alt="Логотип KTSThub" />
-      <header className="hero_header role-select-page__header">
+      <header ref={headerRef} className={`hero_header role-select-page__header ${isMobileNavOpen ? "is-open" : ""}`}>
+        <button
+          type="button"
+          className="hero_menu_button"
+          onClick={() => setIsMobileNavOpen((prev) => !prev)}
+          aria-expanded={isMobileNavOpen}
+          aria-controls="role-select-navigation"
+        >
+          Меню
+        </button>
         <div className="hero_header_inner">
-          <nav className="hero_nav">
-            <a href="/#slice2">Для кого</a>
-            <a href="/#slice3">Платформа</a>
-            <a href="/#slice4">Партнёры</a>
-            <a href="/#slice5">Разработчики</a>
-            <a href="/#slice6">FAQ</a>
+          <nav id="role-select-navigation" className="hero_nav">
+            <a className="hero_nav_link" href="/#slice2" onClick={() => setIsMobileNavOpen(false)}>Для кого</a>
+            <a className="hero_nav_link" href="/#slice3" onClick={() => setIsMobileNavOpen(false)}>Платформа</a>
+            <a className="hero_nav_link" href="/#slice4" onClick={() => setIsMobileNavOpen(false)}>Партнёры</a>
+            <a className="hero_nav_link" href="/#slice5" onClick={() => setIsMobileNavOpen(false)}>Разработчики</a>
+            <a className="hero_nav_link" href="/#slice6" onClick={() => setIsMobileNavOpen(false)}>FAQ</a>
           </nav>
         </div>
       </header>

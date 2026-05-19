@@ -259,6 +259,7 @@ export const HeroSection = () => {
     const infoScrollInnerRef = useRef<HTMLDivElement | null>(null);
     const platformFeatureRefs = useRef<Array<HTMLDivElement | null>>([]);
     const [activePlatformFeatureIndex, setActivePlatformFeatureIndex] = useState(0);
+    const [isPlatformPreviewOpen, setIsPlatformPreviewOpen] = useState(false);
 
     const scrollToSection = useCallback((sectionNum: number) => {
         const container = document.querySelector('.sections-container');
@@ -585,19 +586,36 @@ export const HeroSection = () => {
         };
     }, []);
 
-    const showStickyHeader = currentSection >= 2;
+    useEffect(() => {
+        if (!isPlatformPreviewOpen) {
+            return;
+        }
+
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === "Escape") {
+                setIsPlatformPreviewOpen(false);
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [isPlatformPreviewOpen]);
+
     const navigate = useNavigate();
 
     return (
         <div className="sections-container">
             <section id="slice1" className="hero">
-                <img className={`hero_logo ${showStickyHeader ? 'fixed-on-scroll' : ''}`} src={logo} alt="Р›РѕРіРѕС‚РёРї KTSThub" />
+                <img className={`hero_logo ${currentSection >= 2 ? 'fixed-on-scroll' : ''}`} src={logo} alt="Р›РѕРіРѕС‚РёРї KTSThub" />
 
                 <div className="hero_content">
                     <div className="hero_intro">
                         <img className="hero_intro_logo" src={heroLogo} alt="KTSThub" />
                         <p className="hero_intro_text">Мы дадим тебе<br />портфолио и кейсы</p>
-                        <button className={`hero_button ${showStickyHeader ? 'move-to-nav' : ''}`} onClick={() => navigate('/roles')}>
+                        <button className={`hero_button ${currentSection >= 2 ? 'move-to-nav' : ''}`} onClick={() => navigate('/roles')}>
                             Присоединиться к нашему<br />миру КЦТхак
                         </button>
                     </div>
@@ -609,6 +627,24 @@ export const HeroSection = () => {
                     <div className="secondslice_content" key={activeAudienceSlide.type}>
                         <div className="secondslice_header">
                             <h2>{activeAudienceSlide.title}</h2>
+                            <div className="secondslice_arrows">
+                                <button
+                                    type="button"
+                                    className="secondslice_arrow secondslice_arrow--up"
+                                    onClick={showPrevAudienceSlide}
+                                    aria-label="Показать предыдущий блок"
+                                >
+                                    ↑
+                                </button>
+                                <button
+                                    type="button"
+                                    className="secondslice_arrow secondslice_arrow--down"
+                                    onClick={showNextAudienceSlide}
+                                    aria-label="Показать следующий блок"
+                                >
+                                    ↓
+                                </button>
+                            </div>
                         </div>
                         <div className="secondslice_body">
                             <div className="secondslice_cards">
@@ -630,24 +666,6 @@ export const HeroSection = () => {
                                     </article>
                                 ))}
                             </div>
-                            <div className="secondslice_arrows">
-                                <button
-                                    type="button"
-                                    className="secondslice_arrow secondslice_arrow--up"
-                                    onClick={showPrevAudienceSlide}
-                                    aria-label="Показать предыдущий блок"
-                                >
-                                    ↑
-                                </button>
-                                <button
-                                    type="button"
-                                    className="secondslice_arrow secondslice_arrow--down"
-                                    onClick={showNextAudienceSlide}
-                                    aria-label="Показать следующий блок"
-                                >
-                                    ↓
-                                </button>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -658,58 +676,59 @@ export const HeroSection = () => {
                 <div className="fourthslice_inner">
                     <div className="info-scroll">
                         <div ref={infoScrollInnerRef} className="info-scroll_inner">
-                            <div className="info-scroll_layout">
-                                <div className="info-scroll_content">
-                                    <div className="fourthslice_intro">
-                                        <h2>KCTHack<br />Platform</h2>
-                                        <p>Найди команду, реши реальный кейс,получи портфолио.</p>
-                                    </div>
-                                    {PLATFORM_FEATURES.map((item, index) => (
-                                        <div
-                                            key={item.title}
-                                            ref={(element) => {
-                                                platformFeatureRefs.current[index] = element;
-                                            }}
-                                            className={`info-block${index === activePlatformFeatureIndex ? " info-block--active" : ""}`}
-                                        >
-                                            <div className="info-content">
-                                                <div className="info-heading">
-                                                    {item.leftIcon ? (
-                                                        <img
-                                                            className={`info-heading-icon info-heading-icon-left${item.leftIconMirrored ? " info-heading-icon--mirrored" : ""}`}
-                                                            src={item.leftIcon}
-                                                            alt=""
-                                                        />
-                                                    ) : (
-                                                        <span className="info-heading-spacer" aria-hidden="true" />
-                                                    )}
-                                                    <h3>{item.title}</h3>
-                                                    {item.rightIcon ? (
-                                                        <img
-                                                            className={`info-heading-icon info-heading-icon-right${item.rightIconLarge ? " info-heading-icon--large" : ""}`}
-                                                            src={item.rightIcon}
-                                                            alt=""
-                                                        />
-                                                    ) : (
-                                                        <span className="info-heading-spacer" aria-hidden="true" />
-                                                    )}
-                                                </div>
-                                                <p>{item.text}</p>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="fourthslice_preview" aria-hidden="true">
-                                    <img
-                                        key={activePlatformFeature.title}
-                                        className={`fourthslice_preview-image ${activePlatformFeature.platformImageClassName}`}
-                                        src={activePlatformFeature.platformImage}
-                                        alt=""
-                                    />
-                                </div>
+                            <div className="fourthslice_intro">
+                                <h2>KCTHack<br />Platform</h2>
+                                <p>Найди команду, реши реальный кейс,получи портфолио.</p>
                             </div>
+                            {PLATFORM_FEATURES.map((item, index) => (
+                                <div
+                                    key={item.title}
+                                    ref={(element) => {
+                                        platformFeatureRefs.current[index] = element;
+                                    }}
+                                    className={`info-block${index === activePlatformFeatureIndex ? " info-block--active" : ""}`}
+                                >
+                                    <div className="info-content">
+                                        <div className="info-heading">
+                                            {item.leftIcon ? (
+                                                <img
+                                                    className={`info-heading-icon info-heading-icon-left${item.leftIconMirrored ? " info-heading-icon--mirrored" : ""}`}
+                                                    src={item.leftIcon}
+                                                    alt=""
+                                                />
+                                            ) : (
+                                                <span className="info-heading-spacer" aria-hidden="true" />
+                                            )}
+                                            <h3>{item.title}</h3>
+                                            {item.rightIcon ? (
+                                                <img
+                                                    className={`info-heading-icon info-heading-icon-right${item.rightIconLarge ? " info-heading-icon--large" : ""}`}
+                                                    src={item.rightIcon}
+                                                    alt=""
+                                                />
+                                            ) : (
+                                                <span className="info-heading-spacer" aria-hidden="true" />
+                                            )}
+                                        </div>
+                                        <p>{item.text}</p>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
+                    <button
+                        type="button"
+                        className="fourthslice_preview"
+                        onClick={() => setIsPlatformPreviewOpen(true)}
+                        aria-label={`Открыть изображение для блока ${activePlatformFeature.title}`}
+                    >
+                        <img
+                            key={activePlatformFeature.title}
+                            className={`fourthslice_preview-image ${activePlatformFeature.platformImageClassName}`}
+                            src={activePlatformFeature.platformImage}
+                            alt={activePlatformFeature.title}
+                        />
+                    </button>
                 </div>
             </section>
 
@@ -792,6 +811,9 @@ export const HeroSection = () => {
                                     onMouseMove={(event) => handleTeamPointerMove(event.clientX)}
                                     onMouseUp={handleTeamPointerUp}
                                     onMouseLeave={handleTeamPointerUp}
+                                    onTouchStart={(event) => handleTeamPointerDown(event.touches[0].clientX)}
+                                    onTouchMove={(event) => handleTeamPointerMove(event.touches[0].clientX)}
+                                    onTouchEnd={handleTeamPointerUp}
                                 >
                                     {loopedTeamMembers.map((member) => (
                                         <div key={member.key} className="team-card">
@@ -889,6 +911,35 @@ export const HeroSection = () => {
                                 </div>
                             </div>
                         </section>
+
+                        {isPlatformPreviewOpen ? (
+                            <div
+                                className="platform-preview-modal"
+                                role="dialog"
+                                aria-modal="true"
+                                aria-label={activePlatformFeature.title}
+                                onClick={() => setIsPlatformPreviewOpen(false)}
+                            >
+                                <button
+                                    type="button"
+                                    className="platform-preview-modal_close"
+                                    onClick={() => setIsPlatformPreviewOpen(false)}
+                                    aria-label="Закрыть полноэкранное изображение"
+                                >
+                                    ×
+                                </button>
+                                <div
+                                    className="platform-preview-modal_inner"
+                                    onClick={(event) => event.stopPropagation()}
+                                >
+                                    <img
+                                        className="platform-preview-modal_image"
+                                        src={activePlatformFeature.platformImage}
+                                        alt={activePlatformFeature.title}
+                                    />
+                                </div>
+                            </div>
+                        ) : null}
                     </div>
                 );
             }
