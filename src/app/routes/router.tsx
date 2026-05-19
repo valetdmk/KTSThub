@@ -1,105 +1,113 @@
+import { Suspense, lazy, type ReactNode } from "react";
 import { createBrowserRouter } from "react-router-dom";
-import { AboutUs } from "../../pages/aboutus/ui";
-import { Achievements } from "../../pages/achievements/ui";
-import { AdminCreateEventPage } from "../../pages/admin/ui/create-event";
-import { AdminPage } from "../../pages/admin/ui";
-import { AuthPage } from "../../pages/auth/ui";
-import { Developers } from "../../pages/developers/ui";
-import Events from "../../pages/events/ui";
-import EventPage from "../../pages/events/ui/eventpage";
-import { FAQ } from "../../pages/faq/ui";
-import { HomePage } from "../../pages/home/ui";
-import Login from "../../pages/login/ui";
-import { ParticipantsPage } from "../../pages/participants/ui";
-import { Partners } from "../../pages/partners/ui";
-import { PlatformPage } from "../../pages/platform/ui";
-import { ProfilePage } from "../../pages/profile/ui";
-import { EditProfilePage } from "../../pages/profile-edit/ui";
-import { ProjectsPage } from "../../pages/projects/ui";
-import Register from "../../pages/register/ui";
-import { RoleSelectPage } from "../../pages/role-select/ui";
-import { SchedulePage } from "../../pages/schedule/ui";
 import { ProtectedRoute } from "./ProtectedRoute";
+
+const AboutUs = lazy(() => import("../../pages/aboutus/ui").then((module) => ({ default: module.AboutUs })));
+const Achievements = lazy(() => import("../../pages/achievements/ui").then((module) => ({ default: module.Achievements })));
+const AdminCreateEventPage = lazy(() => import("../../pages/admin/ui/create-event").then((module) => ({ default: module.AdminCreateEventPage })));
+const AdminPage = lazy(() => import("../../pages/admin/ui").then((module) => ({ default: module.AdminPage })));
+const AuthPage = lazy(() => import("../../pages/auth/ui").then((module) => ({ default: module.AuthPage })));
+const Developers = lazy(() => import("../../pages/developers/ui").then((module) => ({ default: module.Developers })));
+const Events = lazy(() => import("../../pages/events/ui"));
+const EventPage = lazy(() => import("../../pages/events/ui/eventpage"));
+const FAQ = lazy(() => import("../../pages/faq/ui").then((module) => ({ default: module.FAQ })));
+const HomePage = lazy(() => import("../../pages/home/ui").then((module) => ({ default: module.HomePage })));
+const Login = lazy(() => import("../../pages/login/ui"));
+const ParticipantsPage = lazy(() => import("../../pages/participants/ui").then((module) => ({ default: module.ParticipantsPage })));
+const Partners = lazy(() => import("../../pages/partners/ui").then((module) => ({ default: module.Partners })));
+const PlatformPage = lazy(() => import("../../pages/platform/ui").then((module) => ({ default: module.PlatformPage })));
+const ProfilePage = lazy(() => import("../../pages/profile/ui").then((module) => ({ default: module.ProfilePage })));
+const EditProfilePage = lazy(() => import("../../pages/profile-edit/ui").then((module) => ({ default: module.EditProfilePage })));
+const ProjectsPage = lazy(() => import("../../pages/projects/ui").then((module) => ({ default: module.ProjectsPage })));
+const Register = lazy(() => import("../../pages/register/ui"));
+const RoleSelectPage = lazy(() => import("../../pages/role-select/ui").then((module) => ({ default: module.RoleSelectPage })));
+const SchedulePage = lazy(() => import("../../pages/schedule/ui").then((module) => ({ default: module.SchedulePage })));
+
+const renderLazyRoute = (node: ReactNode) => (
+  <Suspense fallback={<div className="app-route-loader" aria-hidden="true" />}>
+    {node}
+  </Suspense>
+);
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <HomePage />,
+    element: renderLazyRoute(<HomePage />),
   },
   {
     path: "/participants",
-    element: <ProtectedRoute><ParticipantsPage /></ProtectedRoute>,
+    element: <ProtectedRoute>{renderLazyRoute(<ParticipantsPage />)}</ProtectedRoute>,
   },
   {
     path: "/admin",
-    element: <ProtectedRoute><AdminPage /></ProtectedRoute>,
+    element: <ProtectedRoute>{renderLazyRoute(<AdminPage />)}</ProtectedRoute>,
   },
   {
     path: "/admin/create-event",
-    element: <ProtectedRoute><AdminCreateEventPage /></ProtectedRoute>,
+    element: <ProtectedRoute>{renderLazyRoute(<AdminCreateEventPage />)}</ProtectedRoute>,
   },
   {
     path: "/schedule",
-    element: <ProtectedRoute><SchedulePage /></ProtectedRoute>,
+    element: <ProtectedRoute>{renderLazyRoute(<SchedulePage />)}</ProtectedRoute>,
   },
   {
     path: "/profile",
-    element: <ProtectedRoute><ProfilePage /></ProtectedRoute>,
+    element: <ProtectedRoute>{renderLazyRoute(<ProfilePage />)}</ProtectedRoute>,
   },
   {
     path: "/profile/edit",
-    element: <ProtectedRoute><EditProfilePage /></ProtectedRoute>,
+    element: <ProtectedRoute>{renderLazyRoute(<EditProfilePage />)}</ProtectedRoute>,
   },
   {
     path: "/events",
-    element: <Events />,
+    element: renderLazyRoute(<Events />),
   },
   {
     path: "/events/:id",
-    element: <EventPage />,
+    element: renderLazyRoute(<EventPage />),
   },
   {
     path: "/aboutus",
-    element: <AboutUs />,
+    element: renderLazyRoute(<AboutUs />),
   },
   {
     path: "/achievements",
-    element: <ProtectedRoute><Achievements /></ProtectedRoute>,
+    element: <ProtectedRoute>{renderLazyRoute(<Achievements />)}</ProtectedRoute>,
   },
   {
     path: "/projects",
-    element: <ProtectedRoute><ProjectsPage /></ProtectedRoute>,
+    element: <ProtectedRoute>{renderLazyRoute(<ProjectsPage />)}</ProtectedRoute>,
   },
   {
     path: "/developers",
-    element: <Developers />,
+    element: renderLazyRoute(<Developers />),
   },
   {
     path: "/partners",
-    element: <Partners />,
+    element: renderLazyRoute(<Partners />),
   },
   {
     path: "/faq",
-    element: <FAQ />,
+    element: renderLazyRoute(<FAQ />),
   },
   {
     path: "/login",
-    element: <Login />,
+    element: renderLazyRoute(<Login />),
   },
   {
     path: "/register",
-    element: <Register />,
+    element: renderLazyRoute(<Register />),
   },
   {
     path: "/auth",
-    element: <AuthPage />,
+    element: renderLazyRoute(<AuthPage />),
   },
   {
     path: "/roles",
-    element: <RoleSelectPage />,
+    element: renderLazyRoute(<RoleSelectPage />),
   },
   {
     path: "/platform",
-    element: <ProtectedRoute><PlatformPage /></ProtectedRoute>,
+    element: <ProtectedRoute>{renderLazyRoute(<PlatformPage />)}</ProtectedRoute>,
   },
 ]);

@@ -13,10 +13,10 @@ import logo from "../../../shared/assets/logo.png";
 import heroLogo from "../../../shared/assets/HeroLogo1.png";
 import panda from "../../../shared/assets/panda.png";
 import partnerBack from "../../../shared/assets/PartnerBack.png";
-import platformAuth from "../../../shared/assets/platformAuth.png";
-import platformHero from "../../../shared/assets/platformHero.png";
-import platformReting from "../../../shared/assets/platformReting.png";
-import platformSchedule from "../../../shared/assets/platformSchedule.png";
+import platformAuth from "../../../shared/assets/platformAuth.webp";
+import platformHero from "../../../shared/assets/platformHero.webp";
+import platformReting from "../../../shared/assets/platformReting.webp";
+import platformSchedule from "../../../shared/assets/platformSchedule.webp";
 
 import forstudent1 from "../../../shared/assets/badge.png";
 import forstudent2 from "../../../shared/assets/titleproject.png";
@@ -36,7 +36,7 @@ import Maria from "../../../shared/assets/Maria.png";
 import Danil from "../../../shared/assets/Danil.png";
 import Ksenia from "../../../shared/assets/Ksenia.png";
 import Artem from "../../../shared/assets/Artem.png";
-import footerImage from "../../../shared/assets/footer.png";
+import footerImage from "../../../shared/assets/footer.webp";
 
 
 
@@ -707,11 +707,24 @@ export const HeroSection = () => {
     return (
         <div className={`sections-container ${currentSection === MAX_SECTION ? "sections-container--free-scroll" : ""}`}>
             <section id="slice1" className="hero">
-                <img className={`hero_logo ${currentSection >= 2 ? 'fixed-on-scroll' : ''}`} src={logo} alt="Р›РѕРіРѕС‚РёРї KTSThub" />
+                <img
+                    className={`hero_logo ${currentSection >= 2 ? 'fixed-on-scroll' : ''}`}
+                    src={logo}
+                    alt="Р›РѕРіРѕС‚РёРї KTSThub"
+                    loading="eager"
+                    fetchPriority="high"
+                />
 
                 <div className="hero_content">
                     <div className="hero_intro">
-                        <img className="hero_intro_logo" src={heroLogo} alt="KTSThub" />
+                        <img
+                            className="hero_intro_logo"
+                            src={heroLogo}
+                            alt="KTSThub"
+                            loading="eager"
+                            fetchPriority="high"
+                            decoding="async"
+                        />
                         <p className="hero_intro_text">Мы дадим тебе<br />портфолио и кейсы</p>
                         <button className={`hero_button ${currentSection >= 2 ? 'move-to-nav' : ''}`} onClick={() => navigate('/roles')}>
                             Присоединиться к нашему<br />миру КЦТхак
@@ -811,6 +824,8 @@ export const HeroSection = () => {
                                                     className={`info-heading-icon info-heading-icon-left${item.leftIconMirrored ? " info-heading-icon--mirrored" : ""}`}
                                                     src={item.leftIcon}
                                                     alt=""
+                                                    loading="lazy"
+                                                    decoding="async"
                                                 />
                                             ) : (
                                                 <span className="info-heading-spacer" aria-hidden="true" />
@@ -821,6 +836,8 @@ export const HeroSection = () => {
                                                     className={`info-heading-icon info-heading-icon-right${item.rightIconLarge ? " info-heading-icon--large" : ""}`}
                                                     src={item.rightIcon}
                                                     alt=""
+                                                    loading="lazy"
+                                                    decoding="async"
                                                 />
                                             ) : (
                                                 <span className="info-heading-spacer" aria-hidden="true" />
@@ -840,9 +857,11 @@ export const HeroSection = () => {
                     >
                         <img
                             key={activePlatformFeature.title}
-                            className={`fourthslice_preview-image ${activePlatformFeature.platformImageClassName}`}
+                            className={`fourthslice_preview-image interactive-image ${activePlatformFeature.platformImageClassName}`}
                             src={activePlatformFeature.platformImage}
                             alt={activePlatformFeature.title}
+                            loading="lazy"
+                            decoding="async"
                         />
                     </button>
                 </div>
@@ -878,6 +897,8 @@ export const HeroSection = () => {
                                                 src={partnerBack}
                                                 alt=""
                                                 aria-hidden="true"
+                                                loading="lazy"
+                                                decoding="async"
                                             />
                                             <div className={`partner-spotlight_content${partner.isPlaceholder ? " partner-spotlight_content--placeholder" : ""}`}>
                                                 {partner.isPlaceholder ? (
@@ -895,7 +916,7 @@ export const HeroSection = () => {
                                                 ) : (
                                                     <>
                                                         <div className="partner-spotlight_avatar">
-                                                            <img src={panda} alt={partner.name} />
+                                                            <img src={panda} alt={partner.name} loading="lazy" decoding="async" />
                                                         </div>
                                                         <div className="partner-spotlight_name">{partner.name}</div>
                                                         <p className="partner-spotlight_role">{partner.role}</p>
@@ -950,7 +971,7 @@ export const HeroSection = () => {
                                             className={`team-card${activeTeamCardKey === member.key ? " is-active" : ""}`}
                                             data-card-key={member.key}
                                         >
-                                            <img className="team-card_image" src={member.member.image} alt={member.member.name} />
+                                            <img className="team-card_image" src={member.member.image} alt={member.member.name} loading="lazy" decoding="async" />
                                         </div>
                                     ))}
                                 </div>
@@ -998,7 +1019,7 @@ export const HeroSection = () => {
                                 </div>
                             </div>
                             <div className="faqslice_footer" aria-hidden="true">
-                                <img className="faqslice_footer-image" src={footerImage} alt="" />
+                                <img className="faqslice_footer-image" src={footerImage} alt="" loading="lazy" decoding="async" />
                             </div>
                         </section>
 
@@ -1023,9 +1044,11 @@ export const HeroSection = () => {
                                     onClick={(event) => event.stopPropagation()}
                                 >
                                     <img
-                                        className="platform-preview-modal_image"
+                                        className="platform-preview-modal_image interactive-image"
                                         src={activePlatformFeature.platformImage}
                                         alt={activePlatformFeature.title}
+                                        loading="eager"
+                                        decoding="async"
                                     />
                                 </div>
                             </div>

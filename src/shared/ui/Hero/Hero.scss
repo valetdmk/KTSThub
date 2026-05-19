@@ -28,6 +28,14 @@ html, body {
   overscroll-behavior: none;
 }
 
+.sections-container img {
+  pointer-events: none;
+}
+
+.sections-container .interactive-image {
+  pointer-events: auto;
+}
+
 .sections-container--free-scroll {
   scroll-snap-type: none;
 }
@@ -227,6 +235,9 @@ section {
   box-shadow:
     0 0 12px rgba(255, 138, 0, 0.42),
     0 0 24px rgba(255, 94, 0, 0.24);
+  -webkit-tap-highlight-color: transparent;
+  tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .hero_menu_button-icon {
@@ -796,6 +807,9 @@ section {
   line-height: 1;
   cursor: pointer;
   transition: transform 0.2s ease, background 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .secondslice_arrow:hover {
@@ -2865,6 +2879,9 @@ section {
   z-index: 2;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .team-carousel_arrow:hover {
@@ -3143,6 +3160,9 @@ section {
   border-radius: 28px;
   position: relative;
   z-index: 3;
+  -webkit-tap-highlight-color: transparent;
+  tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .faq-card.is-open .faq-card_trigger {

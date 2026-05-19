@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import "./index.scss";
+import "../../../shared/ui/Hero/Hero.scss";
 import { Background } from "../../../shared/ui/Background/Background";
 import logo from "../../../shared/assets/logo.png";
 import participantRole from "../../../shared/assets/participantRole.png";
@@ -69,7 +70,13 @@ export const RoleSelectPage = () => {
   return (
     <div className={`role-select-shell ${isMobileNavOpen ? "menu-open" : ""}`}>
       <Background />
-      <img className="hero_logo role-select-page__logo" src={logo} alt="Логотип KTSThub" />
+      <img
+        className="hero_logo role-select-page__logo"
+        src={logo}
+        alt="Логотип KTSThub"
+        loading="eager"
+        fetchPriority="high"
+      />
       <header ref={headerRef} className={`hero_header role-select-page__header ${isMobileNavOpen ? "is-open" : ""}`}>
         <button
           type="button"
@@ -106,7 +113,14 @@ export const RoleSelectPage = () => {
                   <span className="role-card__label">{card.label}</span>
                 </div>
                 <div className="role-card__image-wrap">
-                  <img className="role-card__image" src={card.image} alt={card.imageAlt} />
+                  <img
+                    className="role-card__image"
+                    src={card.image}
+                    alt={card.imageAlt}
+                    loading="eager"
+                    fetchPriority="high"
+                    decoding="async"
+                  />
                 </div>
                 <div className="role-card__actions">
                   <a className="role-card__action" href={card.href}>
