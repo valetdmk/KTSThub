@@ -21,6 +21,8 @@ const ROLE_CARDS = [
     imageAlt: "Роль партнёра",
     actionLabel: "Стать Нашим Партнёром",
     href: "https://docs.google.com/forms/d/e/1FAIpQLSf8lYYBIzyrj-PJ3Vq2rscPzG_aRkwe_f6eJZFF4Mgxo6CGUQ/viewform?usp=publish-editor",
+    secondaryActionLabel: "Вернуться",
+    secondaryHref: "/",
   },
 ] as const;
 
@@ -106,9 +108,16 @@ export const RoleSelectPage = () => {
                 <div className="role-card__image-wrap">
                   <img className="role-card__image" src={card.image} alt={card.imageAlt} />
                 </div>
-                <a className="role-card__action" href={card.href}>
-                  {card.actionLabel}
-                </a>
+                <div className="role-card__actions">
+                  <a className="role-card__action" href={card.href}>
+                    {card.actionLabel}
+                  </a>
+                  {"secondaryActionLabel" in card && card.secondaryActionLabel && "secondaryHref" in card && card.secondaryHref ? (
+                    <a className="role-card__secondary-action" href={card.secondaryHref}>
+                      {card.secondaryActionLabel}
+                    </a>
+                  ) : null}
+                </div>
               </article>
             ))}
           </section>

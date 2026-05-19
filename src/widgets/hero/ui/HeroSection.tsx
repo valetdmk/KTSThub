@@ -42,6 +42,7 @@ import footerImage from "../../../shared/assets/footer.png";
 
 export const HeroSection = () => {
     const MAX_SECTION = 6;
+    const PARTNER_APPLICATION_URL = "https://docs.google.com/forms/d/e/1FAIpQLSf8lYYBIzyrj-PJ3Vq2rscPzG_aRkwe_f6eJZFF4Mgxo6CGUQ/viewform?usp=publish-editor";
     const PARTNER_LOOP_MULTIPLIER = 7;
     const PARTNER_MIDDLE_LOOP_INDEX = Math.floor(PARTNER_LOOP_MULTIPLIER / 2);
     const TEAM_LOOP_MULTIPLIER = 7;
@@ -461,24 +462,59 @@ export const HeroSection = () => {
         setActiveTeamCardKey((prev) => (prev === nextActiveCardKey ? prev : nextActiveCardKey));
     }, []);
 
-    const scrollTeamByCard = useCallback((direction: 1 | -1) => {
-        const track = teamCarouselTrackRef.current;
-
+    const scrollTrackToAdjacentCard = useCallback((
+        track: HTMLDivElement | null,
+        selector: string,
+        direction: 1 | -1,
+        afterScroll?: () => void
+    ) => {
         if (!track) {
             return;
         }
 
-        const firstCard = track.querySelector<HTMLElement>(".team-card");
-        const trackStyles = window.getComputedStyle(track);
-        const gap = Number.parseFloat(trackStyles.columnGap || trackStyles.gap || "0");
-        const fallbackCardWidth = track.clientWidth >= 960 ? track.clientWidth / 3 : Math.min(track.clientWidth * 0.82, 420);
-        const cardWidth = firstCard?.offsetWidth ?? fallbackCardWidth;
+        const cards = Array.from(track.querySelectorAll<HTMLElement>(selector));
 
-        track.scrollBy({
-            left: direction * (cardWidth + gap),
+        if (!cards.length) {
+            return;
+        }
+
+        const trackCenter = track.scrollLeft + track.clientWidth / 2;
+        let nearestCardIndex = 0;
+        let nearestDistance = Number.POSITIVE_INFINITY;
+
+        cards.forEach((card, index) => {
+            const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+            const distance = Math.abs(trackCenter - cardCenter);
+
+            if (distance < nearestDistance) {
+                nearestDistance = distance;
+                nearestCardIndex = index;
+            }
+        });
+
+        const targetIndex = Math.min(cards.length - 1, Math.max(0, nearestCardIndex + direction));
+        const targetCard = cards[targetIndex];
+
+        if (!targetCard) {
+            return;
+        }
+
+        const targetScrollLeft = targetCard.offsetLeft + targetCard.offsetWidth / 2 - track.clientWidth / 2;
+
+        track.scrollTo({
+            left: Math.max(0, targetScrollLeft),
             behavior: "smooth",
         });
+
+        afterScroll?.();
     }, []);
+
+    const scrollTeamByCard = useCallback((direction: 1 | -1) => {
+        const track = teamCarouselTrackRef.current;
+
+        recenterTeamTrack();
+        scrollTrackToAdjacentCard(track, ".team-card", direction, updateActiveTeamCard);
+    }, [recenterTeamTrack, scrollTrackToAdjacentCard, updateActiveTeamCard]);
 
     const showPrevTeamMember = () => {
         scrollTeamByCard(-1);
@@ -491,21 +527,9 @@ export const HeroSection = () => {
     const scrollPartnerByCard = useCallback((direction: 1 | -1) => {
         const track = partnerCarouselTrackRef.current;
 
-        if (!track) {
-            return;
-        }
-
-        const firstCard = track.querySelector<HTMLElement>(".partner-spotlight");
-        const trackStyles = window.getComputedStyle(track);
-        const gap = Number.parseFloat(trackStyles.columnGap || trackStyles.gap || "0");
-        const fallbackCardWidth = track.clientWidth;
-        const cardWidth = firstCard?.offsetWidth ?? fallbackCardWidth;
-
-        track.scrollBy({
-            left: direction * (cardWidth + gap),
-            behavior: "smooth",
-        });
-    }, []);
+        recenterPartnerTrack();
+        scrollTrackToAdjacentCard(track, ".partner-spotlight", direction);
+    }, [recenterPartnerTrack, scrollTrackToAdjacentCard]);
 
     const showPrevPartner = () => {
         scrollPartnerByCard(-1);
@@ -857,7 +881,17 @@ export const HeroSection = () => {
                                             />
                                             <div className={`partner-spotlight_content${partner.isPlaceholder ? " partner-spotlight_content--placeholder" : ""}`}>
                                                 {partner.isPlaceholder ? (
-                                                    <div className="partner-spotlight_placeholder">{partner.name}</div>
+                                                    <>
+                                                        <a
+                                                            className="partner-spotlight_action"
+                                                            href={PARTNER_APPLICATION_URL}
+                                                            target="_blank"
+                                                            rel="noreferrer"
+                                                        >
+                                                            Стать Нашим Партнёром
+                                                        </a>
+                                                        <div className="partner-spotlight_placeholder">{partner.name}</div>
+                                                    </>
                                                 ) : (
                                                     <>
                                                         <div className="partner-spotlight_avatar">
