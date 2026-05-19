@@ -2951,14 +2951,14 @@ section {
 
 @media (min-width: 761px) {
   .faqslice {
-    align-items: center;
+    align-items: start;
   }
 
   .faqslice .platform-title {
-    align-self: center;
+    align-self: start;
     position: sticky;
-    top: 50vh;
-    transform: translateY(-50%);
+    top: calc(50vh - 48px);
+    transform: none;
   }
 
   .faqslice_inner {
