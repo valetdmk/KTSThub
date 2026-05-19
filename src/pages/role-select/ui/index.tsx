@@ -8,10 +8,10 @@ import partnerRole from "../../../shared/assets/partnerRole.png";
 const ROLE_CARDS = [
   {
     index: "01",
-    label: "Участник",
+    label: "Телеграм канал",
     image: participantRole,
     imageAlt: "Роль участника",
-    actionLabel: "Присоединиться к Миру КЦТхак",
+    actionLabel: "Присоединится К Миру КЦТхак",
     href: "https://t.me/kcthack",
   },
   {
@@ -101,7 +101,7 @@ export const RoleSelectPage = () => {
               <article key={card.index} className="role-card">
                 <div className="role-card__meta">
                   <span className="role-card__index">{card.index}</span>
-                  <span className="role-card__label" data-label={card.label} />
+                  <span className="role-card__label">{card.label}</span>
                 </div>
                 <div className="role-card__image-wrap">
                   <img className="role-card__image" src={card.image} alt={card.imageAlt} />

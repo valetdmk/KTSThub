@@ -28,6 +28,10 @@ html, body {
   overscroll-behavior: none;
 }
 
+.sections-container--free-scroll {
+  scroll-snap-type: none;
+}
+
 @media (max-width: 900px) {
   .sections-container {
     scroll-snap-type: none;
@@ -2916,15 +2920,19 @@ section {
   min-height: 100vh;
   display: grid;
   grid-template-columns: minmax(260px, 0.82fr) minmax(520px, 1.18fr);
-  grid-template-rows: minmax(0, 1fr);
+  grid-template-rows: auto auto;
   align-items: center;
   justify-content: center;
   gap: 48px;
-  padding: 150px 24px 36px;
+  padding: 150px 24px 0;
   overflow: visible;
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
 }
 
 .faqslice .platform-title {
+  position: relative;
+  z-index: 1;
   width: 100%;
   max-width: 360px;
   justify-self: start;
@@ -2932,7 +2940,8 @@ section {
   text-align: left;
   font-size: clamp(46px, 4.4vw, 76px);
   line-height: 1.06;
-  margin-left: clamp(8px, 1.5vw, 20px);
+  transform: none;
+  margin-left: 0;
 }
 
 .faqslice_inner {
@@ -2946,24 +2955,42 @@ section {
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 28px 80px rgba(0, 0, 0, 0.34);
   justify-self: end;
+  align-self: center;
   overflow: visible;
 }
 
+.faqslice_footer {
+  grid-column: 1 / -1;
+  width: 100vw;
+  margin-top: 12px;
+  margin-left: calc(50% - 50vw);
+  line-height: 0;
+}
+
+.faqslice_footer-image {
+  display: block;
+  width: 100%;
+  min-width: 100vw;
+  height: auto;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.42) 18%,
+    rgba(0, 0, 0, 0.82) 34%,
+    rgba(0, 0, 0, 1) 48%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.42) 18%,
+    rgba(0, 0, 0, 0.82) 34%,
+    rgba(0, 0, 0, 1) 48%
+  );
+}
+
 @media (min-width: 761px) {
-  .faqslice {
-    align-items: start;
-  }
-
-  .faqslice .platform-title {
-    align-self: start;
-    position: sticky;
-    top: calc(50vh - 48px);
-    transform: none;
-  }
-
   .faqslice_inner {
     min-height: calc(100vh - 210px);
-    align-self: start;
   }
 }
 
@@ -3071,17 +3098,22 @@ section {
 @media (max-width: 760px) {
   .faqslice {
     grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
     align-items: flex-start;
     gap: 18px;
+  }
+
+  .faqslice_bg {
+    height: 56vh;
   }
 
   .faqslice .platform-title {
     max-width: none;
     justify-self: center;
     text-align: center;
-    margin-left: 0;
     font-size: clamp(28px, 7vw, 38px);
     line-height: 1.18;
+    transform: none;
   }
 
   .faqslice_inner {
@@ -3089,7 +3121,12 @@ section {
     min-height: auto;
     padding: 20px 14px;
     border-radius: 30px;
-    justify-self: start;
+    justify-self: center;
+    transform: none;
+  }
+
+  .faqslice_footer {
+    margin-top: 4px;
   }
 
   .faq-card {

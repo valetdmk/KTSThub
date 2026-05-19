@@ -10,7 +10,7 @@ import {
 } from "../../../features/hero";
 
 import logo from "../../../shared/assets/logo.png";
-import heroLogo from "../../../shared/assets/heroLogo.png";
+import heroLogo from "../../../shared/assets/HeroLogo1.png";
 import panda from "../../../shared/assets/panda.png";
 import partnerBack from "../../../shared/assets/PartnerBack.png";
 import platformAuth from "../../../shared/assets/platformAuth.png";
@@ -36,13 +36,12 @@ import Maria from "../../../shared/assets/Maria.png";
 import Danil from "../../../shared/assets/Danil.png";
 import Ksenia from "../../../shared/assets/Ksenia.png";
 import Artem from "../../../shared/assets/Artem.png";
-import footerOrange from "../../../shared/assets/footerOrange.png";
-import footerPurple from "../../../shared/assets/footerPurple.png";
+import footerImage from "../../../shared/assets/footer.png";
 
 
 
 export const HeroSection = () => {
-    const MAX_SECTION = 7;
+    const MAX_SECTION = 6;
     const PARTNER_LOOP_MULTIPLIER = 7;
     const PARTNER_MIDDLE_LOOP_INDEX = Math.floor(PARTNER_LOOP_MULTIPLIER / 2);
     const TEAM_LOOP_MULTIPLIER = 7;
@@ -682,7 +681,7 @@ export const HeroSection = () => {
     const navigate = useNavigate();
 
     return (
-        <div className="sections-container">
+        <div className={`sections-container ${currentSection === MAX_SECTION ? "sections-container--free-scroll" : ""}`}>
             <section id="slice1" className="hero">
                 <img className={`hero_logo ${currentSection >= 2 ? 'fixed-on-scroll' : ''}`} src={logo} alt="Р›РѕРіРѕС‚РёРї KTSThub" />
 
@@ -964,51 +963,8 @@ export const HeroSection = () => {
                                     })}
                                 </div>
                             </div>
-                        </section>
-
-                        <section id="slice7" className="footerslice">
-                            <div className="footerslice_content">
-                                <div className="footerslice_info">
-                                    <h2>ООО “КЦТHack”</h2>
-                                    <p className="footerslice_info-line">ИНН: 7777777777</p>
-                                    <p className="footerslice_info-line">Актуальные сведения о проекте деятельности фирмы в IT-сфере</p>
-                                    <p className="footerslice_info-note">
-                                        Сайт защищён сервисом ....... (.....),
-                                        <br />
-                                        который может обрабатывать IP- адрес и иные технические данные пользователей для защиты веб-форм от спама и автоматических отправок.
-                                    </p>
-                                </div>
-                                <div className="footerslice_right">
-                                    <div className="footerslice_subscribe">
-                                        <div className="footerslice_subscribe-copy">
-                                            <h3>Войдите в мир КЦТхак</h3>
-                                            <p>Анонсы предстаящих ивентов, нетворкинг сообщество и публикации</p>
-                                        </div>
-                                        <a
-                                            className="footerslice_subscribe-button"
-                                            href="https://t.me/kcthack"
-                                            target="_blank"
-                                            rel="noreferrer"
-                                        >
-                                            Подписаться
-                                        </a>
-                                    </div>
-                                    <div className="footerslice_contacts">
-                                        <a href="mailto:kcthack@mail.ru">кцтhack@mail.ru</a>
-                                        <a href="tel:+75671230000">+7 (567) 123-00-00</a>
-                                    </div>
-                                </div>
-                                <div className="footerslice_bottom">
-                                    <div className="footerslice_copy">©2021-2026 АНПОО "Колледж Цифровых Технологий"</div>
-                                    <div className="footerslice_links">
-                                        <span>Политика конфидециальности</span>
-                                        <span>Условия и положения</span>
-                                    </div>
-                                </div>
-                                <div className="footerslice_art" aria-hidden="true">
-                                    <img className="footerslice_orange" src={footerOrange} alt="" />
-                                    <img className="footerslice_purple" src={footerPurple} alt="" />
-                                </div>
+                            <div className="faqslice_footer" aria-hidden="true">
+                                <img className="faqslice_footer-image" src={footerImage} alt="" />
                             </div>
                         </section>
 
