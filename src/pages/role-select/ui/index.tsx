@@ -8,7 +8,7 @@ import partnerRole from "../../../shared/assets/partnerRole.png";
 const ROLE_CARDS = [
   {
     index: "01",
-    label: "участник",
+    label: "Участник",
     image: participantRole,
     imageAlt: "Роль участника",
     actionLabel: "Присоединиться к Миру КЦТхак",
@@ -16,7 +16,7 @@ const ROLE_CARDS = [
   },
   {
     index: "02",
-    label: "партнёр",
+    label: "Партнёр",
     image: partnerRole,
     imageAlt: "Роль партнёра",
     actionLabel: "Стать Нашим Партнёром",
@@ -27,6 +27,16 @@ const ROLE_CARDS = [
 export const RoleSelectPage = () => {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const headerRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    document.body.classList.add("role-select-mobile-scroll-hidden");
+    document.documentElement.classList.add("role-select-mobile-scroll-hidden");
+
+    return () => {
+      document.body.classList.remove("role-select-mobile-scroll-hidden");
+      document.documentElement.classList.remove("role-select-mobile-scroll-hidden");
+    };
+  }, []);
 
   useEffect(() => {
     if (!isMobileNavOpen) {
@@ -55,7 +65,7 @@ export const RoleSelectPage = () => {
   }, [isMobileNavOpen]);
 
   return (
-    <div className="role-select-shell">
+    <div className={`role-select-shell ${isMobileNavOpen ? "menu-open" : ""}`}>
       <Background />
       <img className="hero_logo role-select-page__logo" src={logo} alt="Логотип KTSThub" />
       <header ref={headerRef} className={`hero_header role-select-page__header ${isMobileNavOpen ? "is-open" : ""}`}>
@@ -65,8 +75,13 @@ export const RoleSelectPage = () => {
           onClick={() => setIsMobileNavOpen((prev) => !prev)}
           aria-expanded={isMobileNavOpen}
           aria-controls="role-select-navigation"
+          aria-label={isMobileNavOpen ? "Закрыть меню" : "Открыть меню"}
         >
-          Меню
+          <span className="hero_menu_button-icon" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </span>
         </button>
         <div className="hero_header_inner">
           <nav id="role-select-navigation" className="hero_nav">

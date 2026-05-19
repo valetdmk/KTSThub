@@ -31,6 +31,12 @@ html, body {
 @media (max-width: 900px) {
   .sections-container {
     scroll-snap-type: none;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .sections-container::-webkit-scrollbar {
+    display: none;
   }
 
   section {
@@ -217,6 +223,23 @@ section {
   box-shadow:
     0 0 12px rgba(255, 138, 0, 0.42),
     0 0 24px rgba(255, 94, 0, 0.24);
+}
+
+.hero_menu_button-icon {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 24px;
+  height: 24px;
+}
+
+.hero_menu_button-icon span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
 }
 
 .hero_header::before {
@@ -475,6 +498,12 @@ section {
     top: 0;
     right: 0;
     z-index: 2;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow:
+      0 0 12px rgba(255, 255, 255, 0.34),
+      0 0 24px rgba(255, 255, 255, 0.2);
   }
 
   .hero_header.is-open {
@@ -515,6 +544,29 @@ section {
     white-space: normal;
     text-align: center;
     transform: none;
+  }
+
+  .hero_header.is-open .hero_nav_link::before {
+    display: none;
+  }
+
+  .hero_header.is-open .hero_nav_link:hover,
+  .hero_header.is-open .hero_nav_link:active,
+  .hero_header.is-open .hero_nav_link:focus-visible {
+    color: #fff;
+    background: transparent;
+  }
+
+  .hero_header.is-open .hero_menu_button {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .hero_header.is-open ~ .sections-container .hero_logo {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
   }
 
   .hero_content {

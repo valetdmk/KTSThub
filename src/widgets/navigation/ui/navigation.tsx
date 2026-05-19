@@ -53,8 +53,13 @@ export const Navigation = () => {
                 onClick={() => setIsMobileNavOpen((prev) => !prev)}
                 aria-expanded={isMobileNavOpen}
                 aria-controls="home-navigation"
+                aria-label={isMobileNavOpen ? "Закрыть меню" : "Открыть меню"}
             >
-                Меню
+                <span className="hero_menu_button-icon" aria-hidden="true">
+                    <span />
+                    <span />
+                    <span />
+                </span>
             </button>
             <div className="hero_header_inner">
                 <nav id="home-navigation" className="hero_nav">
