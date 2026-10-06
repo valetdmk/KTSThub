@@ -1,0 +1,25 @@
+﻿KTSThub deploy notes
+Date: 2026-05-20
+
+Important:
+This archive contains the built static app only:
+- index.html
+- assets/
+
+There is no src/ on purpose.
+HeroSection and /roles are already included inside the built JS bundles.
+
+Public routes included in this build:
+- /
+- /roles
+
+Nginx requirement for /roles:
+Because the app uses React Router with browser history, direct requests to /roles must be rewritten to /index.html.
+If nginx does not have SPA fallback, the root page / may work, but /roles on refresh or direct open will fail.
+
+Typical nginx rule:
+try_files $uri $uri/ /index.html;
+
+What to deploy:
+Upload the CONTENTS of the zip to the site root so that index.html and assets/ are at the root level.
+Do not deploy project source files.

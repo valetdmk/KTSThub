@@ -14,18 +14,11 @@ import {
 import { skillsApi, type BackendSkill } from "../../../shared/api/skills";
 import { updateUserProfile, type UpdateUserPayload } from "../../../shared/api/users";
 import { USE_MOCK_BACKEND } from "../../../shared/config/devFlags";
-import { mapBackendUserToPlatformUser } from "../../../shared/lib/userProfile";
-import logo from "../../../shared/assets/logo.png";
-import Axolotl from "../../../shared/assets/Axolotl.png";
-import BlackCat from "../../../shared/assets/BlackCat.png";
-import RainbowPic from "../../../shared/assets/RainbowPic.png";
-import Boy from "../../../shared/assets/Boy.png";
-import Girl from "../../../shared/assets/Girl.png";
-import panda from "../../../shared/assets/panda.png";
-import unicorn from "../../../shared/assets/unicorn.png";
-import brain from "../../../shared/assets/brain.png";
-import joystick from "../../../shared/assets/joystick.png";
-import game from "../../../shared/assets/game.png";
+import { DEFAULT_AVATAR, mapBackendUserToPlatformUser } from "../../../shared/lib/userProfile";
+import { PlatformSearchControl } from "../../../shared/ui/PlatformSearchControl";
+import Maria from "../../../shared/assets/Maria.png";
+import Ksenia from "../../../shared/assets/Ksenia.png";
+import Danil from "../../../shared/assets/Danil.png";
 import type { PlatformIconName } from "../../../shared/ui/PlatformIcon";
 import "../../profile/ui/index.scss";
 
@@ -78,16 +71,9 @@ const levelLabels: Record<(typeof levelOptions)[number], string> = {
   ADVANCED: "Продвинутый",
 };
 const avatarOptions = [
-  { id: "axolotl", label: "Axolotl", src: Axolotl },
-  { id: "cat", label: "Black Cat", src: BlackCat },
-  { id: "rainbow", label: "Rainbow", src: RainbowPic },
-  { id: "boy", label: "Boy", src: Boy },
-  { id: "girl", label: "Girl", src: Girl },
-  { id: "panda", label: "Panda", src: panda },
-  { id: "unicorn", label: "Unicorn", src: unicorn },
-  { id: "brain", label: "Brain", src: brain },
-  { id: "joystick", label: "Joystick", src: joystick },
-  { id: "game", label: "Game", src: game },
+  { id: "maria", label: "Maria", src: Maria },
+  { id: "ksenia", label: "Ksenia", src: Ksenia },
+  { id: "danil", label: "Danil", src: Danil },
 ];
 const skillRatingOptions: Array<{ id: SkillRatingId; label: string; color: string }> = [
   { id: "advanced", label: "Продвинутый уровень", color: "#93F890" },
@@ -279,7 +265,6 @@ const iconPaths: Record<IconName, ReactNode> = {
   settings: <><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" /><path d="M19.4 15a1.9 1.9 0 0 0 .38 2.1l.05.05a2.25 2.25 0 0 1-3.18 3.18l-.05-.05a1.9 1.9 0 0 0-2.1-.38 1.9 1.9 0 0 0-1.15 1.75V22a2.25 2.25 0 0 1-4.5 0v-.08A1.9 1.9 0 0 0 7.7 20.17a1.9 1.9 0 0 0-2.1.38l-.05.05a2.25 2.25 0 0 1-3.18-3.18l.05-.05A1.9 1.9 0 0 0 2.8 15a1.9 1.9 0 0 0-1.75-1.15H1a2.25 2.25 0 0 1 0-4.5h.08A1.9 1.9 0 0 0 2.83 8.2a1.9 1.9 0 0 0-.38-2.1l-.05-.05a2.25 2.25 0 0 1 3.18-3.18l.05.05a1.9 1.9 0 0 0 2.1.38A1.9 1.9 0 0 0 8.88 1.55V1a2.25 2.25 0 0 1 4.5 0v.08a1.9 1.9 0 0 0 1.15 1.75 1.9 1.9 0 0 0 2.1-.38l.05-.05a2.25 2.25 0 0 1 3.18 3.18l-.05.05a1.9 1.9 0 0 0-.38 2.1 1.9 1.9 0 0 0 1.75 1.15H22a2.25 2.25 0 0 1 0 4.5h-.08A1.9 1.9 0 0 0 19.4 15Z" /></>,
   logout: <><path d="M10 17l5-5-5-5" /><path d="M15 12H3" /><path d="M21 3v18h-8" /></>,
   search: <><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></>,
-  favorite: <path d="m12 21-1.45-1.32C5.4 15 2 11.92 2 8.14 2 5.06 4.42 3 7.2 3c1.57 0 3.08.73 4.05 1.88A5.36 5.36 0 0 1 15.3 3C18.08 3 20.5 5.06 20.5 8.14c0 3.78-3.4 6.86-8.55 11.54L12 21Z" />,
   bell: <><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" /><path d="M10 21a2 2 0 0 0 4 0" /></>,
 };
 
@@ -592,7 +577,7 @@ export function EditProfilePage() {
     setFormHydrated(true);
   }, [backendUser, currentUser, formHydrated, token]);
 
-  const avatarSrc = !isAvatarBroken && (selectedAvatarSrc || currentUser.avatar) ? (selectedAvatarSrc || currentUser.avatar) : logo;
+  const avatarSrc = !isAvatarBroken && (selectedAvatarSrc || currentUser.avatar) ? (selectedAvatarSrc || currentUser.avatar) : DEFAULT_AVATAR;
   const recommendedHardSkillNames = useMemo(
     () => Array.from(new Set(unifiedHardSkillRecommendationGroups.flatMap((group) => group.items))),
     [],
@@ -973,7 +958,7 @@ export function EditProfilePage() {
     <main className="platform-page">
       <aside className="platform-sidebar" aria-label="Навигация платформы">
         <section className="platform-sidebar-block platform-sidebar-top">
-          <div className="platform-logo-frame"><img src={logo} alt="KTSThub" /></div>
+          <div className="platform-logo-frame"><span className="platform-wordmark">KTST<span>hack</span></span></div>
           <nav className="platform-menu">{topMenuItems.map(renderMenuButton)}</nav>
         </section>
         <section className="platform-sidebar-block platform-sidebar-bottom">
@@ -985,11 +970,8 @@ export function EditProfilePage() {
         <header className="platform-header">
           <div className="platform-content-pill"><span>{activeTopItem.label}</span></div>
           <div className="platform-search-group">
-            <label className="platform-search" aria-label="Поиск">
-              <input type="search" placeholder="Поиск" />
-              <span className="platform-round-button"><Icon name="search" /></span>
-            </label>
-            <button type="button" className="platform-round-button" aria-label="Избранное"><Icon name="favorite" /></button>
+            <PlatformSearchControl />
+
             <button type="button" className="platform-round-button" aria-label="Уведомления"><Icon name="bell" /></button>
           </div>
           <div className="platform-user-card">

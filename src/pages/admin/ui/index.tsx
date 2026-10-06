@@ -8,10 +8,10 @@ import {
   selectors as navigationSelectors,
   type NavigationMenuItem,
 } from "../../../features/navigation";
-import logo from "../../../shared/assets/logo.png";
-import { readSavedUser } from "../../../shared/lib/userProfile";
+import { DEFAULT_AVATAR, readSavedUser } from "../../../shared/lib/userProfile";
 import { PlatformIcon } from "../../../shared/ui/PlatformIcon";
 import "../../achievements/ui/index.scss";
+import { PlatformSearchControl } from "../../../shared/ui/PlatformSearchControl";
 import "./index.scss";
 
 type PlatformUserData = {
@@ -75,7 +75,7 @@ export const AdminPage = () => {
   const activeBottomItemId = useSelector(navigationSelectors.selectActiveBottomItemId);
   const [isAvatarBroken, setIsAvatarBroken] = useState(false);
   const [isCreateEventModalOpen, setIsCreateEventModalOpen] = useState(false);
-  const avatarSrc = !isAvatarBroken && user.avatar ? user.avatar : logo;
+  const avatarSrc = !isAvatarBroken && user.avatar ? user.avatar : DEFAULT_AVATAR;
   const adminTopMenuItems: NavigationMenuItem[] = [
     { id: "admin-home", label: "Главная", icon: "home", path: "/admin" },
   ];
@@ -116,7 +116,7 @@ export const AdminPage = () => {
       <aside className="platform-sidebar">
         <section className="platform-sidebar-block platform-sidebar-top">
           <div className="platform-logo-frame">
-            <img src={logo} alt="KTSThub" />
+            <span className="platform-wordmark">KTST<span>hack</span></span>
           </div>
           <nav className="platform-menu">
             {adminTopMenuItems.map(renderMenuButton)}
@@ -137,15 +137,8 @@ export const AdminPage = () => {
           </div>
 
           <div className="platform-search-group">
-            <label className="platform-search" aria-label="Поиск">
-              <input type="search" placeholder="Поиск" />
-              <span className="platform-round-button">
-                <PlatformIcon name="search" />
-              </span>
-            </label>
-            <button type="button" className="platform-round-button" aria-label="Избранное">
-              <PlatformIcon name="favorite" />
-            </button>
+            <PlatformSearchControl />
+
             <button type="button" className="platform-round-button" aria-label="Уведомления">
               <PlatformIcon name="bell" />
             </button>

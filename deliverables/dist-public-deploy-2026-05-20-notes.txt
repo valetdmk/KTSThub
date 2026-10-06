@@ -1,0 +1,11 @@
+KTSThub public deploy notes
+Date: 2026-05-20
+
+This archive is intended for static deployment and matches the old deploy format:
+- upload index.html and the assets/ folder to the hosting root
+- do not rename files in assets/ because file names contain build hashes
+
+What changed after dist-public-deploy-2026-05-19.zip:
+- images were made non-clickable so page scrolling works correctly
+- on mobile, buttons in "Наши партнеры", "Наша команда", and the 3-line navigation no longer get the blue tap highlight
+- section content now loads/reveals sequentially starting from the 1st section

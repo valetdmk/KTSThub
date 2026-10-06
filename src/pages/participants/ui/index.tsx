@@ -9,10 +9,9 @@ import {
   topMenuItems,
   type NavigationMenuItem,
 } from "../../../features/navigation";
-import logo from "../../../shared/assets/logo.png";
-import { readSavedUser, type PlatformUserData } from "../../../shared/lib/userProfile";
+import { DEFAULT_AVATAR, readSavedUser, type PlatformUserData } from "../../../shared/lib/userProfile";
 import { PlatformIcon } from "../../../shared/ui/PlatformIcon";
-import usersBack from "../../../shared/assets/UsersBack.png";
+import { PlatformSearchControl } from "../../../shared/ui/PlatformSearchControl";
 import "./index.scss";
 
 type ParticipantView = "all" | "level" | "role";
@@ -98,7 +97,7 @@ export const ParticipantsPage = () => {
   const [activeTab, setActiveTab] = useState<ParticipantView>("all");
   const [isAvatarBroken, setIsAvatarBroken] = useState(false);
   const activeTopItem = topMenuItems.find((item) => item.path === location.pathname) ?? topMenuItems[4];
-  const avatarSrc = !isAvatarBroken && user.avatar ? user.avatar : logo;
+  const avatarSrc = !isAvatarBroken && user.avatar ? user.avatar : DEFAULT_AVATAR;
 
   const visibleParticipants = useMemo(() => {
     const sorted = [...participants].sort((a, b) => a.rank - b.rank);
@@ -136,7 +135,7 @@ export const ParticipantsPage = () => {
       <aside className="platform-sidebar" aria-label="Навигация платформы">
         <section className="platform-sidebar-block platform-sidebar-top">
           <div className="platform-logo-frame">
-            <img src={logo} alt="KTSThub" />
+            <span className="platform-wordmark">KTST<span>hack</span></span>
           </div>
           <nav className="platform-menu">{topMenuItems.map(renderMenuButton)}</nav>
         </section>
@@ -151,15 +150,8 @@ export const ParticipantsPage = () => {
             <span>{activeTopItem.label}</span>
           </div>
           <div className="platform-search-group">
-            <label className="platform-search" aria-label="Поиск">
-              <input type="search" placeholder="Поиск" />
-              <span className="platform-round-button">
-                <PlatformIcon name="search" />
-              </span>
-            </label>
-            <button type="button" className="platform-round-button" aria-label="Избранное">
-              <PlatformIcon name="favorite" />
-            </button>
+            <PlatformSearchControl />
+
             <button type="button" className="platform-round-button" aria-label="Уведомления">
               <PlatformIcon name="bell" />
             </button>
@@ -202,7 +194,6 @@ export const ParticipantsPage = () => {
                     </div>
                     <div className="participant-top-stack">
                       <div className="participant-top-art">
-                        <img src={usersBack} alt="Users" />
                       </div>
                       <div className={participantCardClassName(participant.rank)}>
                         <div className="participant-main-info">

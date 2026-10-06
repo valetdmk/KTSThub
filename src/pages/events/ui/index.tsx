@@ -7,31 +7,24 @@ export default function Events() {
   const dispatch = useDispatch();
   const { events, loading, error } = useSelector(selectors.root);
 
-    useEffect(() => {
-        dispatch(fetchEventsRequest());
-    }, [dispatch]);
+  useEffect(() => {
+    dispatch(fetchEventsRequest());
+  }, [dispatch]);
 
-    if (loading) {
-      return <div>Загрузка событий...</div>;
-    }
-
-    if (error) {
-      return <div>{error}</div>;
-    }
-
-    if (events.length === 0) {
-      return <div>Событий пока нет</div>;
-    }
-
-    return (
-    <div>
-      <h1>События</h1>
-
-      <div className="events-list">
-        {events.map((event) => (
-          <EventCard key={event.id} event={event} />
-        ))}
-      </div>
-    </div>
+  return (
+    <main className="events-page">
+      <header className="events-page__header">
+        <p className="page-eyebrow">KTSTHACK · СООБЩЕСТВО</p>
+        <h1>Мероприятия</h1>
+      </header>
+      {loading ? <p className="page-status" role="status">Загрузка мероприятий…</p> : null}
+      {error ? <p className="page-status page-status--error" role="alert">{error}</p> : null}
+      {!loading && !error && events.length === 0 ? <p className="page-status">Пока нет запланированных событий.</p> : null}
+      {!loading && !error && events.length > 0 ? (
+        <div className="events-list">
+          {events.map((event) => <EventCard key={event.id} event={event} />)}
+        </div>
+      ) : null}
+    </main>
   );
 }

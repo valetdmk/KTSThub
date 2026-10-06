@@ -4,13 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { actions as authActions, AuthFeature } from "../../../features/auth";
 import { mapBackendUserToPlatformUser } from "../../../shared/lib/userProfile";
 import "./index.scss";
-import logo from "../../../shared/assets/logo.png";
-import UnionTop from "../../../shared/assets/UnionTop.png";
-import UnionBottom from "../../../shared/assets/UnionBottom.png";
-import Boy from "../../../shared/assets/Boy.png";
-import Girl from "../../../shared/assets/Girl.png";
-import loginnregistr from "../../../shared/assets/loginnregistr.png";
-import BackLogin from "../../../shared/assets/BackLogin.png";
 
 export type PlatformUserData = {
   lastName: string;
@@ -73,14 +66,9 @@ export default function Login() {
 
   return (
     <div className="login-page">
-      <img className="BackLogin" src={BackLogin} alt="" />
-      <img className="loginnregistr" src={loginnregistr} alt="" />
-      <img className="boy" src={Boy} alt="" />
-      <img className="girl" src={Girl} alt="" />
 
       <form className="login-form-container" onSubmit={handleSubmit}>
-        <img className="unionTop" src={UnionTop} alt="" />
-        <img className="logoLogin" src={logo} alt="KTSThub" />
+        <a className="account-wordmark" href="/">KTST<span>hack</span></a>
         <h2>Welcome back<br />to platform</h2>
 
         {error ? <div className="error-message">{error}</div> : null}
@@ -130,7 +118,6 @@ export default function Login() {
           {loading ? "Loading..." : <>Sign in <span>→</span></>}
         </button>
 
-        <img className="unionBottom" src={UnionBottom} alt="" />
       </form>
     </div>
   );

@@ -1,28 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+﻿import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { registerRequest, selectors, updateProfileRequest } from "../../../features/register";
 import "./index.scss";
-import registerBack from "../../../shared/assets/registerBack.png"
-import registerLines from "../../../shared/assets/registerLines.png"
-import boyregistration from "../../../shared/assets/boyregistration.png"
-import loginnregistr from "../../../shared/assets/loginnregistr.png"
-import BackLogin from "../../../shared/assets/BackLogin.png"
-import logo from "../../../shared/assets/logo.png"
-import boyngirl from "../../../shared/assets/boyngirl.jpg"
-import UnionTop from "../../../shared/assets/UnionTop.png"
-import UnionBottom from "../../../shared/assets/UnionBottom.png"
-import authStar from "../../../shared/assets/authStar.png"
-import badge from "../../../shared/assets/badge.png"
-import Axolotl from "../../../shared/assets/Axolotl.png"
-import BlackCat from "../../../shared/assets/BlackCat.png"
-import RainbowPic from "../../../shared/assets/RainbowPic.png"
-import Boy from "../../../shared/assets/Boy.png"
-import Girl from "../../../shared/assets/Girl.png"
-import panda from "../../../shared/assets/panda.png"
-import unicorn from "../../../shared/assets/unicorn.png"
-import brain from "../../../shared/assets/brain.png"
-import joystick from "../../../shared/assets/joystick.png"
-import game from "../../../shared/assets/game.png"
+import Maria from "../../../shared/assets/Maria.png";
+import Ksenia from "../../../shared/assets/Ksenia.png";
+import Danil from "../../../shared/assets/Danil.png";
 
 const calendarWeekDays = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
 const calendarMonthNames = [
@@ -73,16 +55,9 @@ const levelOptions = [
 ];
 
 const avatarOptions = [
-  { id: "axolotl", label: "Axolotl", src: Axolotl },
-  { id: "cat", label: "Black Cat", src: BlackCat },
-  { id: "rainbow", label: "Rainbow", src: RainbowPic },
-  { id: "boy", label: "Boy", src: Boy },
-  { id: "girl", label: "Girl", src: Girl },
-  { id: "panda", label: "Panda", src: panda },
-  { id: "unicorn", label: "Unicorn", src: unicorn },
-  { id: "brain", label: "Brain", src: brain },
-  { id: "joystick", label: "Joystick", src: joystick },
-  { id: "game", label: "Game", src: game },
+  { id: "maria", label: "Maria", src: Maria },
+  { id: "ksenia", label: "Ksenia", src: Ksenia },
+  { id: "danil", label: "Danil", src: Danil },
 ];
 
 const skillRatingOptions = [
@@ -1363,13 +1338,11 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
 
   const renderStep3 = () => (
     <div className="step3-form">
-      <img className="step3-union step3-union-top" src={UnionTop} alt="" />
-      <img className="step3-union step3-union-bottom" src={UnionBottom} alt="" />
       <button
         type="button"
         className="step3-page-arrow step3-page-arrow-outside"
         onClick={() => setStep3Page(prev => (prev === 1 ? 2 : 1))}
-        aria-label={step3Page === 1 ? "РџРѕРєР°Р·Р°С‚СЊ РІС‚РѕСЂСѓСЋ СЃС‚СЂР°РЅРёС†Сѓ" : "Р’РµСЂРЅСѓС‚СЊСЃСЏ РЅР° РїРµСЂРІСѓСЋ СЃС‚СЂР°РЅРёС†Сѓ"}
+        aria-label={step3Page === 1 ? "Показать вторую страницу" : "Вернуться на первую страницу"}
       >
         <span>{step3Page === 1 ? ">" : "<"}</span>
       </button>
@@ -1427,7 +1400,6 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
             <span className="participant-display">Участник</span>
           </div>
 
-          <img className="renderstep3-girl" src={boyngirl} alt="" />
 
           <div className="role-section">
             <span className="role-display">{jobOptions.find(r => r.id === step2Data.job)?.label}</span>
@@ -1525,19 +1497,15 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
     <div className={`register-role-page ${selectedRole ? 'role-selected' : ''}`}>
       {selectedRole ? (
         <>
-          <img className="BackLogin" src={BackLogin} alt="" />
-          <img className="register-lines" src={registerLines} alt="" />
-          <img className="loginnregistr" src={loginnregistr} alt="" />
-          <img className="boyforma" src={boyregistration} alt="" />
           {renderProgressIndicator()}
           <div className={`register-form-shell ${skillsModal ? 'skills-open' : ''}`}>
           <div className="register-form-container">
             <div className="logo-block">
-              <img className="register-badge" src={badge} alt="" />
+              <span className="register-badge" aria-hidden="true">KT</span>
             </div>
             {step === 3 ? renderStep3() : step === 2 ? renderStep2() : (
               <>
-                <img className="logoLogin" src={logo} alt="Логотип KTSThub" />
+                <a className="account-wordmark" href="/">KTST<span>hack</span></a>
                 <h2>Welcome to platform</h2>
                 {renderForm()}
               </>
@@ -1548,9 +1516,6 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
         </>
       ) : (
         <>
-          <img className="register-auth-star register-auth-star-top-left" src={authStar} alt="" />
-          <img className="register-auth-star register-auth-star-bottom-left" src={authStar} alt="" />
-          <img className="register-auth-star register-auth-star-top-right" src={authStar} alt="" />
           <h1 className="register-title">Выберите вашу роль</h1>
           <div className="roles-grid">
             {roles.map((role) => (
@@ -1559,7 +1524,6 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
                 className={`role-card ${role.id === 'business_partner' || role.id === 'organizer' ? 'offset-down' : ''} ${role.id === 'student' || role.id === 'judge' ? 'offset-up' : ''}`}
               >
                   <div className={`boyregistration-wrapper ${role.id === 'business_partner' || role.id === 'judge' ? 'mirrored' : ''}`}>
-                    <img className="boyregistration" src={boyregistration} alt="" />
                   </div>
                   {role.id === 'business_partner' || role.id === 'organizer' ? (
                     <div className="role-bottom-right bottom-right">
@@ -1592,7 +1556,6 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
               </div>
             ))}
           </div>
-          <img className="backregister" src={registerBack} alt="" />
         </>
       )}
     </div>

@@ -1,0 +1,12 @@
+.auth-page { min-height: 100vh; display: grid; grid-template-columns: 1fr minmax(320px, 580px) 1fr; align-items: center; padding: 32px; background: #080809; }
+.auth-page > .account-wordmark { grid-column: 1 / -1; align-self: start; color: #fff; font-size: 20px; font-weight: 800; text-decoration: none; }
+.account-wordmark span { color: #f35b1f; }
+.auth-choice { grid-column: 2; }
+.auth-eyebrow { color: #f35b1f; font-size: 12px; font-weight: 700; letter-spacing: .12em; }
+.auth-choice h1 { margin: 14px 0; font-size: clamp(36px, 6vw, 56px); line-height: 1.04; letter-spacing: -.055em; }
+.auth-choice > p:not(.auth-eyebrow) { color: #b7b3ba; }
+.auth-buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+.auth-button { min-height: 46px; padding: 10px 18px; border: 1px solid #f35b1f; border-radius: 8px; cursor: pointer; }
+.register-btn { color: #fff; background: #f35b1f; }
+.login-btn { color: #fff; background: transparent; }
+@media (max-width: 600px) { .auth-page { grid-template-columns: 1fr; padding: 22px; } .auth-choice { grid-column: 1; } }

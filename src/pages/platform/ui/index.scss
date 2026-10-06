@@ -766,4 +766,41 @@
     }
     }
   }
+
+}
+
+/* Let the platform dashboard use the full area left by the fixed sidebar. */
+.platform-home-page .platform-bottom-stack {
+  width: 100%; max-width: none; margin: 0; gap: 14px;
+}
+.platform-home-page .platform-lower-content { width: 100%; margin: 0; }
+.platform-home-page .platform-stats-grid {
+  width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px;
+}
+.platform-home-page .platform-stat-card {
+  min-width: 0; min-height: 184px; border: 1px solid rgba(255,255,255,.14);
+  border-radius: 14px; background: #101012; padding: 18px;
+}
+.platform-home-page .platform-active-projects {
+  border: 1px solid rgba(255,255,255,.14); border-radius: 14px;
+  background: #101012; padding: 18px;
+}
+.platform-home-page .platform-active-project-card {
+  grid-template-columns: minmax(190px, .9fr) minmax(280px, 1.35fr) minmax(180px, .8fr);
+  gap: 12px; align-items: stretch;
+}
+.platform-home-page :is(.platform-active-event, .platform-active-stages, .platform-active-team) {
+  min-width: 0; border: 1px solid rgba(255,255,255,.12); border-radius: 10px;
+  background: #151517; padding: 12px;
+}
+.platform-home-page .platform-active-team-avatar { background: #500f72; border-color: #101012; }
+
+@media (max-width: 1024px) {
+  .platform-home-page .platform-stats-grid { grid-template-columns: minmax(0, 1fr); }
+  .platform-home-page .platform-active-project-card { grid-template-columns: 1fr; }
+}
+@media (max-width: 620px) {
+  .platform-home-page .platform-stats-grid { grid-template-columns: minmax(0, 1fr); }
+  .platform-home-page .platform-stat-card { min-height: 160px; }
+  .platform-home-page .platform-active-projects { padding: 14px; }
 }

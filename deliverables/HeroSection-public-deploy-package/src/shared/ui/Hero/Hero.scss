@@ -28,6 +28,14 @@ html, body {
   overscroll-behavior: none;
 }
 
+.sections-container img {
+  pointer-events: none;
+}
+
+.sections-container .interactive-image {
+  pointer-events: auto;
+}
+
 .sections-container--free-scroll {
   scroll-snap-type: none;
 }
@@ -227,6 +235,9 @@ section {
   box-shadow:
     0 0 12px rgba(255, 138, 0, 0.42),
     0 0 24px rgba(255, 94, 0, 0.24);
+  -webkit-tap-highlight-color: transparent;
+  tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .hero_menu_button-icon {
@@ -796,6 +807,9 @@ section {
   line-height: 1;
   cursor: pointer;
   transition: transform 0.2s ease, background 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .secondslice_arrow:hover {
@@ -2865,6 +2879,9 @@ section {
   z-index: 2;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .team-carousel_arrow:hover {
@@ -3143,6 +3160,9 @@ section {
   border-radius: 28px;
   position: relative;
   z-index: 3;
+  -webkit-tap-highlight-color: transparent;
+  tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .faq-card.is-open .faq-card_trigger {
@@ -3639,4 +3659,73 @@ section {
     object-fit: cover;
     object-position: center bottom;
   }
+}
+
+/* 2026 visual system: a restrained ember-to-violet light field under the
+   existing story sections, with the original scroll and carousel behavior intact. */
+.home {
+  position: relative;
+  isolation: isolate;
+  background: #050505;
+  color: #fff;
+}
+.home::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 38rem 26rem at 7% 15%, rgba(243, 91, 31, .19), transparent 72%),
+    radial-gradient(ellipse 42rem 32rem at 93% 33%, rgba(80, 15, 114, .28), transparent 70%),
+    linear-gradient(180deg, #080709 0%, #050505 58%, #09060b 100%);
+}
+.hero_header {
+  top: 24px;
+  width: max-content;
+  max-width: calc(100vw - 40px);
+  padding: 5px;
+  border: 1px solid rgba(255,255,255,.13);
+  border-radius: 999px;
+  background: rgba(14,12,16,.72);
+  box-shadow: 0 12px 48px rgba(0,0,0,.34), inset 0 1px rgba(255,255,255,.05);
+  backdrop-filter: blur(20px);
+}
+.hero_header::before { opacity: .55; border-radius: inherit; }
+.hero_header_inner { padding: 5px 8px; }
+.hero_nav { gap: clamp(4px, 1vw, 16px); }
+.hero_nav_link {
+  padding: 10px 14px;
+  border-radius: 999px;
+  color: rgba(255,255,255,.78);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: .01em;
+}
+.hero_nav_link::before { inset: 0; background: rgba(255,255,255,.09); }
+.hero_nav_link:hover { color: #fff; }
+.hero_button {
+  border-radius: 999px;
+  background: linear-gradient(115deg, #f35b1f, #b63858 56%, #500f72) padding-box,
+              linear-gradient(115deg, #ff9a69, #7433a0) border-box;
+  box-shadow: 0 10px 34px rgba(243,91,31,.22), 0 0 54px rgba(80,15,114,.2);
+  font-family: Manrope, 'Inter', sans-serif;
+  font-weight: 800;
+}
+.hero_button:hover { color: #fff; background: linear-gradient(115deg, #ff7440, #c04b70 56%, #68218b) padding-box, linear-gradient(115deg, #ffc3a7, #aa72ca) border-box; }
+.platform-title { font-family: Manrope, 'Inter', sans-serif; font-weight: 800; letter-spacing: -.055em; }
+.secondslice_card, .partner-spotlight, .team-card, .faq-card {
+  border-color: rgba(255,255,255,.11);
+  box-shadow: 0 24px 80px rgba(0,0,0,.28);
+}
+.faq-card { backdrop-filter: blur(18px); }
+.faq-card_trigger:focus-visible, .team-carousel_arrow:focus-visible, .secondslice_arrow:focus-visible { outline: 2px solid #ff956a; outline-offset: 4px; }
+
+@media (max-width: 900px) {
+  .hero_header { top: 16px; width: calc(100vw - 32px); max-width: 420px; padding: 8px; border-radius: 22px; }
+  .hero_header_inner { padding: 0; }
+  .hero_header.is-open .hero_header_inner { padding-top: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero_intro_logo, .hero_intro_text, .hero_button, .hero_logo { animation: none !important; opacity: 1; transform: none; }
 }

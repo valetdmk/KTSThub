@@ -1,5 +1,21 @@
-import logo from "../assets/logo.png";
 import type { User } from "../../entities/user/model";
+import { apiBaseUrl } from "../api/endpoints";
+
+export const DEFAULT_AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' rx='40' fill='%23500f72'/%3E%3Ccircle cx='40' cy='29' r='13' fill='%23fff'/%3E%3Cpath d='M15 72c2-15 12-23 25-23s23 8 25 23' fill='%23fff'/%3E%3C/svg%3E";
+
+export function resolveUserAvatar(avatar?: string | null) {
+    const source = avatar?.trim();
+    if (!source) return DEFAULT_AVATAR;
+    if (/^(?:data:|blob:|https?:\/\/|\/\/)/i.test(source)) return source;
+    if (/^(?:\/src\/|\/assets\/)/i.test(source)) return source;
+
+    try {
+        const apiDirectory = `${apiBaseUrl.replace(/\/+$/g, "")}/`;
+        return new URL(source, apiDirectory).toString();
+    } catch {
+        return source;
+    }
+}
 
 export type PlatformUserData = {
     lastName: string;
@@ -25,7 +41,7 @@ export type PlatformUserData = {
 export const fallbackUser: PlatformUserData = {
     lastName: "Фамилия",
     firstName: "Имя",
-    avatar: logo,
+    avatar: DEFAULT_AVATAR,
     username: "",
     email: "email@example.com",
     birthday: "",
@@ -89,7 +105,7 @@ export function mapBackendUserToPlatformUser(user: User | null, savedUser = read
         ...savedUser,
         lastName: user.lastName ?? user.lastname ?? savedUser.lastName,
         firstName: user.name ?? savedUser.firstName,
-        avatar: user.avatar ?? savedUser.avatar,
+        avatar: user.avatar?.trim() ? user.avatar : savedUser.avatar,
         username: user.username ?? savedUser.username,
         email: user.email ?? savedUser.email,
         birthday: user.birthday ?? savedUser.birthday,

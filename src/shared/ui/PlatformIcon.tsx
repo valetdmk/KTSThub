@@ -11,7 +11,6 @@ export type PlatformIconName =
   | "settings"
   | "logout"
   | "search"
-  | "favorite"
   | "bell";
 
 type PlatformIconBaseProps = {
@@ -133,14 +132,6 @@ export function SearchIcon(props: Omit<PlatformIconBaseProps, "children">) {
   );
 }
 
-export function FavoriteIcon(props: Omit<PlatformIconBaseProps, "children">) {
-  return (
-    <PlatformIconBase {...props}>
-      <path d="m12 21-1.45-1.32C5.4 15 2 11.92 2 8.14 2 5.06 4.42 3 7.2 3c1.57 0 3.08.73 4.05 1.88A5.36 5.36 0 0 1 15.3 3C18.08 3 20.5 5.06 20.5 8.14c0 3.78-3.4 6.86-8.55 11.54L12 21Z" />
-    </PlatformIconBase>
-  );
-}
-
 export function BellIcon(props: Omit<PlatformIconBaseProps, "children">) {
   return (
     <PlatformIconBase {...props}>
@@ -161,7 +152,6 @@ const iconComponents: Record<PlatformIconName, (props: Omit<PlatformIconBaseProp
   settings: SettingsIcon,
   logout: LogoutIcon,
   search: SearchIcon,
-  favorite: FavoriteIcon,
   bell: BellIcon,
 };
 

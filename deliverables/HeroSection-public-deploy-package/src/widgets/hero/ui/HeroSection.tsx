@@ -5,38 +5,12 @@ import { useNavigate } from "react-router-dom";
 import "../../../shared/ui/Hero/Hero.scss";
 import {
     setCurrentSection,
-    setImages,
     selectors,
 } from "../../../features/hero";
 
-import logo from "../../../shared/assets/logo.png";
-import heroLogo from "../../../shared/assets/HeroLogo1.png";
-import panda from "../../../shared/assets/panda.png";
-import partnerBack from "../../../shared/assets/PartnerBack.png";
-import platformAuth from "../../../shared/assets/platformAuth.png";
-import platformHero from "../../../shared/assets/platformHero.png";
-import platformReting from "../../../shared/assets/platformReting.png";
-import platformSchedule from "../../../shared/assets/platformSchedule.png";
-
-import forstudent1 from "../../../shared/assets/badge.png";
-import forstudent2 from "../../../shared/assets/titleproject.png";
-import forstudent3 from "../../../shared/assets/RainbowPic.png";
-import forstudent4 from "../../../shared/assets/VectorRegistration.png";
-import forstudentcircle from "../../../shared/assets/Group 239910.png";
-
-import brain from "../../../shared/assets/brain.png";
-import joystick from "../../../shared/assets/joystick.png";
-import kybok from "../../../shared/assets/kybok.png";
-import lamp from "../../../shared/assets/lamp.png";
-import molniya from "../../../shared/assets/molniya.png";
-import pazl from "../../../shared/assets/pazl.png";
-import unicorn from "../../../shared/assets/unicorn.png";
-import Arseniy from "../../../shared/assets/Arseniy.png";
 import Maria from "../../../shared/assets/Maria.png";
 import Danil from "../../../shared/assets/Danil.png";
 import Ksenia from "../../../shared/assets/Ksenia.png";
-import Artem from "../../../shared/assets/Artem.png";
-import footerImage from "../../../shared/assets/footer.png";
 
 
 
@@ -77,11 +51,11 @@ export const HeroSection = () => {
         },
     ];
     const TEAM_MEMBERS = [
-        { name: "Arseniy", image: Arseniy },
+        { name: "Arseniy" },
         { name: "Maria", image: Maria },
         { name: "Danil", image: Danil },
         { name: "Ksenia", image: Ksenia },
-        { name: "Artem", image: Artem },
+        { name: "Artem" },
     ];
     const FAQ_ITEMS = [
         {
@@ -124,53 +98,26 @@ export const HeroSection = () => {
         {
             title: "Участвуй в хакатонах",
             text: "Регистрируйся на события, собирай команду и решай реальные кейсы от компаний-партнёров.",
-            leftIcon: brain,
-            rightIcon: kybok,
-            platformImage: platformAuth,
-            platformImageClassName: "fourthslice_decor-image--auth",
         },
         {
             title: "Собери свою команду",
             text: "Находи единомышленников с нужным стеком, создавай команду и берись за проекты вместе.",
-            leftIcon: unicorn,
-            rightIcon: molniya,
-            rightIconLarge: true,
-            platformImage: platformHero,
-            platformImageClassName: "fourthslice_decor-image--hero",
         },
         {
             title: "Прокачай портфолио",
             text: "Добавляй реальные проекты в профиль и показывай работодателям на что ты способен.",
-            leftIcon: pazl,
-            rightIcon: lamp,
-            platformImage: platformAuth,
-            platformImageClassName: "fourthslice_decor-image--auth",
         },
         {
             title: "Взойди на вершину\nрейтинга",
             text: "Участвуй в событиях, получай баллы и поднимайся в таблице лидеров сообщества.",
-            leftIcon: joystick,
-            rightIcon: kybok,
-            platformImage: platformReting,
-            platformImageClassName: "fourthslice_decor-image--rating",
         },
         {
             title: "Следи за расписанием",
             text: "Все воркшопы, хакатоны, митапы и тренировки в одном календаре — ничего не пропустишь.",
-            leftIcon: unicorn,
-            rightIcon: molniya,
-            rightIconLarge: true,
-            platformImage: platformSchedule,
-            platformImageClassName: "fourthslice_decor-image--schedule",
         },
         {
             title: "Стань частью сообщества",
             text: "Общайся с разработчиками, дизайнерами и PM-ами, которые горят IT так же, как ты.",
-            leftIcon: brain,
-            leftIconMirrored: true,
-            rightIcon: kybok,
-            platformImage: platformAuth,
-            platformImageClassName: "fourthslice_decor-image--auth",
         },
     ];
     const STUDENT_FEATURES = [
@@ -260,7 +207,6 @@ export const HeroSection = () => {
     const infoScrollInnerRef = useRef<HTMLDivElement | null>(null);
     const platformFeatureRefs = useRef<Array<HTMLDivElement | null>>([]);
     const [activePlatformFeatureIndex, setActivePlatformFeatureIndex] = useState(0);
-    const [isPlatformPreviewOpen, setIsPlatformPreviewOpen] = useState(false);
 
     const snapTrackToClosestCard = useCallback((
         track: HTMLDivElement | null,
@@ -308,7 +254,6 @@ export const HeroSection = () => {
 
     const activeAudienceSlide = AUDIENCE_SLIDES[activeAudienceIndex];
     const activeAudienceFeatures = AUDIENCE_FEATURES[activeAudienceSlide.type];
-    const activePlatformFeature = PLATFORM_FEATURES[activePlatformFeatureIndex] ?? PLATFORM_FEATURES[0];
 
     const showPrevAudienceSlide = useCallback(() => {
         setActiveAudienceIndex((prev) => (prev - 1 + AUDIENCE_SLIDES.length) % AUDIENCE_SLIDES.length);
@@ -357,16 +302,6 @@ export const HeroSection = () => {
             observer.disconnect();
         };
     }, [currentSection, scrollToSection, dispatch, MAX_SECTION]);
-
-    useEffect(() => {
-        dispatch(setImages({
-            forstudent1,
-            forstudent2,
-            forstudent3,
-            forstudent4,
-            forstudentcircle,
-        }));
-    }, [dispatch]);
 
     const loopedPartnerSpotlights = Array.from({ length: PARTNER_LOOP_MULTIPLIER }, (_, loopIndex) =>
         PARTNER_SPOTLIGHTS.map((partner, partnerIndex) => ({
@@ -684,36 +619,18 @@ export const HeroSection = () => {
         };
     }, []);
 
-    useEffect(() => {
-        if (!isPlatformPreviewOpen) {
-            return;
-        }
-
-        const handleKeyDown = (event: KeyboardEvent) => {
-            if (event.key === "Escape") {
-                setIsPlatformPreviewOpen(false);
-            }
-        };
-
-        window.addEventListener("keydown", handleKeyDown);
-
-        return () => {
-            window.removeEventListener("keydown", handleKeyDown);
-        };
-    }, [isPlatformPreviewOpen]);
-
     const navigate = useNavigate();
 
     return (
         <div className={`sections-container ${currentSection === MAX_SECTION ? "sections-container--free-scroll" : ""}`}>
             <section id="slice1" className="hero">
-                <img className={`hero_logo ${currentSection >= 2 ? 'fixed-on-scroll' : ''}`} src={logo} alt="Р›РѕРіРѕС‚РёРї KTSThub" />
+                <a className={`hero_logo ${currentSection >= 2 ? 'fixed-on-scroll' : ''} hero_wordmark`} href="/" aria-label="KTSThub — на главную">KTST<span>hub</span></a>
 
                 <div className="hero_content">
                     <div className="hero_intro">
-                        <img className="hero_intro_logo" src={heroLogo} alt="KTSThub" />
-                        <p className="hero_intro_text">Мы дадим тебе<br />портфолио и кейсы</p>
-                        <button className={`hero_button ${currentSection >= 2 ? 'move-to-nav' : ''}`} onClick={() => navigate('/roles')}>
+                        <p className="hero_intro_text">Проекты и люди для твоего IT-портфолио</p>
+                        <p className="hero_intro_description">КЦТхак объединяет студентов, экспертов и компании вокруг реальных задач, хакатонов и командной работы.</p>
+                        <button className={`hero_button ${currentSection >= 2 ? 'move-to-nav' : ''}`} onClick={() => navigate('/auth')}>
                             Присоединиться к нашему<br />миру КЦТхак
                         </button>
                     </div>
@@ -806,25 +723,9 @@ export const HeroSection = () => {
                                 >
                                     <div className="info-content">
                                         <div className="info-heading">
-                                            {item.leftIcon ? (
-                                                <img
-                                                    className={`info-heading-icon info-heading-icon-left${item.leftIconMirrored ? " info-heading-icon--mirrored" : ""}`}
-                                                    src={item.leftIcon}
-                                                    alt=""
-                                                />
-                                            ) : (
-                                                <span className="info-heading-spacer" aria-hidden="true" />
-                                            )}
+                                            <span className="info-heading-spacer" aria-hidden="true" />
                                             <h3>{item.title}</h3>
-                                            {item.rightIcon ? (
-                                                <img
-                                                    className={`info-heading-icon info-heading-icon-right${item.rightIconLarge ? " info-heading-icon--large" : ""}`}
-                                                    src={item.rightIcon}
-                                                    alt=""
-                                                />
-                                            ) : (
-                                                <span className="info-heading-spacer" aria-hidden="true" />
-                                            )}
+                                            <span className="info-heading-spacer" aria-hidden="true" />
                                         </div>
                                         <p>{item.text}</p>
                                     </div>
@@ -832,19 +733,6 @@ export const HeroSection = () => {
                             ))}
                         </div>
                     </div>
-                    <button
-                        type="button"
-                        className="fourthslice_preview"
-                        onClick={() => setIsPlatformPreviewOpen(true)}
-                        aria-label={`Открыть изображение для блока ${activePlatformFeature.title}`}
-                    >
-                        <img
-                            key={activePlatformFeature.title}
-                            className={`fourthslice_preview-image ${activePlatformFeature.platformImageClassName}`}
-                            src={activePlatformFeature.platformImage}
-                            alt={activePlatformFeature.title}
-                        />
-                    </button>
                 </div>
             </section>
 
@@ -873,12 +761,6 @@ export const HeroSection = () => {
                                 >
                                     {loopedPartnerSpotlights.map(({ key, partner }) => (
                                         <article key={key} className="partner-spotlight">
-                                            <img
-                                                className="partner-spotlight_background"
-                                                src={partnerBack}
-                                                alt=""
-                                                aria-hidden="true"
-                                            />
                                             <div className={`partner-spotlight_content${partner.isPlaceholder ? " partner-spotlight_content--placeholder" : ""}`}>
                                                 {partner.isPlaceholder ? (
                                                     <>
@@ -894,9 +776,7 @@ export const HeroSection = () => {
                                                     </>
                                                 ) : (
                                                     <>
-                                                        <div className="partner-spotlight_avatar">
-                                                            <img src={panda} alt={partner.name} />
-                                                        </div>
+                                                        <div className="partner-spotlight_avatar" aria-hidden="true">{partner.name.slice(0, 1)}</div>
                                                         <div className="partner-spotlight_name">{partner.name}</div>
                                                         <p className="partner-spotlight_role">{partner.role}</p>
                                                         <p className="partner-spotlight_title">{partner.title}</p>
@@ -950,7 +830,7 @@ export const HeroSection = () => {
                                             className={`team-card${activeTeamCardKey === member.key ? " is-active" : ""}`}
                                             data-card-key={member.key}
                                         >
-                                            <img className="team-card_image" src={member.member.image} alt={member.member.name} />
+                                            {member.member.image ? <img className="team-card_image" src={member.member.image} alt={member.member.name} loading="lazy" decoding="async" /> : <span className="team-card_initials" aria-label={member.member.name}>{member.member.name.slice(0, 1)}</span>}
                                         </div>
                                     ))}
                                 </div>
@@ -997,39 +877,8 @@ export const HeroSection = () => {
                                     })}
                                 </div>
                             </div>
-                            <div className="faqslice_footer" aria-hidden="true">
-                                <img className="faqslice_footer-image" src={footerImage} alt="" />
-                            </div>
                         </section>
 
-                        {isPlatformPreviewOpen ? (
-                            <div
-                                className="platform-preview-modal"
-                                role="dialog"
-                                aria-modal="true"
-                                aria-label={activePlatformFeature.title}
-                                onClick={() => setIsPlatformPreviewOpen(false)}
-                            >
-                                <button
-                                    type="button"
-                                    className="platform-preview-modal_close"
-                                    onClick={() => setIsPlatformPreviewOpen(false)}
-                                    aria-label="Закрыть полноэкранное изображение"
-                                >
-                                    ×
-                                </button>
-                                <div
-                                    className="platform-preview-modal_inner"
-                                    onClick={(event) => event.stopPropagation()}
-                                >
-                                    <img
-                                        className="platform-preview-modal_image"
-                                        src={activePlatformFeature.platformImage}
-                                        alt={activePlatformFeature.title}
-                                    />
-                                </div>
-                            </div>
-                        ) : null}
                     </div>
                 );
             }

@@ -1,4 +1,4 @@
-﻿import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AuthFeature, actions as authActions } from "../../../features/auth";
@@ -9,10 +9,9 @@ import {
   topMenuItems,
   type NavigationMenuItem,
 } from "../../../features/navigation";
-import { mapBackendUserToPlatformUser } from "../../../shared/lib/userProfile";
-import logo from "../../../shared/assets/logo.png";
-import wayPlatform from "../../../shared/assets/wayPlatform.png";
+import { DEFAULT_AVATAR, mapBackendUserToPlatformUser } from "../../../shared/lib/userProfile";
 import { PlatformIcon } from "../../../shared/ui/PlatformIcon";
+import { PlatformSearchControl } from "../../../shared/ui/PlatformSearchControl";
 import "./index.scss";
 
 function getProjectLabel(count: number) {
@@ -20,28 +19,28 @@ function getProjectLabel(count: number) {
   const mod100 = count % 100;
 
   if (mod100 >= 11 && mod100 <= 14) {
-    return "РїСЂРѕРµРєС‚РѕРІ";
+    return "проектов";
   }
 
   if (mod10 === 1) {
-    return "РїСЂРѕРµРєС‚";
+    return "проект";
   }
 
   if (mod10 >= 2 && mod10 <= 4) {
-    return "РїСЂРѕРµРєС‚Р°";
+    return "проекта";
   }
 
-  return "РїСЂРѕРµРєС‚РѕРІ";
+  return "проектов";
 }
 export function PlatformPage() {
   const totalProjects = 3;
   const activeProjects = [
     {
       company: "TechNova",
-      title: "РҐР°РєР°С‚РѕРЅ РїРѕ РїСЂРѕРґСѓРєС‚РѕРІРѕР№ Р°РЅР°Р»РёС‚РёРєРµ",
-      description: "Р—Р°РіР»СѓС€РєР°: РєР°СЂС‚РѕС‡РєР° С‚РµРєСѓС‰РµРіРѕ РјРµСЂРѕРїСЂРёСЏС‚РёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.",
-      teamName: "РљРѕРјР°РЅРґР° Alpha",
-      teammates: ["РђР‘", "РњРЎ", "РРљ"],
+      title: "Хакатон по продуктовой аналитике",
+      description: "Заглушка: карточка текущего мероприятия пользователя.",
+      teamName: "Команда Alpha",
+      teammates: ["АБ", "МС", "ИК"],
     },
   ];
 
@@ -56,7 +55,7 @@ export function PlatformPage() {
   const activeTopItem = topMenuItems.find((item) => item.path === location.pathname) ?? topMenuItems[1];
   const activeBottomItem = bottomMenuItems.find((item) => item.id === activeBottomItemId) ?? bottomMenuItems[0];
   const activeItem = activeTopItem ?? activeBottomItem;
-  const avatarSrc = !isAvatarBroken && user.avatar ? user.avatar : logo;
+  const avatarSrc = !isAvatarBroken && user.avatar ? user.avatar : DEFAULT_AVATAR;
   const projectsCompleted = Math.max(0, Math.min(user.projectsCount ?? 0, totalProjects));
   const projectsRemaining = Math.max(totalProjects - projectsCompleted, 0);
   const progressPercent = Math.round((projectsCompleted / totalProjects) * 100);
@@ -102,10 +101,10 @@ export function PlatformPage() {
   return (
     <main className="platform-home-page">
       <div className="platform-page">
-        <aside className="platform-sidebar" aria-label="РќР°РІРёРіР°С†РёСЏ РїР»Р°С‚С„РѕСЂРјС‹">
+        <aside className="platform-sidebar" aria-label="Навигация платформы">
           <section className="platform-sidebar-block platform-sidebar-top">
             <div className="platform-logo-frame">
-              <img src={logo} alt="KTSThub" />
+              <span className="platform-wordmark">KTST<span>hack</span></span>
             </div>
             <nav className="platform-menu">
               {topMenuItems.map(renderMenuButton)}
@@ -126,16 +125,9 @@ export function PlatformPage() {
             </div>
 
             <div className="platform-search-group">
-              <label className="platform-search" aria-label="РџРѕРёСЃРє">
-                <input type="search" placeholder="РџРѕРёСЃРє" />
-                <span className="platform-round-button">
-                  <PlatformIcon name="search" />
-                </span>
-              </label>
-              <button type="button" className="platform-round-button" aria-label="РР·Р±СЂР°РЅРЅРѕРµ">
-                <PlatformIcon name="favorite" />
-              </button>
-              <button type="button" className="platform-round-button" aria-label="РЈРІРµРґРѕРјР»РµРЅРёСЏ">
+              <PlatformSearchControl />
+
+              <button type="button" className="platform-round-button" aria-label="Уведомления">
                 <PlatformIcon name="bell" />
               </button>
             </div>
@@ -154,26 +146,20 @@ export function PlatformPage() {
             </div>
           </header>
 
-          <section className="platform-top-content">
-            <section className="platform-hero">
-              <img className="platform-hero-image" src={wayPlatform} alt="Platform background" />
-            </section>
-          </section>
-
           <div className="platform-bottom-stack">
             <section className="platform-lower-content">
               <section className="platform-stats-grid">
                 <article className="platform-stat-card">
                   <div className="platform-stat-copy">
-                    <h2>РџСЂРѕРіСЂРµСЃСЃ<br />СЃС‚Р°С‚СѓСЃР°</h2>
+                    <h2>Прогресс<br />статуса</h2>
                     <p className="platform-stat-line">
-                      <strong>Р‘С‹Р»Рѕ СѓС‡Р°СЃС‚РёРµ:</strong>
+                      <strong>Было участие:</strong>
                       <span className="platform-project-badge">
                         {projectsCompleted} {getProjectLabel(projectsCompleted)}
                       </span>
                     </p>
                     <p className="platform-stat-line">
-                      <strong>РћСЃС‚Р°Р»РѕСЃСЊ:</strong>
+                      <strong>Осталось:</strong>
                       <span className="platform-project-badge">
                         {projectsRemaining} {getProjectLabel(projectsRemaining)}
                       </span>
@@ -182,7 +168,7 @@ export function PlatformPage() {
                   <div
                     className="platform-progress-ring"
                     style={{ "--progress": `${progressPercent}%` } as CSSProperties}
-                    aria-label={`РџСЂРѕРіСЂРµСЃСЃ СѓС‡Р°СЃС‚РёСЏ ${progressPercent}%`}
+                    aria-label={`Прогресс участия ${progressPercent}%`}
                   >
                     <div className="platform-progress-ring-inner">
                       <strong>{progressPercent}%</strong>
@@ -192,7 +178,7 @@ export function PlatformPage() {
 
                 <article className="platform-stat-card platform-stat-card-points">
                   <div className="platform-stat-copy">
-                    <h2>Р’Р°С€Рё Р±Р°Р»Р»С‹</h2>
+                    <h2>Ваши баллы</h2>
                     {isPointsDetailsOpen ? (
                       <>
                         <button
@@ -200,28 +186,28 @@ export function PlatformPage() {
                           className="platform-details-button"
                           onClick={() => setIsPointsDetailsOpen(false)}
                         >
-                          <span aria-hidden="true">в†ђ</span>
-                          РЅР°Р·Р°Рґ
+                          <span aria-hidden="true">{"\u2190"}</span>
+                          назад
                         </button>
                         <div className="platform-points-placeholder">
-                          Р Р°Р·РґРµР» СЃ РїРѕРґСЂРѕР±РЅРѕР№ Р°РЅР°Р»РёС‚РёРєРѕР№ Р±Р°Р»Р»РѕРІ РїРѕСЏРІРёС‚СЃСЏ РІ СЃР»РµРґСѓСЋС‰РёС… РѕР±РЅРѕРІР»РµРЅРёСЏС….
+                          Раздел с подробной аналитикой баллов появится в следующих обновлениях.
                         </div>
                       </>
                     ) : (
                       <>
-                        <p>РћР±РЅРѕРІР»РµРЅРёРµ Р±Р°Р»Р»РѕРІ РїСЂРѕРёСЃС…РѕРґРёС‚ Р±Р»Р°РіРѕРґР°СЂСЏ СѓС‡Р°СЃС‚РёСЋ РІ РҐР°РєР°С‚РѕРЅР°С… Рё РѕС†РµРЅРєРё РІР°С€РёС… РїСЂРѕРµРєС‚РѕРІ.</p>
+                        <p>Обновление баллов происходит благодаря участию в Хакатонах и оценки ваших проектов.</p>
                         <button
                           type="button"
                           className="platform-details-button"
                           onClick={() => setIsPointsDetailsOpen(true)}
                         >
-                          РїРѕРґСЂРѕР±РЅРµРµ
-                          <span aria-hidden="true">в†’</span>
+                          подробнее
+                          <span aria-hidden="true">{"\u2192"}</span>
                         </button>
                       </>
                     )}
                   </div>
-                  <div className="platform-points-ring" aria-label={`Р‘Р°Р»Р»С‹ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ ${userPoints}`}>
+                  <div className="platform-points-ring" aria-label={`Баллы пользователя ${userPoints}`}>
                     <div className="platform-points-ring-inner">
                       <strong>{userPoints}</strong>
                     </div>
@@ -230,12 +216,12 @@ export function PlatformPage() {
               </section>
             </section>
 
-            <section className="platform-active-projects" aria-label="РўРµРєСѓС‰РёРµ РїСЂРѕРµРєС‚С‹ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ">
+            <section className="platform-active-projects" aria-label="Текущие проекты пользователя">
               <div className="platform-active-projects-head">
-                <h2>РџСЂРѕРµРєС‚С‹</h2>
+                <h2>Проекты</h2>
                 <p>
-                  РџСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРµ: СЃС‚СЂР°РЅРёС†С‹ С„РѕСЂРјРёСЂРѕРІР°РЅРёСЏ РєРѕРјР°РЅРґ Рё РІС‹Р±РѕСЂР° РјРµСЂРѕРїСЂРёСЏС‚РёСЏ РїРѕРєР° РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅС‹,
-                  РїРѕСЌС‚РѕРјСѓ РЅРёР¶Рµ РїРѕРєР°Р·Р°РЅР° РІСЂРµРјРµРЅРЅР°СЏ Р·Р°РіР»СѓС€РєР°.
+                  Предупреждение: страницы формирования команд и выбора мероприятия пока не реализованы,
+                  поэтому ниже показана временная заглушка.
                 </p>
               </div>
 
@@ -257,27 +243,27 @@ export function PlatformPage() {
                       </button>
                     </div>
 
-                    <div className="platform-active-stages" aria-label="Р­С‚Р°РїС‹ РїСЂРѕРµРєС‚Р°">
+                    <div className="platform-active-stages" aria-label="Этапы проекта">
                       <div className="platform-active-stage">
-                        <span className="platform-active-stage-number">1 СЌС‚Р°Рї</span>
-                        <strong>РЎС‚Р°СЂС‚ РҐР°РєР°С‚РѕРЅР°</strong>
+                        <span className="platform-active-stage-number">1 этап</span>
+                        <strong>Старт Хакатона</strong>
                       </div>
                       <div className="platform-active-stage-divider" aria-hidden="true" />
                       <div className="platform-active-stage">
-                        <span className="platform-active-stage-number">2 СЌС‚Р°Рї</span>
-                        <strong>РџСЂРѕС†РµСЃСЃ РЎРѕР·РґР°РЅРёСЏ</strong>
+                        <span className="platform-active-stage-number">2 этап</span>
+                        <strong>Процесс Создания</strong>
                       </div>
                       <div className="platform-active-stage-divider" aria-hidden="true" />
                       <div className="platform-active-stage">
-                        <span className="platform-active-stage-number">3 СЌС‚Р°Рї</span>
-                        <strong>Р¤РёРЅРёС€ РҐР°РєР°С‚РѕРЅР°</strong>
+                        <span className="platform-active-stage-number">3 этап</span>
+                        <strong>Финиш Хакатона</strong>
                       </div>
                     </div>
 
                     <div className="platform-active-team">
                       <span className="platform-active-team-name">{project.teamName}</span>
                       <div className="platform-active-team-row">
-                        <div className="platform-active-team-avatars" aria-label="РЎРѕСЃС‚Р°РІ РєРѕРјР°РЅРґС‹">
+                        <div className="platform-active-team-avatars" aria-label="Состав команды">
                           {project.teammates.map((teammate) => (
                             <span key={teammate} className="platform-active-team-avatar">
                               {teammate}
@@ -289,7 +275,7 @@ export function PlatformPage() {
                           className="platform-active-team-button"
                           onClick={() => navigate("/projects")}
                         >
-                          РїРѕРґСЂРѕР±РЅРµРµ
+                          подробнее
                         </button>
                       </div>
                     </div>
