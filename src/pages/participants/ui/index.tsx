@@ -71,12 +71,6 @@ const participants: Participant[] = Array.from({ length: 30 }, (_, index) => ({
   projectsCount: 1 + (index % 7),
 }));
 
-const participantCardClassName = (rank: number) => {
-  if (rank === 1) return "participant-card first-place";
-  if (rank === 2) return "participant-card second-place";
-  if (rank === 3) return "participant-card third-place";
-  return "participant-card default-place";
-};
 
 const participantRankClassName = (rank: number) => {
   if (rank === 1) return "participant-rank first-place";
@@ -106,8 +100,6 @@ export const ParticipantsPage = () => {
     return sorted.slice(0, 30);
   }, [activeTab]);
 
-  const topParticipants = visibleParticipants.slice(0, 3);
-  const otherParticipants = visibleParticipants.slice(3);
 
   const renderMenuButton = (item: NavigationMenuItem) => (
     <button
@@ -187,49 +179,29 @@ export const ParticipantsPage = () => {
           <div className="participants-frame">
             <div className="participants-scroll-area">
               <div className="participants-list" aria-label="Рейтинг участников">
-                {topParticipants.map((participant) => (
-                  <article key={participant.id} className={`participant-row participant-row-top top-rank-${participant.rank}`}>
-                    <div className={`${participantRankClassName(participant.rank)} participant-rank-top`}>
-                      № {participant.rank}
-                    </div>
-                    <div className="participant-top-stack">
-                      <div className="participant-top-art">
+                {visibleParticipants.map((participant, index) => {
+                  const displayRank = index + 1;
+
+                  return (
+                    <article key={participant.id} className="participant-row">
+                      <div className={participantRankClassName(displayRank)}>
+                        {"№"} {displayRank}
                       </div>
-                      <div className={participantCardClassName(participant.rank)}>
+                      <div className="participant-card">
                         <div className="participant-main-info">
-                          <strong>{participant.lastName} {participant.firstName}, {participant.gender}, {participant.age} лет</strong>
+                          <strong>{participant.lastName} {participant.firstName}, {participant.gender}, {participant.age} {"лет"}</strong>
                           <span>{participant.title}</span>
                         </div>
                         <div className="participant-meta">
                           <span>{participant.role}</span>
-                          <span>{participant.projectsCount} проектов</span>
+                          <span>{participant.projectsCount} {"проектов"}</span>
                         </div>
-                        <button type="button" className="participant-invite-button">Пригласить</button>
+                        <button type="button" className="participant-invite-button">{"Пригласить"}</button>
                       </div>
-                    </div>
-                  </article>
-                ))}
+                    </article>
+                  );
+                })}
 
-                <div className="participants-divider" />
-
-                {otherParticipants.map((participant) => (
-                  <article key={participant.id} className="participant-row">
-                    <div className={participantRankClassName(participant.rank)}>
-                      № {participant.rank}
-                    </div>
-                    <div className={participantCardClassName(participant.rank)}>
-                      <div className="participant-main-info">
-                        <strong>{participant.lastName} {participant.firstName}, {participant.gender}, {participant.age} лет</strong>
-                        <span>{participant.title}</span>
-                      </div>
-                      <div className="participant-meta">
-                        <span>{participant.role}</span>
-                        <span>{participant.projectsCount} проектов</span>
-                      </div>
-                      <button type="button" className="participant-invite-button">Пригласить</button>
-                    </div>
-                  </article>
-                ))}
               </div>
             </div>
           </div>

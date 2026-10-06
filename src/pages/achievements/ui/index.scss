@@ -266,6 +266,29 @@
   }
 }
 
+.achievements-empty-state {
+  display: block;
+  min-height: 0;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.76);
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 600;
+  text-align: center;
+}
+
+.page-placeholder-card:has(.achievements-empty-state) {
+  width: fit-content;
+  max-width: 100%;
+  padding: 10px 14px;
+}
+
+.page-placeholder-card .achievements-empty-state {
+  max-width: none;
+  text-align: left;
+  font-size: 18px;
+  line-height: 1.4;
+}
+
 @media (max-width: 980px) {
   .platform-page {
     grid-template-columns: 1fr;
