@@ -9,6 +9,12 @@
   padding: 40px;
 
   &.role-selected {
+    box-sizing: border-box;
+    min-height: 100vh;
+    justify-content: center;
+    padding: 24px;
+    overflow-x: hidden;
+    overflow-y: auto;
     background: 
       radial-gradient(80% 80% at 0% 0%, #9605CA 0%, rgba(0, 0, 0, 0) 60%),
       radial-gradient(80% 80% at 100% 100%, #B51601 0%, rgba(0, 0, 0, 0) 60%),
@@ -60,52 +66,6 @@
      transform: scaleX(-1);
      z-index: 2;
      pointer-events: none;
-   }
-
-   .register-progress {
-     position: absolute;
-     top: 800px;
-     left: 250px;
-     display: flex;
-     align-items: center;
-     gap: 22px;
-     z-index: 3;
-   }
-
-   .register-progress-block {
-     width: 88px;
-     height: 88px;
-     border-radius: 24px;
-     background: #000;
-     border: 2px solid rgba(255, 255, 255, 0.18);
-     display: flex;
-     align-items: center;
-     justify-content: center;
-     box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
-     transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
-
-     &.loading,
-     &.completed {
-       background: linear-gradient(180deg, #F1DF6A 0%, #10FE4B 100%);
-       box-shadow: 0 12px 30px rgba(16, 254, 75, 0.25);
-     }
-
-     &.partial {
-       background: linear-gradient(180deg, #FFE47A 0%, #FF7741 100%);
-       box-shadow: 0 12px 30px rgba(255, 119, 65, 0.25);
-     }
-
-     &.loading {
-       animation: progressPulse 1.15s ease-in-out infinite;
-     }
-
-     &.completed {
-       animation: none;
-     }
-
-     svg {
-       display: block;
-     }
    }
 
    .register-title {
@@ -167,6 +127,33 @@
       overflow: visible;
       transition: transform 0.2s;
 
+      .role-fill-image {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: inherit;
+        object-fit: cover;
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      .judge-image {
+        object-position: center 35%;
+      }
+
+      .student-image {
+        object-position: center center;
+      }
+
+      .business-partner-image {
+        object-position: center 35%;
+      }
+
+      .organizer-image {
+        object-position: center 30%;
+      }
+
       .boyregistration-wrapper {
         position: absolute;
         top: 0;
@@ -206,33 +193,6 @@
       &.offset-up {
         position: relative;
         top: -40px;
-      }
-
-      &::before {
-        content: '';
-        position: absolute;
-        top: -2px;
-        left: -2px;
-        right: -2px;
-        bottom: -2px;
-        border-radius: 182px;
-        z-index: -1;
-      }
-
-      &:nth-child(1)::before {
-        background: linear-gradient(179.98deg, #C2FF72 0.02%, #EAE0AC 40.13%, rgba(242, 255, 154, 0.6) 68.44%, rgba(0, 0, 0, 0) 89.67%);
-      }
-
-      &:nth-child(2)::before {
-        background: linear-gradient(179.98deg, #87E3E9 10.01%, rgba(154, 183, 255, 0.6) 68.44%, rgba(0, 0, 0, 0) 89.67%);
-        transform: rotate(180deg);
-      }
-      &:nth-child(3)::before {
-        background: linear-gradient(179.98deg, #D0BFEF 40.13%, rgba(139, 64, 201, 0.6) 68.44%, rgba(0, 0, 0, 0) 89.67%);
-      }
-      &:nth-child(4)::before {
-        background: linear-gradient(179.98deg, #FFB2CE 7.66%, rgba(255, 28, 119, 0.6) 68.44%, rgba(0, 0, 0, 0) 89.67%);
-        transform: rotate(180deg);
       }
 
       .role-number, .role-label-wrapper, .select-btn, .role-bottom-right, .role-top-right {
@@ -284,6 +244,8 @@
 .role-label-wrapper {
         display: inline-block;
         background: #00000091;
+        border: 1px solid #FFFFFF;
+        box-sizing: border-box;
         transform: skewX(-20deg);
         padding: 8px 20px;
         margin-bottom: 30px;
@@ -336,6 +298,16 @@
           right: -20px;
         }
       }
+      // Override the app-wide !important role button colors for these four buttons.
+      .select-btn,
+      .select-btn:hover,
+      .select-btn:active,
+      .select-btn:focus,
+      .select-btn:focus-visible {
+        background: #FFFFFF !important;
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+      }
     }
   }
 
@@ -350,23 +322,23 @@
   }
 
    .register-form-shell {
-     position: absolute;
-     top: 54%;
-     right: 10%;
-     transform: translateY(-50%);
+     position: relative;
+     inset: auto;
+     transform: none;
      display: flex;
      align-items: center;
+     justify-content: center;
      gap: 26px;
      z-index: 5;
    }
 
    .register-form-container {
-    position: absolute;
-    top: 57%;
-    right: 10%;
-    transform: translateY(-50%);
-    width: 586px;
+    position: relative;
+    inset: auto;
+    transform: none;
+    width: min(586px, calc(100vw - 48px));
     height: 770px;
+    max-height: calc(100vh - 48px);
     background: linear-gradient(204deg, #FFD6C3 0.95%, #FF712F 26.24%, #A919AE 88.14%, #9605CA 102.09%);
     backdrop-filter: blur(10px);
     padding: 40px 60px;
@@ -377,7 +349,8 @@
    display: flex;
    flex-direction: column;
    align-items: center;
-   overflow: visible;
+   overflow-y: auto;
+   overflow-x: hidden;
 
       .unionTop {
       position: absolute;
@@ -398,30 +371,6 @@
       height: auto;
       z-index: 0;
     }
-
-.logo-block {
-        width: 150px;
-        height: 33px;
-        background: #000;
-        border-radius: 90px;
-        position: relative;
-        overflow: visible;
-        box-shadow: 
-          6px -3px 5px 0px #FF5100 inset,
-          1px 3px 8.6px 0px #FF5100 inset;
-          z-index: 12;
-
-        .register-badge {
-          position: absolute;
-          left: 50%;
-          top: -415px;
-          transform: translateX(-50%);
-          width: 140px;
-          height: auto;
-          z-index: 13;
-          pointer-events: none;
-        }
-      }
 
       .logoLogin {
         width: 83px;
@@ -909,13 +858,13 @@
                color: #fff;
              }
 
-             &:not(.active) {
-               opacity: 0.5;
-             }
-           }
-         }
-       }
-     }
+              &:not(.active) {
+                opacity: 0.5;
+              }
+            }
+          }
+        }
+      }
 
      .password-wrapper {
        width: 100%;

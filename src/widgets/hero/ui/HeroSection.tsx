@@ -8,19 +8,14 @@ import {
     selectors,
 } from "../../../features/hero";
 
-import Maria from "../../../shared/assets/Maria.png";
 import Danil from "../../../shared/assets/Danil.png";
 import Ksenia from "../../../shared/assets/Ksenia.png";
+import Maria from "../../../shared/assets/Maria.png";
 
-
+const PARTNER_APPLICATION_URL = "https://docs.google.com/forms/d/e/1FAIpQLSf8lYYBIzyrj-PJ3Vq2rscPzG_aRkwe_f6eJZFF4Mgxo6CGUQ/viewform?usp=publish-editor";
 
 export const HeroSection = () => {
     const MAX_SECTION = 6;
-    const PARTNER_APPLICATION_URL = "https://docs.google.com/forms/d/e/1FAIpQLSf8lYYBIzyrj-PJ3Vq2rscPzG_aRkwe_f6eJZFF4Mgxo6CGUQ/viewform?usp=publish-editor";
-    const PARTNER_LOOP_MULTIPLIER = 7;
-    const PARTNER_MIDDLE_LOOP_INDEX = Math.floor(PARTNER_LOOP_MULTIPLIER / 2);
-    const TEAM_LOOP_MULTIPLIER = 7;
-    const TEAM_MIDDLE_LOOP_INDEX = Math.floor(TEAM_LOOP_MULTIPLIER / 2);
     const AUDIENCE_SLIDES = [
         {
             title: "Для участников и студентов",
@@ -35,26 +30,12 @@ export const HeroSection = () => {
             type: "judges",
         },
     ] as const;
-    const PARTNER_SPOTLIGHTS = [
-        {
-            name: "Максим Сергеевич",
-            role: "Директор “Колледжа Цифровых Технологий” ИТ-колледж",
-            title: "Максим Сергеевич выражает благодарность команде КЦТхак за проделанную работу",
-            text: "Спасибо КЦТхак за эффективное и профессиональную платформу со своей созданной экосистемой...",
-        },
-        {
-            name: "Здесь могли бы быть Вы",
-            role: "",
-            title: "",
-            text: "",
-            isPlaceholder: true,
-        },
-    ];
-    const TEAM_MEMBERS = [
-        { name: "Maria", image: Maria },
-        { name: "Danil", image: Danil },
-        { name: "Ksenia", image: Ksenia },
-    ];
+    const PARTNER_SPOTLIGHT = {
+        name: "Максим Сергеевич",
+        role: "Директор “Колледжа Цифровых Технологий” ИТ-колледж",
+        title: "Максим Сергеевич выражает благодарность команде КЦТхак за проделанную работу",
+        text: "Спасибо КЦТхак за эффективное и профессиональную платформу со своей созданной экосистемой...",
+    };
     const FAQ_ITEMS = [
         {
             question: "Что это вообще за платформа?",
@@ -192,54 +173,11 @@ export const HeroSection = () => {
     const dispatch = useDispatch();
     const currentSection = useSelector(selectors.selectCurrentSection);
     const [openFaqIndex, setOpenFaqIndex] = useState(0);
-    const partnerCarouselTrackRef = useRef<HTMLDivElement | null>(null);
-    const partnerDragStartX = useRef<number | null>(null);
-    const partnerDragStartScrollLeft = useRef(0);
-    const [isPartnerDragging, setIsPartnerDragging] = useState(false);
-    const teamCarouselTrackRef = useRef<HTMLDivElement | null>(null);
-    const teamDragStartX = useRef<number | null>(null);
-    const teamDragStartScrollLeft = useRef(0);
-    const [isTeamDragging, setIsTeamDragging] = useState(false);
-    const [activeTeamCardKey, setActiveTeamCardKey] = useState("");
+    const [activePartnerSlide, setActivePartnerSlide] = useState(0);
     const [activeAudienceIndex, setActiveAudienceIndex] = useState(0);
     const infoScrollInnerRef = useRef<HTMLDivElement | null>(null);
     const platformFeatureRefs = useRef<Array<HTMLDivElement | null>>([]);
     const [activePlatformFeatureIndex, setActivePlatformFeatureIndex] = useState(0);
-
-    const snapTrackToClosestCard = useCallback((
-        track: HTMLDivElement | null,
-        selector: string,
-        behavior: ScrollBehavior = "smooth"
-    ) => {
-        if (!track) {
-            return;
-        }
-
-        const cards = Array.from(track.querySelectorAll<HTMLElement>(selector));
-
-        if (!cards.length) {
-            return;
-        }
-
-        const trackCenter = track.scrollLeft + track.clientWidth / 2;
-        let nextScrollLeft = track.scrollLeft;
-        let nearestDistance = Number.POSITIVE_INFINITY;
-
-        cards.forEach((card) => {
-            const cardCenter = card.offsetLeft + card.offsetWidth / 2;
-            const distance = Math.abs(trackCenter - cardCenter);
-
-            if (distance < nearestDistance) {
-                nearestDistance = distance;
-                nextScrollLeft = cardCenter - track.clientWidth / 2;
-            }
-        });
-
-        track.scrollTo({
-            left: Math.max(0, nextScrollLeft),
-            behavior,
-        });
-    }, []);
 
     const scrollToSection = useCallback((sectionNum: number) => {
         const container = document.querySelector('.sections-container');
@@ -300,288 +238,6 @@ export const HeroSection = () => {
             observer.disconnect();
         };
     }, [currentSection, scrollToSection, dispatch, MAX_SECTION]);
-
-    const loopedPartnerSpotlights = Array.from({ length: PARTNER_LOOP_MULTIPLIER }, (_, loopIndex) =>
-        PARTNER_SPOTLIGHTS.map((partner, partnerIndex) => ({
-            key: `${partner.name}-${loopIndex}-${partnerIndex}`,
-            partner,
-        }))
-    ).flat();
-
-    const loopedTeamMembers = Array.from({ length: TEAM_LOOP_MULTIPLIER }, (_, loopIndex) =>
-        TEAM_MEMBERS.map((member, memberIndex) => ({
-            key: `${member.name}-${loopIndex}-${memberIndex}`,
-            member,
-        }))
-    ).flat();
-
-    const recenterPartnerTrack = useCallback((force = false) => {
-        const track = partnerCarouselTrackRef.current;
-
-        if (!track) {
-            return;
-        }
-
-        const singleLoopWidth = track.scrollWidth / PARTNER_LOOP_MULTIPLIER;
-
-        if (!singleLoopWidth) {
-            return;
-        }
-
-        const middleLoopStart = singleLoopWidth * PARTNER_MIDDLE_LOOP_INDEX;
-        const safeStart = singleLoopWidth;
-        const safeEnd = singleLoopWidth * (PARTNER_LOOP_MULTIPLIER - 2);
-
-        if (force || track.scrollLeft < safeStart || track.scrollLeft > safeEnd) {
-            const normalizedOffset =
-                ((track.scrollLeft % singleLoopWidth) + singleLoopWidth) % singleLoopWidth;
-
-            track.scrollLeft = middleLoopStart + normalizedOffset;
-        }
-    }, [PARTNER_LOOP_MULTIPLIER, PARTNER_MIDDLE_LOOP_INDEX]);
-
-    const recenterTeamTrack = useCallback((force = false) => {
-        const track = teamCarouselTrackRef.current;
-
-        if (!track) {
-            return;
-        }
-
-        const singleLoopWidth = track.scrollWidth / TEAM_LOOP_MULTIPLIER;
-
-        if (!singleLoopWidth) {
-            return;
-        }
-
-        const middleLoopStart = singleLoopWidth * TEAM_MIDDLE_LOOP_INDEX;
-        const safeStart = singleLoopWidth;
-        const safeEnd = singleLoopWidth * (TEAM_LOOP_MULTIPLIER - 2);
-
-        if (force || track.scrollLeft < safeStart || track.scrollLeft > safeEnd) {
-            const normalizedOffset =
-                ((track.scrollLeft % singleLoopWidth) + singleLoopWidth) % singleLoopWidth;
-
-            track.scrollLeft = middleLoopStart + normalizedOffset;
-        }
-    }, [TEAM_LOOP_MULTIPLIER, TEAM_MIDDLE_LOOP_INDEX]);
-
-    const updateActiveTeamCard = useCallback(() => {
-        const track = teamCarouselTrackRef.current;
-
-        if (!track) {
-            return;
-        }
-
-        const cards = Array.from(track.querySelectorAll<HTMLElement>(".team-card"));
-
-        if (!cards.length) {
-            return;
-        }
-
-        const trackCenter = track.scrollLeft + track.clientWidth / 2;
-        let nextActiveCardKey = "";
-        let nearestDistance = Number.POSITIVE_INFINITY;
-
-        cards.forEach((card) => {
-            const cardCenter = card.offsetLeft + card.offsetWidth / 2;
-            const distance = Math.abs(trackCenter - cardCenter);
-
-            if (distance < nearestDistance) {
-                nearestDistance = distance;
-                nextActiveCardKey = card.dataset.cardKey ?? "";
-            }
-        });
-
-        setActiveTeamCardKey((prev) => (prev === nextActiveCardKey ? prev : nextActiveCardKey));
-    }, []);
-
-    const scrollTrackToAdjacentCard = useCallback((
-        track: HTMLDivElement | null,
-        selector: string,
-        direction: 1 | -1,
-        afterScroll?: () => void
-    ) => {
-        if (!track) {
-            return;
-        }
-
-        const cards = Array.from(track.querySelectorAll<HTMLElement>(selector));
-
-        if (!cards.length) {
-            return;
-        }
-
-        const trackCenter = track.scrollLeft + track.clientWidth / 2;
-        let nearestCardIndex = 0;
-        let nearestDistance = Number.POSITIVE_INFINITY;
-
-        cards.forEach((card, index) => {
-            const cardCenter = card.offsetLeft + card.offsetWidth / 2;
-            const distance = Math.abs(trackCenter - cardCenter);
-
-            if (distance < nearestDistance) {
-                nearestDistance = distance;
-                nearestCardIndex = index;
-            }
-        });
-
-        const targetIndex = Math.min(cards.length - 1, Math.max(0, nearestCardIndex + direction));
-        const targetCard = cards[targetIndex];
-
-        if (!targetCard) {
-            return;
-        }
-
-        const targetScrollLeft = targetCard.offsetLeft + targetCard.offsetWidth / 2 - track.clientWidth / 2;
-
-        track.scrollTo({
-            left: Math.max(0, targetScrollLeft),
-            behavior: "smooth",
-        });
-
-        afterScroll?.();
-    }, []);
-
-    const scrollTeamByCard = useCallback((direction: 1 | -1) => {
-        const track = teamCarouselTrackRef.current;
-
-        recenterTeamTrack();
-        scrollTrackToAdjacentCard(track, ".team-card", direction, updateActiveTeamCard);
-    }, [recenterTeamTrack, scrollTrackToAdjacentCard, updateActiveTeamCard]);
-
-    const showPrevTeamMember = () => {
-        scrollTeamByCard(-1);
-    };
-
-    const showNextTeamMember = () => {
-        scrollTeamByCard(1);
-    };
-
-    const scrollPartnerByCard = useCallback((direction: 1 | -1) => {
-        const track = partnerCarouselTrackRef.current;
-
-        recenterPartnerTrack();
-        scrollTrackToAdjacentCard(track, ".partner-spotlight", direction);
-    }, [recenterPartnerTrack, scrollTrackToAdjacentCard]);
-
-    const showPrevPartner = () => {
-        scrollPartnerByCard(-1);
-    };
-
-    const showNextPartner = () => {
-        scrollPartnerByCard(1);
-    };
-
-    const handlePartnerPointerDown = (clientX: number) => {
-        const track = partnerCarouselTrackRef.current;
-
-        if (!track) {
-            return;
-        }
-
-        partnerDragStartX.current = clientX;
-        partnerDragStartScrollLeft.current = track.scrollLeft;
-        setIsPartnerDragging(true);
-    };
-
-    const handlePartnerPointerMove = (clientX: number) => {
-        const track = partnerCarouselTrackRef.current;
-
-        if (!track || partnerDragStartX.current === null) {
-            return;
-        }
-
-        track.scrollLeft = partnerDragStartScrollLeft.current - (clientX - partnerDragStartX.current);
-    };
-
-    const handlePartnerPointerUp = () => {
-        const track = partnerCarouselTrackRef.current;
-
-        partnerDragStartX.current = null;
-        setIsPartnerDragging(false);
-        recenterPartnerTrack();
-        snapTrackToClosestCard(track, ".partner-spotlight");
-    };
-
-    useEffect(() => {
-        const track = partnerCarouselTrackRef.current;
-
-        if (!track) {
-            return;
-        }
-
-        const frameId = window.requestAnimationFrame(() => {
-            recenterPartnerTrack(true);
-        });
-
-        const handleResize = () => {
-            recenterPartnerTrack(true);
-        };
-
-        window.addEventListener("resize", handleResize);
-
-        return () => {
-            window.cancelAnimationFrame(frameId);
-            window.removeEventListener("resize", handleResize);
-        };
-    }, [recenterPartnerTrack]);
-
-    const handleTeamPointerDown = (clientX: number) => {
-        const track = teamCarouselTrackRef.current;
-
-        if (!track) {
-            return;
-        }
-
-        teamDragStartX.current = clientX;
-        teamDragStartScrollLeft.current = track.scrollLeft;
-        setIsTeamDragging(true);
-    };
-
-    const handleTeamPointerMove = (clientX: number) => {
-        const track = teamCarouselTrackRef.current;
-
-        if (!track || teamDragStartX.current === null) {
-            return;
-        }
-
-        track.scrollLeft = teamDragStartScrollLeft.current - (clientX - teamDragStartX.current);
-    };
-
-    const handleTeamPointerUp = () => {
-        const track = teamCarouselTrackRef.current;
-
-        teamDragStartX.current = null;
-        setIsTeamDragging(false);
-        recenterTeamTrack();
-        snapTrackToClosestCard(track, ".team-card");
-        updateActiveTeamCard();
-    };
-
-    useEffect(() => {
-        const track = teamCarouselTrackRef.current;
-
-        if (!track) {
-            return;
-        }
-
-        const frameId = window.requestAnimationFrame(() => {
-            recenterTeamTrack(true);
-            updateActiveTeamCard();
-        });
-
-        const handleResize = () => {
-            recenterTeamTrack(true);
-            updateActiveTeamCard();
-        };
-
-        window.addEventListener("resize", handleResize);
-
-        return () => {
-            window.cancelAnimationFrame(frameId);
-            window.removeEventListener("resize", handleResize);
-        };
-    }, [recenterTeamTrack, updateActiveTeamCard]);
 
     useEffect(() => {
         const features = platformFeatureRefs.current.filter((element): element is HTMLDivElement => element !== null);
@@ -726,61 +382,43 @@ export const HeroSection = () => {
 
                         <section id="slice4" className={`sixthslice ${currentSection === 4 ? "sixthslice--active" : ""}`}>
                             <div className="section-container spotlight-section-container">
-                            <div className="platform-title">Наши партнеры</div>
-                            <div className="sixthslice_inner">
+                            <div className="platform-title sixthslice_partner-heading">Наши партнёры</div>
+                            <div className="sixthslice_carousel">
                                 <button
                                     type="button"
-                                    className="team-carousel_arrow"
-                                    onClick={showPrevPartner}
-                                    aria-label="Показать предыдущего партнёра"
+                                    className="sixthslice_arrow"
+                                    onClick={() => setActivePartnerSlide((slide) => (slide - 1 + 2) % 2)}
+                                    aria-label="Предыдущий слайд"
                                 >
                                     ←
                                 </button>
-                                <div
-                                    ref={partnerCarouselTrackRef}
-                                    className={`partner-carousel_track ${isPartnerDragging ? "is-dragging" : ""}`}
-                                    onScroll={() => recenterPartnerTrack()}
-                                    onMouseDown={(event) => handlePartnerPointerDown(event.clientX)}
-                                    onMouseMove={(event) => handlePartnerPointerMove(event.clientX)}
-                                    onMouseUp={handlePartnerPointerUp}
-                                    onMouseLeave={handlePartnerPointerUp}
-                                    onTouchStart={(event) => handlePartnerPointerDown(event.touches[0].clientX)}
-                                    onTouchMove={(event) => handlePartnerPointerMove(event.touches[0].clientX)}
-                                    onTouchEnd={handlePartnerPointerUp}
-                                >
-                                    {loopedPartnerSpotlights.map(({ key, partner }) => (
-                                        <article key={key} className="partner-spotlight">
-                                            <div className={`partner-spotlight_content${partner.isPlaceholder ? " partner-spotlight_content--placeholder" : ""}`}>
-                                                {partner.isPlaceholder ? (
-                                                    <>
-                                                        <a
-                                                            className="partner-spotlight_action"
-                                                            href={PARTNER_APPLICATION_URL}
-                                                            target="_blank"
-                                                            rel="noreferrer"
-                                                        >
-                                                            Стать Нашим Партнёром
-                                                        </a>
-                                                        <div className="partner-spotlight_placeholder">{partner.name}</div>
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <div className="partner-spotlight_avatar" aria-hidden="true">{partner.name.slice(0, 1)}</div>
-                                                        <div className="partner-spotlight_name">{partner.name}</div>
-                                                        <p className="partner-spotlight_role">{partner.role}</p>
-                                                        <p className="partner-spotlight_title">{partner.title}</p>
-                                                        <p className="partner-spotlight_text">{partner.text}</p>
-                                                    </>
-                                                )}
+                                <div className="sixthslice_inner" aria-live="polite">
+                                    {activePartnerSlide === 0 ? (
+                                        <article className="partner-spotlight sixthslice_slide" key="partner">
+                                            <div className="partner-spotlight_content">
+                                                <div className="partner-spotlight_avatar" aria-hidden="true">{PARTNER_SPOTLIGHT.name.slice(0, 1)}</div>
+                                                <div className="partner-spotlight_name">{PARTNER_SPOTLIGHT.name}</div>
+                                                <p className="partner-spotlight_role">{PARTNER_SPOTLIGHT.role}</p>
+                                                <p className="partner-spotlight_title">{PARTNER_SPOTLIGHT.title}</p>
+                                                <p className="partner-spotlight_text">{PARTNER_SPOTLIGHT.text}</p>
                                             </div>
                                         </article>
-                                    ))}
+                                    ) : (
+                                        <article className="sixthslice_slide sixthslice_invitation" key="invitation">
+                                            <div className="sixthslice_invitation-card">
+                                                <p>Здесь могли бы быть вы</p>
+                                                <a className="sixthslice_partner-link" href={PARTNER_APPLICATION_URL} target="_blank" rel="noreferrer">
+                                                    Стать нашим партнером
+                                                </a>
+                                            </div>
+                                        </article>
+                                    )}
                                 </div>
                                 <button
                                     type="button"
-                                    className="team-carousel_arrow"
-                                    onClick={showNextPartner}
-                                    aria-label="Показать следующего партнёра"
+                                    className="sixthslice_arrow"
+                                    onClick={() => setActivePartnerSlide((slide) => (slide + 1) % 2)}
+                                    aria-label="Следующий слайд"
                                 >
                                     →
                                 </button>
@@ -792,47 +430,24 @@ export const HeroSection = () => {
                             <div className="section-container team-section-container">
                             <div className="platform-title">Наша команда</div>
                             <div className="teamslice_inner">
-                                <button
-                                    type="button"
-                                    className="team-carousel_arrow"
-                                    onClick={showPrevTeamMember}
-                                    aria-label="Показать предыдущего участника"
-                                >
-                                    ←
-                                </button>
-                                <div
-                                    ref={teamCarouselTrackRef}
-                                    className={`team-carousel_track ${isTeamDragging ? "is-dragging" : ""}`}
-                                    onScroll={() => {
-                                        recenterTeamTrack();
-                                        updateActiveTeamCard();
-                                    }}
-                                    onMouseDown={(event) => handleTeamPointerDown(event.clientX)}
-                                    onMouseMove={(event) => handleTeamPointerMove(event.clientX)}
-                                    onMouseUp={handleTeamPointerUp}
-                                    onMouseLeave={handleTeamPointerUp}
-                                    onTouchStart={(event) => handleTeamPointerDown(event.touches[0].clientX)}
-                                    onTouchMove={(event) => handleTeamPointerMove(event.touches[0].clientX)}
-                                    onTouchEnd={handleTeamPointerUp}
-                                >
-                                    {loopedTeamMembers.map((member) => (
-                                        <div
-                                            key={member.key}
-                                            className={`team-card${activeTeamCardKey === member.key ? " is-active" : ""}`}
-                                            data-card-key={member.key}
-                                        >
-                                            {member.member.image ? <img className="team-card_image" src={member.member.image} alt={member.member.name} loading="lazy" decoding="async" /> : <span className="team-card_initials" aria-label={member.member.name}>{member.member.name.slice(0, 1)}</span>}
-                                        </div>
-                                    ))}
-                                </div>
-                                <button
-                                    type="button"
-                                    className="team-carousel_arrow"
-                                    onClick={showNextTeamMember}
-                                    aria-label="Показать следующего участника"
-                                >
-                                    →
-                                </button>
+                                <article className="team-member">
+                                    <img className="team-member_image" src={Danil} alt="Хасанов Данил" loading="lazy" decoding="async" />
+                                    <div className="team-member_name">Хасанов Данил</div>
+                                    <div className="team-member_direction">Back-End</div>
+                                    <div className="team-member_role">разработчик</div>
+                                </article>
+                                <article className="team-member">
+                                    <img className="team-member_image" src={Ksenia} alt="Качура Ксения" loading="lazy" decoding="async" />
+                                    <div className="team-member_name">Качура Ксения</div>
+                                    <div className="team-member_direction">Front-End</div>
+                                    <div className="team-member_role">разработчик</div>
+                                </article>
+                                <article className="team-member">
+                                    <img className="team-member_image" src={Maria} alt="Хомутова Мария" loading="lazy" decoding="async" />
+                                    <div className="team-member_name">Хомутова Мария</div>
+                                    <div className="team-member_direction">Организатор</div>
+                                    <div className="team-member_role">Project Manager</div>
+                                </article>
                             </div>
                             </div>
                         </section>

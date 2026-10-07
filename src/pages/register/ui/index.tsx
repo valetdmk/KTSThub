@@ -5,6 +5,10 @@ import "./index.scss";
 import Maria from "../../../shared/assets/Maria.png";
 import Ksenia from "../../../shared/assets/Ksenia.png";
 import Danil from "../../../shared/assets/Danil.png";
+import judgeImage from "../../../shared/assets/jou.png";
+import businessPartnerImage from "../../../shared/assets/busines.png";
+import organizerImage from "../../../shared/assets/organizer.png";
+import studentImage from "../../../shared/assets/student.png";
 
 const calendarWeekDays = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
 const calendarMonthNames = [
@@ -110,7 +114,6 @@ export default function Register() {
    const [showPassword, setShowPassword] = useState(false);
    const [localError, setLocalError] = useState<string | null>(null);
    const [step3Page, setStep3Page] = useState<1 | 2>(1);
-   const [pendingProgressStep, setPendingProgressStep] = useState<number | null>(null);
 
   const calculateAge = (birthday: string) => {
     if (!birthday) return "";
@@ -193,7 +196,6 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
 
     setSelectedRole(roleId);
     setStep3Page(1);
-    setPendingProgressStep(null);
   };
 
   const togglePasswordVisibility = () => {
@@ -686,24 +688,11 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
     return telegramValidationMessage === null && githubValidationMessage === null;
   };
 
-  const hasStep1Progress = Object.values(formData).some((value) => value.trim() !== "");
-  const hasStep2Progress = Object.values(step2Data).some((value) => {
-    if (typeof value === "boolean") {
-      return value;
-    }
-
-    return value.trim() !== "";
-  });
-  const visiblePendingProgressStep = pendingProgressStep !== null && step > pendingProgressStep
-    ? null
-    : pendingProgressStep;
-
    const handleSignup = async (e: React.FormEvent) => {
      e.preventDefault();
      if (!isFormValid()) return;
 
      setLocalError(null);
-     setPendingProgressStep(1);
 
      dispatch(registerRequest({
        name: formData.name,
@@ -731,11 +720,9 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
      }
 
      setLocalError(null);
-     setPendingProgressStep(2);
      setStep3Page(1);
 
      if (!token || !userId) {
-       setPendingProgressStep(null);
        setLocalError("Сначала заверши шаг регистрации и повтори сохранение.");
        return;
      }
@@ -790,40 +777,6 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
       document.removeEventListener("pointerdown", handlePointerDown);
     };
   }, []);
-
-  const renderProgressIndicator = () => (
-    <div className="register-progress" aria-label="Прогресс регистрации">
-      {[1, 2, 3].map((progressStep) => {
-        const isCompleted = step > progressStep;
-        const isLoading = loading && visiblePendingProgressStep === progressStep;
-        const isPartial =
-          !isCompleted &&
-          !isLoading &&
-          ((progressStep === 1 && hasStep1Progress) ||
-            (progressStep === 2 && hasStep2Progress));
-
-        return (
-          <div
-            key={progressStep}
-            className={`register-progress-block${isCompleted ? " completed" : ""}${isLoading ? " loading" : ""}${isPartial ? " partial" : ""}`}
-            aria-current={step === progressStep ? "step" : undefined}
-          >
-            {isCompleted ? (
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path
-                  d="M20 6L9 17L4 12"
-                  stroke="#000"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            ) : null}
-          </div>
-        );
-      })}
-    </div>
-  );
 
   const renderForm = () => (
     <form onSubmit={handleSignup} noValidate>
@@ -1497,12 +1450,8 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
     <div className={`register-role-page ${selectedRole ? 'role-selected' : ''}`}>
       {selectedRole ? (
         <>
-          {renderProgressIndicator()}
           <div className={`register-form-shell ${skillsModal ? 'skills-open' : ''}`}>
           <div className="register-form-container">
-            <div className="logo-block">
-              <span className="register-badge" aria-hidden="true">KT</span>
-            </div>
             {step === 3 ? renderStep3() : step === 2 ? renderStep2() : (
               <>
                 <a className="account-wordmark" href="/">KTST<span>hack</span></a>
@@ -1523,6 +1472,10 @@ const [selectedSkillRatingId, setSelectedSkillRatingId] = useState<SkillRatingId
                 key={role.id} 
                 className={`role-card ${role.id === 'business_partner' || role.id === 'organizer' ? 'offset-down' : ''} ${role.id === 'student' || role.id === 'judge' ? 'offset-up' : ''}`}
               >
+                  {role.id === "student" && <img className="role-fill-image student-image" src={studentImage} alt="" />}
+                  {role.id === "judge" && <img className="role-fill-image judge-image" src={judgeImage} alt="" />}
+                  {role.id === "business_partner" && <img className="role-fill-image business-partner-image" src={businessPartnerImage} alt="" />}
+                  {role.id === "organizer" && <img className="role-fill-image organizer-image" src={organizerImage} alt="" />}
                   <div className={`boyregistration-wrapper ${role.id === 'business_partner' || role.id === 'judge' ? 'mirrored' : ''}`}>
                   </div>
                   {role.id === 'business_partner' || role.id === 'organizer' ? (
